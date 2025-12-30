@@ -11,4 +11,5 @@ type Playlist struct {
 	Img         string
 	Public      bool
 	Total       uint
+	Tracks      []PlayListTrack
 }

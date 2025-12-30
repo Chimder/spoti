@@ -11,15 +11,10 @@ type Album struct {
 	Name             string
 	ReleaseDate      string
 	URI              string
+	Tracks           []AlbumTracks
 	Artists          []AlbumArtist
-	Copyrights []struct {
-		Text string
-		Type string
-	}
-	ExternalIds struct {
-		Upc string
-	}
-	Genres     []interface{}
-	Label      string
-	Popularity int
+	Copyrights       string
+	Genres           []string
+	Label            string
+	Popularity       int
 }

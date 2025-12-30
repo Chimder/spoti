@@ -1,13 +1,13 @@
-package album
+package user
 
 import "spoti/internal/domain/track"
 
-type AlbumTracks struct {
+type UserTopTracks struct {
 	Href     string
 	Limit    int
+	Next     string
 	Offset   int
-	Next     interface{}
-	Previous interface{}
+	Previous string
 	Total    int
 	Tracks   []track.Track
 }

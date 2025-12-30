@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres
+    container_name: spPostgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - spotiData:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    container_name: spRedis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: spPgweb
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PGWEB_DATABASE_URL: "postgres://postgres:postgres@spPostgres:5432/postgres?sslmode=disable"
+    ports:
+      - "8081:8081"
+
+  # elasticsearch:
+  #   image: elasticsearch
+  #   container_name: spElasticsearch
+  #   restart: always
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #   ports:
+  #     - "9200:9200"
+
+  # nats:
+  #   image: nats:latest
+  #   container_name: nats
+  #   restart: always
+  #   command: ["-js"]
+  #   ports:
+  #     - "4222:4222"
+  #     - "8222:8222"
+
+volumes:
+  spotiData:
