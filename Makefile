@@ -1,6 +1,6 @@
 include .env
 export $(shell sed 's/=.*//' .env)
-MGDIR = sql/mangapark/migration
+MGDIR = sql/spoti/migration
 
 dev:
 	go run ./cmd

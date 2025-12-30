@@ -2,4 +2,4 @@
 dialect = postgres
 
 [sqlfluff:rules:capitalisation.keywords]
-capitalisation_policy = upper
+capitalisation_policy = lower
