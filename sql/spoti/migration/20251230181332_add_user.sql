@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 create extension if not exists "uuid-ossp";
 
-create table if not exists user (
+create table if not exists users (
     id uuid primary key default uuid_generate_v4(),
     user_name varchar(255) not null,
     email varchar(255) not null,
@@ -16,6 +16,6 @@ create table if not exists user (
 -- +goose Down
 -- +goose StatementBegin
 
-drop table if exists user;
+drop table if exists users;
 
 -- +goose StatementEnd

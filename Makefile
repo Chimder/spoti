@@ -6,7 +6,7 @@ dev:
 	go run ./cmd
 
 up:
-	goose -dir $(MGDIR) postgres ${DB_URL} up
+	goose -dir $(MGDIR) postgres ${POSTGRES_URL} up
 
 create_%:
 	goose -dir $(MGDIR) create $* sql
