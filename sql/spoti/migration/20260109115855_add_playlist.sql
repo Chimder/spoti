@@ -13,18 +13,6 @@ create table if not exists playlists (
     created_at timestamptz not null default now()
 );
 create index idx_playlists_owner_id on playlists (owner_id);
-
-create table if not exists playlist_tracks (
-    playlist_id uuid not null references playlists (id) on delete cascade,
-    track_id uuid not null references tracks (id) on delete cascade,
-    track_position int not null,
-    added_at timestamptz not null default now(),
-    primary key (playlist_id, track_id),
-    unique (playlist_id, track_position)
-);
-
-create index idx_playlist_tracks_playlist_id on playlist_tracks (playlist_id);
-create index idx_playlist_tracks_track_id on playlist_tracks (track_id);
 -- +goose StatementEnd
 
 -- +goose Down

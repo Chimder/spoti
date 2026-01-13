@@ -14,7 +14,6 @@ create table if not exists albums (
     release_date timestamptz not null default now(),
     created_at timestamptz not null default now()
 );
-create index idx_albums_id on albums (id);
 
 create table if not exists album_artists (
     album_id uuid not null references albums (id) on delete cascade,
@@ -22,10 +21,10 @@ create table if not exists album_artists (
     primary key (album_id, artist_id)
 );
 
-
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
+drop table if exists album_artists;
 drop table if exists albums;
 -- +goose StatementEnd
