@@ -2,11 +2,11 @@
 -- +goose StatementBegin
 
 create table if not exists albums (
-    id uuid primary key default uuid_generate_v4(),
+    id uuid primary key default uuid_generate_v4 (),
     album_type varchar(225),
     total_tracks smallint not null,
     image varchar(255) not null,
-    album_name varchar(255) not null,
+    album_name varchar(255) not null unique,
     uri varchar(255) not null,
     copyrights varchar(255) not null,
     album_label varchar(255) not null,
@@ -26,5 +26,6 @@ create table if not exists album_artists (
 -- +goose Down
 -- +goose StatementBegin
 drop table if exists album_artists;
+
 drop table if exists albums;
 -- +goose StatementEnd

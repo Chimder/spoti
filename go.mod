@@ -4,6 +4,7 @@ go 1.25.5
 
 require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.42.0
+	github.com/brianvoe/gofakeit/v7 v7.14.0
 	github.com/elastic/go-elasticsearch/v9 v9.2.1
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.11.0
