@@ -21,10 +21,21 @@ create table if not exists album_artists (
     primary key (album_id, artist_id)
 );
 
+create index idx_album_artists_artist on album_artists (artist_id);
+
+create table if not exists user_saved_albums (
+    album_id uuid not null references albums (id) on delete cascade,
+    user_id uuid not null references users (id) on delete cascade,
+    primary key (album_id, user_id)
+);
+
+create index idx_user_saved_albums_user on user_saved_albums (user_id);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
+drop table if exists user_saved_albums;
+
 drop table if exists album_artists;
 
 drop table if exists albums;
