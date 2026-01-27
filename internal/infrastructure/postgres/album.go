@@ -4,12 +4,27 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
+type Album struct {
+	ID          uuid.UUID `db:"id"`
+	AlbumType   string    `db:"album_type"`
+	TotalTracks int16     `db:"total_tracks"`
+	Image       string    `db:"image"`
+	AlbumName   string    `db:"album_name"`
+	URI         string    `db:"uri"`
+	Copyrights  string    `db:"copyrights"`
+	AlbumLabel  string    `db:"album_label"`
+	Popularity  int16     `db:"popularity"`
+	ReleaseDate time.Time `db:"release_date"`
+	CreatedAt   time.Time `db:"created_at"`
+}
 type AlbumRepo struct {
 	db *pgxpool.Pool
 }
@@ -267,6 +282,110 @@ WHERE a.id = $1;`
 	err := al.db.QueryRow(ctx, query, albumID).Scan(&data)
 	if err != nil {
 		log.Error().Err(err).Msg("Get Album from db")
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func (al *AlbumRepo) GetUserSavedAlbums(ctx context.Context, userId string) ([]Album, error) {
+	query := `SELECT a.*
+FROM albums a
+JOIN user_saved_albums usa ON usa.album_id = a.id
+WHERE usa.user_id = $1
+`
+	rows, err := al.db.Query(ctx, query, userId)
+	if err != nil {
+		log.Error().Err(err).Msg("Get user saved albums from db")
+		return nil, err
+	}
+	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[Album])
+	if err != nil {
+		log.Error().Err(err).Msg("collect rows user saved albums")
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func (al *AlbumRepo) SaveAlbumsForCurrentUser(ctx context.Context, albumIds []string, userId string) error {
+	if len(albumIds) == 0 {
+		return nil
+	}
+	query := `
+        INSERT INTO user_saved_albums (album_id, user_id)
+        SELECT unnest($1::uuid[]), $2
+        ON CONFLICT DO NOTHING
+    `
+	_, err := al.db.Exec(ctx, query, albumIds, userId)
+	if err != nil {
+		log.Error().Err(err).Msg("err SaveAlbumsForCurrentUser from db")
+		return err
+	}
+	return nil
+}
+
+func (al *AlbumRepo) RemoveAlbumsFromCurrentUser(ctx context.Context, albumIds []string, userId string) error {
+	if len(albumIds) == 0 {
+		return nil
+	}
+	query := `
+        DELETE FROM user_saved_albums
+        WHERE user_id = $1
+        AND album_id = ANY($2::uuid[])
+    `
+
+	_, err := al.db.Exec(ctx, query, userId, albumIds)
+	if err != nil {
+		log.Error().Err(err).Msg("err RemoveAlbumsFromCurrentUser from db")
+		return err
+	}
+
+	return nil
+}
+
+func (al *AlbumRepo) CheckUsersSavedAlbums(ctx context.Context, albumIDs []string, userID string) ([]bool, error) {
+	query := `
+        SELECT id IN (
+            SELECT album_id
+            FROM user_saved_albums
+            WHERE user_id = $2
+        ) as saved
+        FROM unnest($1::uuid[]) AS id
+    `
+
+	rows, err := al.db.Query(ctx, query, albumIDs, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []bool
+	for rows.Next() {
+		var saved bool
+		rows.Scan(&saved)
+		results = append(results, saved)
+	}
+
+	return results, nil
+}
+
+func (al *AlbumRepo) GetNewReleases(ctx context.Context, limit int) ([]Album, error) {
+	query := `
+SELECT * FROM albums
+ORDER BY created_at DESC
+LIMIT $1
+`
+
+	rows, err := al.db.Query(ctx, query, limit)
+	if err != nil {
+		log.Error().Err(err).Msg("err get new releases from db")
+		return nil, err
+	}
+
+	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[Album])
+	if err != nil {
+		log.Error().Err(err).Msg("collect rows  get new releases")
 		return nil, err
 	}
 

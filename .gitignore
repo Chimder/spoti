@@ -5,3 +5,4 @@
 tmp/*
 /tmp/
 tess/vegeta/results.html
+query.sql

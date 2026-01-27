@@ -9,6 +9,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -18,16 +19,16 @@ const (
 	AlbumsCount     = 1000
 	RecordingsCount = 1000
 	// TracksCount     = 1000
-	// PlaylistsCount  = 150
+	PlaylistsCount = 150
 )
 
 var (
-	userIDs      []uuid.UUID
-	artistIDs    []uuid.UUID
-	albumIDs     []uuid.UUID
-	recordingIDs []uuid.UUID
-	trackIDs     []uuid.UUID
-	// playlistIDs  []uuid.UUID
+	userIDs   []uuid.UUID
+	artistIDs []uuid.UUID
+	albumIDs  []uuid.UUID
+	// recordingIDs []uuid.UUID
+	trackIDs    []uuid.UUID
+	playlistIDs []uuid.UUID
 )
 
 func main() {
@@ -41,22 +42,27 @@ func main() {
 
 	gofakeit.Seed(time.Now().UnixNano())
 
+	now := time.Now()
 	fmt.Println("run seed>>")
 	if err := seedUsers(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\n users OK")
 
 	if err := seedArtists(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\n artists OK")
 
 	if err := seedAlbums(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\n albums OK")
 
 	if err := seedAlbumArtists(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\n albumArtists OK")
 
 	// if err := seedRecordings(ctx, pool); err != nil {
 	// 	log.Fatal(err)
@@ -65,20 +71,28 @@ func main() {
 	if err := seedTracks(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\n tracks OK")
 
 	if err := seedArtistTracks(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("\n artistTracks OK")
 
-	// if err := seedPlaylists(ctx, pool); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err := seedUserSaveAlbums(ctx, pool); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n us_save_alb OK")
+	if err := seedPlaylists(ctx, pool); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n playlist OK")
 
-	// if err := seedPlaylistTracks(ctx, pool); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err := seedPlaylistTracks(ctx, pool); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n playlist tracks OK")
 
-	fmt.Println("\n db seed OK")
+	fmt.Printf("time %v\n", time.Since(now))
 	printStatistics(ctx, pool)
 }
 
@@ -165,26 +179,6 @@ func seedAlbumArtists(ctx context.Context, pool *pgxpool.Pool) error {
 	return nil
 }
 
-func seedRecordings(ctx context.Context, pool *pgxpool.Pool) error {
-	for i := 0; i < RecordingsCount; i++ {
-		recording := GetFakeRecordings()
-
-		var id uuid.UUID
-		err := pool.QueryRow(ctx, `
-			INSERT INTO recordings (isrc, duration_ms, popularity, play_count, audio_uri, preview_uri)
-			VALUES ($1, $2, $3, $4, $5, $6)
-			RETURNING id
-		`,
-			recording.isrc, recording.duration_ms, recording.popularity, recording.play_count, recording.audio_uri, recording.preview_uri,
-		).Scan(&id)
-		if err != nil {
-			return fmt.Errorf("err seed recording %d: %w", i, err)
-		}
-		recordingIDs = append(recordingIDs, id)
-	}
-	return nil
-}
-
 func seedTracks(ctx context.Context, pool *pgxpool.Pool) error {
 	for _, albumID := range albumIDs {
 
@@ -228,21 +222,24 @@ func seedTracks(ctx context.Context, pool *pgxpool.Pool) error {
 					return err
 				}
 
-				_, err = pool.Exec(ctx, `
+				var id uuid.UUID
+				err = pool.QueryRow(ctx, `
 						INSERT INTO tracks (
 						album_id, recording_id, track_name, track_number, disc_number, explicit, is_playable, track_type, uri, islocal
 						)
 						VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+			      RETURNING id
 					`, albumID, recordingID,
 					fmt.Sprintf("%s %s", gofakeit.Adjective(), gofakeit.Noun()),
 					trackNum, disc, gofakeit.Bool(), true, "track",
 					fmt.Sprintf("spotify:track:%s", uuid.New()), false,
-				)
+				).Scan(&id)
 				if err != nil {
 					return fmt.Errorf("err seed track  %w", err)
 				}
 
 				trackNum++
+				trackIDs = append(trackIDs, id)
 			}
 		}
 	}
@@ -256,6 +253,8 @@ func seedArtistTracks(ctx context.Context, pool *pgxpool.Pool) error {
 	}
 	defer rows.Close()
 
+	batch := &pgx.Batch{}
+
 	for rows.Next() {
 		var trackID uuid.UUID
 		if err := rows.Scan(&trackID); err != nil {
@@ -265,19 +264,39 @@ func seedArtistTracks(ctx context.Context, pool *pgxpool.Pool) error {
 		numArtists := gofakeit.Number(1, 3)
 		selected := map[uuid.UUID]bool{}
 
-		for i := 0; i < numArtists; i++ {
+		for range numArtists {
 			artistID := artistIDs[rand.Intn(len(artistIDs))]
 			if selected[artistID] {
 				continue
 			}
 			selected[artistID] = true
 
-			_, err := pool.Exec(ctx, `
+			batch.Queue(`
 				INSERT INTO artist_tracks (artist_id, track_id)
 				VALUES ($1, $2)
 				ON CONFLICT DO NOTHING
 			`, artistID, trackID)
+		}
+	}
 
+	br := pool.SendBatch(ctx, batch)
+	defer br.Close()
+
+	return br.Close()
+}
+
+func seedUserSaveAlbums(ctx context.Context, pool *pgxpool.Pool) error {
+
+	for _, userId := range userIDs {
+		numAlbums := gofakeit.Number(1, 25)
+
+		for range numAlbums {
+			albumId := albumIDs[rand.Intn(len(albumIDs))]
+
+			query := `
+			INSERT INTO user_saved_albums (album_id, user_id) VALUES ($1, $2)
+			ON CONFLICT DO NOTHING`
+			_, err := pool.Exec(ctx, query, albumId, userId)
 			if err != nil {
 				return err
 			}
@@ -286,95 +305,73 @@ func seedArtistTracks(ctx context.Context, pool *pgxpool.Pool) error {
 	return nil
 }
 
-// func seedPlaylists(ctx context.Context, pool *pgxpool.Pool) error {
-// 	playlistNames := []string{
-// 		"Chill Vibes", "Workout Mix", "Study Focus", "Party Hits",
-// 		"Road Trip", "Morning Coffee", "Evening Relax", "90s Throwback",
-// 		"Top 100", "Discover Weekly", "Daily Mix", "Summer Hits",
-// 	}
+func seedPlaylists(ctx context.Context, pool *pgxpool.Pool) error {
+	for i := range PlaylistsCount {
+		ownerID := userIDs[rand.Intn(len(userIDs))]
 
-// 	for i := 0; i < PlaylistsCount; i++ {
-// 		ownerID := userIDs[rand.Intn(len(userIDs))]
-// 		playlistName := fmt.Sprintf("%s %d", playlistNames[rand.Intn(len(playlistNames))], gofakeit.Number(1, 100))
+		var id uuid.UUID
+		err := pool.QueryRow(ctx, `
+			INSERT INTO playlists (owner_id, playlist_name, description, image, is_public, total)
+			VALUES ($1, $2, $3, $4, $5, $6)
+			RETURNING id
+		`,
+			ownerID,
+			gofakeit.Sentence(2),
+			gofakeit.Sentence(10),
+			fmt.Sprintf("https://i.scdn.co/image/%s", gofakeit.UUID()),
+			gofakeit.Bool(),
+			gofakeit.Number(0, 50),
+		).Scan(&id)
+		if err != nil {
+			return fmt.Errorf("err seed playlist %d: %w", i, err)
+		}
 
-// 		totalTracks := gofakeit.Number(0, 50)
+		playlistIDs = append(playlistIDs, id)
+	}
+	return nil
+}
 
-// 		var hasImage bool
-// 		var image *string
-// 		if gofakeit.Bool() {
-// 			img := gofakeit.ImageURL(400, 400)
-// 			image = &img
-// 			hasImage = true
-// 		}
+func seedPlaylistTracks(ctx context.Context, pool *pgxpool.Pool) error {
+	for _, playlistID := range playlistIDs {
+		var total int
+		err := pool.QueryRow(ctx, `SELECT total FROM playlists WHERE id = $1`, playlistID).Scan(&total)
+		if err != nil {
+			return fmt.Errorf("err get playlist: %w", err)
+		}
 
-// 		var description *string
-// 		if gofakeit.Bool() {
-// 			desc := gofakeit.Sentence(10)
-// 			description = &desc
-// 		}
+		if total == 0 {
+			continue
+		}
 
-// 		var id uuid.UUID
-// 		err := pool.QueryRow(ctx, `
-// 			INSERT INTO playlists (owner_id, playlist_name, description, image, is_public, total)
-// 			VALUES ($1, $2, $3, $4, $5, $6)
-// 			RETURNING id
-// 		`,
-// 			ownerID,
-// 			playlistName,
-// 			description,
-// 			image,
-// 			gofakeit.Bool(),
-// 			totalTracks,
-// 		).Scan(&id)
-// 		if err != nil {
-// 			return fmt.Errorf("error seeding playlist %d: %w", i, err)
-// 		}
-// 		playlistIDs = append(playlistIDs, id)
-// 	}
-// 	return nil
-// }
+		selectedTracks := make(map[uuid.UUID]bool)
+		position := 1
 
-// func seedPlaylistTracks(ctx context.Context, pool *pgxpool.Pool) error {
-// 	for _, playlistID := range playlistIDs {
-// 		var total int
-// 		err := pool.QueryRow(ctx, `SELECT total FROM playlists WHERE id = $1`, playlistID).Scan(&total)
-// 		if err != nil {
-// 			return fmt.Errorf("err get playlist: %w", err)
-// 		}
+		for len(selectedTracks) < total {
+			trackID := trackIDs[rand.Intn(len(trackIDs))]
 
-// 		if total == 0 {
-// 			continue
-// 		}
+			if selectedTracks[trackID] {
+				continue
+			}
+			selectedTracks[trackID] = true
 
-// 		selectedTracks := make(map[uuid.UUID]bool)
-// 		position := 1
+			addedAt := gofakeit.DateRange(
+				time.Now().AddDate(-1, 0, 0),
+				time.Now(),
+			)
 
-// 		for len(selectedTracks) < total {
-// 			trackID := trackIDs[rand.Intn(len(trackIDs))]
-
-// 			if selectedTracks[trackID] {
-// 				continue
-// 			}
-// 			selectedTracks[trackID] = true
-
-// 			addedAt := gofakeit.DateRange(
-// 				time.Now().AddDate(-1, 0, 0),
-// 				time.Now(),
-// 			)
-
-// 			_, err := pool.Exec(ctx, `
-// 				INSERT INTO playlist_tracks (playlist_id, track_id, track_position, added_at)
-// 				VALUES ($1, $2, $3, $4)
-// 				ON CONFLICT DO NOTHING
-// 			`, playlistID, trackID, position, addedAt)
-// 			if err != nil {
-// 				return fmt.Errorf("err seed playlist_tracks: %w", err)
-// 			}
-// 			position++
-// 		}
-// 	}
-// 	return nil
-// }
+			_, err := pool.Exec(ctx, `
+				INSERT INTO playlist_tracks (playlist_id, track_id, track_position, added_at)
+				VALUES ($1, $2, $3, $4)
+				ON CONFLICT DO NOTHING
+			`, playlistID, trackID, position, addedAt)
+			if err != nil {
+				return fmt.Errorf("err seed playlist_tracks: %w", err)
+			}
+			position++
+		}
+	}
+	return nil
+}
 
 func printStatistics(ctx context.Context, pool *pgxpool.Pool) {
 	fmt.Println("\n📊 Database Statistics:")
@@ -390,8 +387,9 @@ func printStatistics(ctx context.Context, pool *pgxpool.Pool) {
 		{"Tracks", "SELECT COUNT(*) FROM tracks"},
 		{"Album-Artist relations", "SELECT COUNT(*) FROM album_artists"},
 		{"Artist-Track relations", "SELECT COUNT(*) FROM artist_tracks"},
-		// {"Playlists", "SELECT COUNT(*) FROM playlists"},
-		// {"Playlist-Track relations", "SELECT COUNT(*) FROM playlist_tracks"},
+		{"user_saved_album", "SELECT COUNT(*) FROM user_saved_albums"},
+		{"Playlists", "SELECT COUNT(*) FROM playlists"},
+		{"Playlist-Track relations", "SELECT COUNT(*) FROM playlist_tracks"},
 	}
 
 	for _, stat := range stats {
