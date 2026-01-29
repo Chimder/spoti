@@ -29,6 +29,24 @@ services:
       PGWEB_DATABASE_URL: "postgres://postgres:postgres@spPostgres:5432/postgres?sslmode=disable"
     ports:
       - "8081:8081"
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: spClickhouse
+    restart: always
+    environment:
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: default
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - spotiData:/var/lib/clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
 
   # elasticsearch:
   #   image: elasticsearch

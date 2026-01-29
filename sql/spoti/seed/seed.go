@@ -82,6 +82,12 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("\n us_save_alb OK")
+
+	if err := seedUserSavedArtists(ctx, pool); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n user saved artists OK")
+
 	if err := seedPlaylists(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
@@ -92,7 +98,12 @@ func main() {
 	}
 	fmt.Println("\n playlist tracks OK")
 
+	if err := seedUserSavedPlaylists(ctx, pool); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n user saved playlist OK")
 	fmt.Printf("time %v\n", time.Since(now))
+
 	printStatistics(ctx, pool)
 }
 
@@ -173,6 +184,37 @@ func seedAlbumArtists(ctx context.Context, pool *pgxpool.Pool) error {
 			`, albumID, artistID)
 			if err != nil {
 				return fmt.Errorf("err seed album_artists: %w", err)
+			}
+		}
+	}
+	return nil
+}
+
+func seedUserSavedArtists(ctx context.Context, pool *pgxpool.Pool) error {
+	for _, userID := range userIDs {
+		numArtists := gofakeit.Number(0, 15)
+
+		if numArtists == 0 {
+			continue
+		}
+
+		selectedArtists := make(map[uuid.UUID]bool)
+
+		for range numArtists {
+			artistID := artistIDs[rand.Intn(len(artistIDs))]
+
+			if selectedArtists[artistID] {
+				continue
+			}
+			selectedArtists[artistID] = true
+
+			_, err := pool.Exec(ctx, `
+				INSERT INTO user_saved_artists (user_id, artist_id)
+				VALUES ($1, $2)
+				ON CONFLICT DO NOTHING
+			`, userID, artistID)
+			if err != nil {
+				return fmt.Errorf("err seed user_saved_artists: %w", err)
 			}
 		}
 	}
@@ -372,24 +414,54 @@ func seedPlaylistTracks(ctx context.Context, pool *pgxpool.Pool) error {
 	}
 	return nil
 }
+func seedUserSavedPlaylists(ctx context.Context, pool *pgxpool.Pool) error {
+	for _, userID := range userIDs {
+		numPlaylists := gofakeit.Number(0, 15)
+
+		if numPlaylists == 0 {
+			continue
+		}
+
+		selectedPlaylists := make(map[uuid.UUID]bool)
+
+		for range numPlaylists {
+			playlistID := playlistIDs[rand.Intn(len(playlistIDs))]
+
+			if selectedPlaylists[playlistID] {
+				continue
+			}
+			selectedPlaylists[playlistID] = true
+
+			_, err := pool.Exec(ctx, `
+				INSERT INTO user_saved_playlists (user_id, playlist_id)
+				VALUES ($1, $2)
+				ON CONFLICT DO NOTHING
+			`, userID, playlistID)
+			if err != nil {
+				return fmt.Errorf("err seed user_saved_playlists: %w", err)
+			}
+		}
+	}
+	return nil
+}
 
 func printStatistics(ctx context.Context, pool *pgxpool.Pool) {
-	fmt.Println("\n📊 Database Statistics:")
-
 	stats := []struct {
 		table string
 		query string
 	}{
-		{"Users", "SELECT COUNT(*) FROM users"},
-		{"Artists", "SELECT COUNT(*) FROM artists"},
-		{"Albums", "SELECT COUNT(*) FROM albums"},
-		{"Recordings", "SELECT COUNT(*) FROM recordings"},
-		{"Tracks", "SELECT COUNT(*) FROM tracks"},
-		{"Album-Artist relations", "SELECT COUNT(*) FROM album_artists"},
-		{"Artist-Track relations", "SELECT COUNT(*) FROM artist_tracks"},
-		{"user_saved_album", "SELECT COUNT(*) FROM user_saved_albums"},
-		{"Playlists", "SELECT COUNT(*) FROM playlists"},
-		{"Playlist-Track relations", "SELECT COUNT(*) FROM playlist_tracks"},
+		{"users", "SELECT COUNT(*) FROM users"},
+		{"artists", "SELECT COUNT(*) FROM artists"},
+		{"albums", "SELECT COUNT(*) FROM albums"},
+		{"recordings", "SELECT COUNT(*) FROM recordings"},
+		{"tracks", "SELECT COUNT(*) FROM tracks"},
+		{"album artist relations", "SELECT COUNT(*) FROM album_artists"},
+		{"artist track relations", "SELECT COUNT(*) FROM artist_tracks"},
+		{"user saved album", "SELECT COUNT(*) FROM user_saved_albums"},
+		{"user saved artists", "SELECT COUNT(*) FROM user_saved_artists"},
+		{"playlists", "SELECT COUNT(*) FROM playlists"},
+		{"playlist track relations", "SELECT COUNT(*) FROM playlist_tracks"},
+		{"user saved playlists", "SELECT COUNT(*) FROM user_saved_playlists"},
 	}
 
 	for _, stat := range stats {

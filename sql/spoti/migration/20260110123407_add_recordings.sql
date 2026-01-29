@@ -7,7 +7,6 @@ create table recordings (
     popularity int not null default 0,
     play_count bigint not null default 0,
     audio_uri varchar(255) not null,
-    preview_uri varchar(255),
     created_at timestamptz not null default now()
 );
 

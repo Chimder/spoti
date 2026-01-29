@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
@@ -97,8 +98,21 @@ func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, 
 
 	return data, nil
 }
-func (art *ArtistRepo) GetPlaylistById(ctx context.Context, playlistId string) (Playlist, error) {
-	return Playlist{}, nil
+
+func (art *ArtistRepo) AddToPlaylist(ctx context.Context, playlist_id, track_id string) error {
+	query := `
+INSERT INTO playlist_tracks (playlist_id, track_id, track_position)
+SELECT $1, $2, COALESCE(MAX(track_position), 0) + 1
+FROM playlist_tracks
+WHERE playlist_id = $1;
+`
+	_, err := art.db.Exec(ctx, query, playlist_id, track_id)
+	if err != nil {
+		log.Error().Err(err).Msg("err add to playlist")
+		return err
+	}
+
+	return err
 }
 
 type UpdatePlaylistReq struct {
@@ -120,6 +134,68 @@ func (pl *PlaylistRepo) UpdatePlaylist(ctx context.Context, playlistId string, r
 	_, err := pl.db.Exec(ctx, query, playlistId, req.Name, req.Description, req.Public)
 	if err != nil {
 		log.Error().Err(err).Msg("err updatePlaylist db")
+		return err
+	}
+
+	return err
+}
+func (art *ArtistRepo) DeleteFromPlaylist(ctx context.Context, playlistId, trackId string) error {
+	query := `
+WITH removed AS (
+    DELETE FROM playlist_tracks
+    WHERE playlist_id = $1
+      AND track_id = $2
+    RETURNING track_position
+)
+UPDATE playlist_tracks
+SET track_position = track_position - 1
+WHERE playlist_id = $1
+  AND track_position > (SELECT track_position FROM removed);
+`
+	_, err := art.db.Exec(ctx, query, playlistId, trackId)
+	if err != nil {
+		log.Error().Err(err).Msg("err delete from playlist")
+		return err
+	}
+
+	return err
+}
+
+func (art *ArtistRepo) GetAllUserPlaylists(ctx context.Context, userId string) ([]Playlist, error) {
+	query := `SELECT * FROM playlists WHERE owner_id = $1;`
+
+	rows, err := art.db.Query(ctx, query, userId)
+	if err != nil {
+		log.Error().Err(err).Msg("err get all playlists by id db")
+		return nil, err
+	}
+
+	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[Playlist])
+	if err != nil {
+		log.Error().Err(err).Msg("err collect all playlists by id")
+		return nil, err
+	}
+
+	return data, nil
+}
+
+type CreatePlaylistReq struct {
+	OwnerID      uuid.UUID
+	PlaylistName string
+	Description  string
+	Image        string
+	IsPublic     bool
+}
+
+func (art *ArtistRepo) CreatePlaylist(ctx context.Context, cp CreatePlaylistReq) error {
+	query := `
+	INSERT INTO playlists (owner_id, playlist_name, description, image, is_public)
+	VALUES ($1, $2, $3, $4, $5)
+	`
+
+	_, err := art.db.Exec(ctx, query, cp.OwnerID, cp.PlaylistName, cp.Description, cp.Image, cp.IsPublic)
+	if err != nil {
+		log.Error().Err(err).Msg("err create playlist")
 		return err
 	}
 

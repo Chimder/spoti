@@ -2,7 +2,6 @@ package clickhouse
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"sync"
 
@@ -18,11 +17,11 @@ func Conn(ctx context.Context) (driver.Conn, error) {
 
 	once.Do(func() {
 		conn, err = clickhouse.Open(&clickhouse.Options{
-			Addr: []string{"<CLICKHOUSE_SECURE_NATIVE_HOSTNAME>:9440"},
+			Addr: []string{"localhost:9000"},
 			Auth: clickhouse.Auth{
 				Database: "default",
 				Username: "default",
-				Password: "<DEFAULT_USER_PASSWORD>",
+				Password: "default",
 			},
 			Compression: &clickhouse.Compression{
 				Method: clickhouse.CompressionLZ4,
@@ -36,11 +35,11 @@ func Conn(ctx context.Context) (driver.Conn, error) {
 				},
 			},
 			Debugf: func(format string, v ...interface{}) {
-				fmt.Printf(format, v)
+				fmt.Printf("[ClickHouse DEBUG] "+format+"\n", v...)
 			},
-			TLS: &tls.Config{
-				InsecureSkipVerify: true,
-			},
+			// TLS: &tls.Config{
+			// 	InsecureSkipVerify: true,
+			// },
 		})
 	})
 
