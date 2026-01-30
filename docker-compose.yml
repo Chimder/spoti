@@ -36,7 +36,6 @@ services:
     environment:
       CLICKHOUSE_DB: default
       CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: default
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     volumes:
       - spotiData:/var/lib/clickhouse
