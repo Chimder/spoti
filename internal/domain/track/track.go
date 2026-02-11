@@ -1,20 +1,23 @@
 package track
 
-import "spoti/internal/domain/artist"
+import "github.com/google/uuid"
 
 type Track struct {
-	ID               string
-	AvailableMarkets []string
-	Explicit         bool
-	IsPlayable       bool
-	Name             string
-	Popularity       int
-	PreviewURL       string
-	DiscNumber       int
-	TrackNumber      int
-	DurationMs       uint32
-	Type             string
-	URI              string
-	IsLocal          bool
-	Artists          artist.Artist
+	ID          uuid.UUID
+	AlbumID     uuid.UUID
+	RecordingID uuid.UUID
+	Name        string
+	Number      int16
+	DiscNumber  int16
+	Explicit    bool
+	IsPlayable  bool
+	Type        string
+	URI         string
+	IsLocal     bool
+
+	ISRC       string
+	DurationMs int64
+	Popularity int
+	PlayCount  int64
+	AudioURI   string
 }

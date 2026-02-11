@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
+	"spoti/internal/domain/album"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -12,19 +12,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type Album struct {
-	ID          uuid.UUID `db:"id"`
-	AlbumType   string    `db:"album_type"`
-	TotalTracks int16     `db:"total_tracks"`
-	Image       string    `db:"image"`
-	AlbumName   string    `db:"album_name"`
-	URI         string    `db:"uri"`
-	Copyrights  string    `db:"copyrights"`
-	AlbumLabel  string    `db:"album_label"`
-	Popularity  int16     `db:"popularity"`
-	ReleaseDate time.Time `db:"release_date"`
-	CreatedAt   time.Time `db:"created_at"`
-}
 type AlbumRepo struct {
 	db *pgxpool.Pool
 }
@@ -288,7 +275,7 @@ WHERE a.id = $1;`
 	return data, nil
 }
 
-func (al *AlbumRepo) GetUserSavedAlbums(ctx context.Context, userId string) ([]Album, error) {
+func (al *AlbumRepo) GetUserSavedAlbums(ctx context.Context, userId string) ([]album.Album, error) {
 	query := `SELECT a.*
 FROM albums a
 JOIN user_saved_albums usa ON usa.album_id = a.id
@@ -299,13 +286,14 @@ WHERE usa.user_id = $1
 		log.Error().Err(err).Msg("Get user saved albums from db")
 		return nil, err
 	}
+
 	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[Album])
 	if err != nil {
 		log.Error().Err(err).Msg("collect rows user saved albums")
 		return nil, err
 	}
 
-	return data, nil
+	return AlbumsToDomain(data), nil
 }
 
 func (al *AlbumRepo) SaveAlbumsForCurrentUser(ctx context.Context, albumIds []string, userId string) error {
@@ -370,7 +358,7 @@ func (al *AlbumRepo) CheckUsersSavedAlbums(ctx context.Context, albumIDs []strin
 	return results, nil
 }
 
-func (al *AlbumRepo) GetNewReleases(ctx context.Context, limit int) ([]Album, error) {
+func (al *AlbumRepo) GetNewReleases(ctx context.Context, limit int) ([]album.Album, error) {
 	query := `
 SELECT * FROM albums
 ORDER BY created_at DESC
@@ -385,9 +373,9 @@ LIMIT $1
 
 	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[Album])
 	if err != nil {
-		log.Error().Err(err).Msg("collect rows  get new releases")
+		log.Error().Err(err).Msg("collect rows get new releases")
 		return nil, err
 	}
 
-	return data, nil
+	return AlbumsToDomain(data), nil
 }

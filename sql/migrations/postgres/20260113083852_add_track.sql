@@ -9,7 +9,7 @@ create table tracks (
     disc_number smallint not null default 1,
     explicit boolean default false,
     is_playable boolean default true,
-    track_type varchar(50) not null, -- track / bonus / intro
+    track_type varchar(50) not null,
     uri varchar(255) not null,
     islocal boolean default false,
     unique (

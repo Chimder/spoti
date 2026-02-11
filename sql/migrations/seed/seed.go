@@ -157,7 +157,7 @@ func seedAlbums(ctx context.Context, pool *pgxpool.Pool) error {
 			INSERT INTO albums (album_type, total_tracks, image, album_name, uri, copyrights, album_label, popularity, release_date)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 			RETURNING id
-		`, album.album_label, album.total_tracks, album.image, album.album_name, album.uri, album.copyrights, album.album_label,
+		`, album.album_type, album.total_tracks, album.image, album.album_name, album.uri, album.copyrights, album.album_label,
 			album.popularity, album.release_date,
 		).Scan(&id)
 		if err != nil {

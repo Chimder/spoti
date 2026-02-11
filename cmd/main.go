@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 	"spoti/config"
-	postgres_db "spoti/internal/infrastructure/postgres"
-	httpgin "spoti/internal/interfaces/http"
+	httpgin "spoti/internal/handler/http"
+	postgres_db "spoti/internal/repository/postgres"
 	"syscall"
 	"time"
 

@@ -1,13 +1,19 @@
 package artist
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type Artist struct {
-	ID         string
+	ID         uuid.UUID
 	Url        string
 	Followers  uint64
 	Genres     []string
 	Image      string
 	Name       string
 	Popularity uint8
-	Type       string
 	URI        string
+	CreatedAt  time.Time
 }

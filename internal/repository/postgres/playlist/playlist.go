@@ -3,7 +3,7 @@ package postgres
 import (
 	"context"
 	"encoding/json"
-	"time"
+	"spoti/internal/domain/playlist"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -11,28 +11,18 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type Playlist struct {
-	ID           uuid.UUID `db:"id"`
-	OwnerID      uuid.UUID `db:"owner_id"`
-	PlaylistName string    `db:"playlist_name"`
-	Description  string    `db:"description"`
-	Image        string    `db:"image"`
-	IsPublic     bool      `db:"is_public"`
-	Total        int       `db:"total"`
-	CreatedAt    time.Time `db:"created_at"`
-}
 type PlaylistRepo struct {
 	db *pgxpool.Pool
 }
 
-func NewPlaylistRepo(db *pgxpool.Pool) *AlbumRepo {
-	return &AlbumRepo{
+func NewPlaylistRepo(db *pgxpool.Pool) *PlaylistRepo {
+	return &PlaylistRepo{
 		db: db,
 	}
 }
 
-func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, limit, offset int) (json.RawMessage, error) {
-	if limit <= 0 || limit > 100 {
+func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, limit, offset int) (playlist.PlaylistJson, error) {
+	if limit <= 0 || limit > 20 {
 		limit = 20
 	}
 	if offset < 0 {
@@ -92,21 +82,25 @@ func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, 
 	var data json.RawMessage
 	err := pl.db.QueryRow(ctx, query, playlistId, limit, offset).Scan(&data)
 	if err != nil {
-		log.Error().Err(err).Msg("Get playlist from db")
-		return nil, err
+		return playlist.PlaylistJson{}, err
 	}
 
-	return data, nil
+	var playlistData playlist.PlaylistJson
+	if err := json.Unmarshal(data, &playlistData); err != nil {
+		return playlist.PlaylistJson{}, err
+	}
+
+	return playlistData, nil
 }
 
-func (art *ArtistRepo) AddToPlaylist(ctx context.Context, playlist_id, track_id string) error {
+func (pl *PlaylistRepo) AddToPlaylist(ctx context.Context, playlist_id, track_id string) error {
 	query := `
 INSERT INTO playlist_tracks (playlist_id, track_id, track_position)
 SELECT $1, $2, COALESCE(MAX(track_position), 0) + 1
 FROM playlist_tracks
 WHERE playlist_id = $1;
 `
-	_, err := art.db.Exec(ctx, query, playlist_id, track_id)
+	_, err := pl.db.Exec(ctx, query, playlist_id, track_id)
 	if err != nil {
 		log.Error().Err(err).Msg("err add to playlist")
 		return err
@@ -139,7 +133,7 @@ func (pl *PlaylistRepo) UpdatePlaylist(ctx context.Context, playlistId string, r
 
 	return err
 }
-func (art *ArtistRepo) DeleteFromPlaylist(ctx context.Context, playlistId, trackId string) error {
+func (pl *PlaylistRepo) DeleteFromPlaylist(ctx context.Context, playlistId, trackId string) error {
 	query := `
 WITH removed AS (
     DELETE FROM playlist_tracks
@@ -152,7 +146,7 @@ SET track_position = track_position - 1
 WHERE playlist_id = $1
   AND track_position > (SELECT track_position FROM removed);
 `
-	_, err := art.db.Exec(ctx, query, playlistId, trackId)
+	_, err := pl.db.Exec(ctx, query, playlistId, trackId)
 	if err != nil {
 		log.Error().Err(err).Msg("err delete from playlist")
 		return err
@@ -161,22 +155,22 @@ WHERE playlist_id = $1
 	return err
 }
 
-func (art *ArtistRepo) GetAllUserPlaylists(ctx context.Context, userId string) ([]Playlist, error) {
+func (pl *PlaylistRepo) GetAllUserPlaylists(ctx context.Context, userId string) ([]playlist.Playlist, error) {
 	query := `SELECT * FROM playlists WHERE owner_id = $1;`
 
-	rows, err := art.db.Query(ctx, query, userId)
+	rows, err := pl.db.Query(ctx, query, userId)
 	if err != nil {
 		log.Error().Err(err).Msg("err get all playlists by id db")
 		return nil, err
 	}
 
-	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[Playlist])
+	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[PlaylistRow])
 	if err != nil {
 		log.Error().Err(err).Msg("err collect all playlists by id")
 		return nil, err
 	}
 
-	return data, nil
+	return PlayListsToDomain(data), nil
 }
 
 type CreatePlaylistReq struct {
@@ -187,13 +181,13 @@ type CreatePlaylistReq struct {
 	IsPublic     bool
 }
 
-func (art *ArtistRepo) CreatePlaylist(ctx context.Context, cp CreatePlaylistReq) error {
+func (pl *PlaylistRepo) CreatePlaylist(ctx context.Context, cp CreatePlaylistReq) error {
 	query := `
 	INSERT INTO playlists (owner_id, playlist_name, description, image, is_public)
 	VALUES ($1, $2, $3, $4, $5)
 	`
 
-	_, err := art.db.Exec(ctx, query, cp.OwnerID, cp.PlaylistName, cp.Description, cp.Image, cp.IsPublic)
+	_, err := pl.db.Exec(ctx, query, cp.OwnerID, cp.PlaylistName, cp.Description, cp.Image, cp.IsPublic)
 	if err != nil {
 		log.Error().Err(err).Msg("err create playlist")
 		return err

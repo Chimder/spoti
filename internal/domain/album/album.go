@@ -1,19 +1,37 @@
 package album
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+// type Album struct {
+// 	ID          uuid.UUID
+// 	AlbumType   string
+// 	TotalTracks int
+// 	Images      string
+// 	Name        string
+// 	ReleaseDate string
+// 	URI         string
+// 	Tracks      []AlbumTracks
+// 	Artists     []AlbumArtist
+// 	Copyrights  string
+// 	Genres      []string
+// 	Label       string
+// 	Popularity  int
+// }
 
 type Album struct {
 	ID          uuid.UUID
-	AlbumType   string //"album", "single", "compilation"
-	TotalTracks int
-	Images      string
+	AlbumType   string
+	TotalTracks int16
+	Image       string
 	Name        string
-	ReleaseDate string
 	URI         string
-	Tracks      []AlbumTracks
-	Artists     []AlbumArtist
 	Copyrights  string
-	Genres      []string
 	Label       string
-	Popularity  int
+	Popularity  int16
+	ReleaseDate time.Time
+	CreatedAt   time.Time
 }

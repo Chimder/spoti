@@ -2,23 +2,12 @@ package postgres
 
 import (
 	"context"
-	"time"
+	"spoti/internal/domain/user"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
-
-type User struct {
-	ID            uuid.UUID `db:"id"`
-	UserName      string    `db:"user_name"`
-	Email         string    `db:"email"`
-	Image         string    `db:"image"`
-	Followers     int64     `db:"followers"`
-	CreatedAt     time.Time `db:"created_at"`
-	PremiumStatus bool      `db:"premium_status"`
-}
 
 type UserRepo struct {
 	db *pgxpool.Pool
@@ -30,21 +19,20 @@ func NewUserRepo(db *pgxpool.Pool) *UserRepo {
 	}
 }
 
-func (ur *UserRepo) GetUserById(ctx context.Context, userId string) (User, error) {
-
+func (ur *UserRepo) GetUserById(ctx context.Context, userId string) (user.User, error) {
 	rows, err := ur.db.Query(ctx, "SELECT * FROM users WHERE id = $1", userId)
 	if err != nil {
 		log.Error().Err(err).Msg("err get user by id")
-		return User{}, err
+		return user.User{}, err
 	}
 
 	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[User])
 	if err != nil {
 		log.Error().Err(err).Msg("err collect user info by id")
-		return User{}, err
+		return user.User{}, err
 	}
 
-	return data, nil
+	return data.ToDomain(), nil
 }
 
 func (ur *UserRepo) FollowUserToPlaylist(ctx context.Context, userId, playlistId string) error {

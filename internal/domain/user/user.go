@@ -5,10 +5,10 @@ import (
 )
 
 type User struct {
-	id            uuid.UUID
-	name          string
-	email         string
-	image         string
-	followers     uint32
-	premiumStatus bool
+	Id            uuid.UUID
+	Name          string
+	Email         string
+	Image         string
+	Followers     uint32
+	PremiumStatus bool
 }
