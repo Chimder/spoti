@@ -30,6 +30,7 @@ create table if not exists artist_tracks (
 );
 
 create index idx_artist_tracks_track_id on artist_tracks (track_id);
+
 create table if not exists playlist_tracks (
     playlist_id uuid not null references playlists (id) on delete cascade,
     track_id uuid not null references tracks (id) on delete cascade,

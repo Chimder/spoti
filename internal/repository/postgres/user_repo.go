@@ -4,6 +4,7 @@ import (
 	"context"
 	"spoti/internal/domain/user"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
@@ -17,6 +18,24 @@ func NewUserRepo(db *pgxpool.Pool) *UserRepo {
 	return &UserRepo{
 		db: db,
 	}
+}
+func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
+	query := `
+			INSERT INTO users (user_name, email, image)
+			VALUES ($1, $2, $3, $4, $5)
+			RETURNING id
+		`
+
+	var id uuid.UUID
+	err := ur.db.QueryRow(ctx, query,
+		user.Name, user.Email, user.Image,
+	).Scan(&id)
+	if err != nil {
+		log.Error().Err(err).Msg("err create user")
+		return uuid.UUID{}, err
+	}
+
+	return id, err
 }
 
 func (ur *UserRepo) GetUserById(ctx context.Context, userId string) (user.User, error) {

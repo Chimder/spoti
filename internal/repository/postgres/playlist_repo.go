@@ -21,6 +21,22 @@ func NewPlaylistRepo(db *pgxpool.Pool) *PlaylistRepo {
 	}
 }
 
+func (pl *PlaylistRepo) CreatePlaylist(ctx context.Context, p playlist.CreatePlaylistReq) (uuid.UUID, error) {
+	query := `
+INSERT INTO playlists (owner_id, playlist_name, description, image, is_public)
+VALUES ($1, $2, $3, $4, $5)
+RETURNING id
+`
+	var id uuid.UUID
+	err := pl.db.QueryRow(ctx, query, p.OwnerId, p.PlaylistName, p.Description, p.Image, p.IsPublic).Scan(&id)
+	if err != nil {
+		log.Error().Err(err).Msg("err create playlist")
+		return uuid.UUID{}, err
+	}
+
+	return id, err
+}
+
 func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, limit, offset int) (playlist.PlaylistJson, error) {
 	if limit <= 0 || limit > 20 {
 		limit = 20
@@ -68,7 +84,6 @@ func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, 
 	SELECT
 		to_jsonb(pi.*) ||
 		jsonb_build_object(
-			'collaborative', false,
 			'tracks', jsonb_build_object(
 				'total', pi.total,
 				'limit', $2,
@@ -171,27 +186,4 @@ func (pl *PlaylistRepo) GetAllUserPlaylists(ctx context.Context, userId string) 
 	}
 
 	return PlayListsToDomain(data), nil
-}
-
-type CreatePlaylistReq struct {
-	OwnerID      uuid.UUID
-	PlaylistName string
-	Description  string
-	Image        string
-	IsPublic     bool
-}
-
-func (pl *PlaylistRepo) CreatePlaylist(ctx context.Context, cp CreatePlaylistReq) error {
-	query := `
-	INSERT INTO playlists (owner_id, playlist_name, description, image, is_public)
-	VALUES ($1, $2, $3, $4, $5)
-	`
-
-	_, err := pl.db.Exec(ctx, query, cp.OwnerID, cp.PlaylistName, cp.Description, cp.Image, cp.IsPublic)
-	if err != nil {
-		log.Error().Err(err).Msg("err create playlist")
-		return err
-	}
-
-	return err
 }

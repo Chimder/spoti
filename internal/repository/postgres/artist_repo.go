@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"spoti/internal/domain/artist"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 type ArtistRepo struct {
@@ -17,6 +19,22 @@ func NewArtistRepo(db *pgxpool.Pool) *ArtistRepo {
 	return &ArtistRepo{
 		db: db,
 	}
+}
+
+func (art *ArtistRepo) CreateArtist(ctx context.Context, a artist.CreateArtistReq) (uuid.UUID, error) {
+	query := `
+	INSERT INTO artists (url, uri, artist_name, image)
+	VALUES ($1, $2, $3, $4, $5, $6, $7)
+	RETURNING id
+	`
+	var id uuid.UUID
+	err := art.db.QueryRow(ctx, query, a.Url, a.Uri, a.ArtistName, a.Image).Scan(&id)
+	if err != nil {
+		log.Error().Err(err).Msg("err create artist")
+		return uuid.UUID{}, err
+	}
+
+	return id, err
 }
 
 func (art *ArtistRepo) GetArtist(ctx context.Context, artistId string) (artist.Artist, error) {

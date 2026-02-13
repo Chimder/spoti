@@ -22,7 +22,25 @@ func NewAlbumRepo(db *pgxpool.Pool) *AlbumRepo {
 	}
 }
 
-func (t *AlbumRepo) GetAlbum(ctx context.Context, albumID string) (json.RawMessage, error) {
+func (al *AlbumRepo) CreateAlbum(ctx context.Context, a album.CreateAlbumReq) (uuid.UUID, error) {
+	query := `
+	INSERT INTO albums (album_type, total_tracks, image, album_name, uri, copyrights, album_label, release_date)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+	RETURNING id
+`
+	var id uuid.UUID
+	err := al.db.QueryRow(ctx, query, a.AlbumType, a.TotalTracks, a.Image,
+		a.AlbumName, a.Uri, a.Copyrights, a.AlbumLabel, a.ReleaseDate,
+	).Scan(&id)
+	if err != nil {
+		log.Error().Err(err).Msg("err create album")
+		return uuid.UUID{}, err
+	}
+
+	return id, err
+}
+
+func (al *AlbumRepo) GetAlbum(ctx context.Context, albumID string) (json.RawMessage, error) {
 	query := `
 		WITH album AS (
     SELECT
@@ -104,7 +122,7 @@ LEFT JOIN tracks t ON TRUE;
 	`
 
 	var data json.RawMessage
-	err := t.db.QueryRow(ctx, query, albumID).Scan(&data)
+	err := al.db.QueryRow(ctx, query, albumID).Scan(&data)
 	if err != nil {
 		log.Error().Err(err).Msg("Get Album from db")
 		return nil, err

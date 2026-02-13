@@ -4,6 +4,7 @@ import (
 	"context"
 	"spoti/internal/domain/track"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
@@ -17,6 +18,25 @@ func NewTrackRepo(db *pgxpool.Pool) *TrackRepo {
 	return &TrackRepo{
 		db: db,
 	}
+}
+
+func (tr *TrackRepo) CreateTrack(ctx context.Context, t track.CreateTrackReq) (uuid.UUID, error) {
+	query := `
+	INSERT INTO tracks (
+	album_id, recording_id, track_name, track_number, disc_number, explicit, is_playable, track_type, uri, islocal
+	)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+	RETURNING id
+	`
+
+	var id uuid.UUID
+	err := tr.db.QueryRow(ctx, query, t.AlbumId, t.RecordingId, t.Name, t.Number,
+		t.DiscNumber, t.Explicit, t.IsPlayable, t.Type, t.URI, t.IsLocal).Scan(&id)
+	if err != nil {
+		return uuid.UUID{}, err
+	}
+
+	return id, err
 }
 
 func (tr *TrackRepo) GetTrackById(ctx context.Context, trackId string) (track.Track, error) {

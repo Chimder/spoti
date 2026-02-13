@@ -18,12 +18,6 @@ type Track struct {
 	TrackType   string    `db:"track_type"`
 	URI         string    `db:"uri"`
 	IsLocal     bool      `db:"islocal"`
-
-	ISRC       string `db:"isrc"`
-	DurationMs int64  `db:"duration_ms"`
-	Popularity int    `db:"popularity"`
-	PlayCount  int64  `db:"play_count"`
-	AudioURI   string `db:"audio_uri"`
 }
 
 func (t *Track) ToDomain() track.Track {
@@ -39,11 +33,6 @@ func (t *Track) ToDomain() track.Track {
 		Type:        t.TrackType,
 		URI:         t.URI,
 		IsLocal:     t.IsLocal,
-		ISRC:        t.ISRC,
-		DurationMs:  t.DurationMs,
-		Popularity:  t.Popularity,
-		PlayCount:   t.PlayCount,
-		AudioURI:    t.AudioURI,
 	}
 }
 
