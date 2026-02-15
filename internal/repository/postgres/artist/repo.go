@@ -1,4 +1,4 @@
-package postgres
+package artistrepo
 
 import (
 	"context"
@@ -24,7 +24,7 @@ func NewArtistRepo(db *pgxpool.Pool) *ArtistRepo {
 func (art *ArtistRepo) CreateArtist(ctx context.Context, a artist.CreateArtistReq) (uuid.UUID, error) {
 	query := `
 	INSERT INTO artists (url, uri, artist_name, image)
-	VALUES ($1, $2, $3, $4, $5, $6, $7)
+	VALUES ($1, $2, $3, $4)
 	RETURNING id
 	`
 	var id uuid.UUID

@@ -1,4 +1,4 @@
-package postgres
+package playlistrepo
 
 import (
 	"spoti/internal/domain/playlist"

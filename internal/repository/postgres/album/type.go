@@ -1,4 +1,4 @@
-package postgres
+package albumrepo
 
 import (
 	"spoti/internal/domain/album"

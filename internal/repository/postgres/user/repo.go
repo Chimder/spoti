@@ -1,4 +1,4 @@
-package postgres
+package userrepo
 
 import (
 	"context"
@@ -22,7 +22,7 @@ func NewUserRepo(db *pgxpool.Pool) *UserRepo {
 func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
 	query := `
 			INSERT INTO users (user_name, email, image)
-			VALUES ($1, $2, $3, $4, $5)
+			VALUES ($1, $2, $3)
 			RETURNING id
 		`
 
@@ -38,7 +38,7 @@ func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uu
 	return id, err
 }
 
-func (ur *UserRepo) GetUserById(ctx context.Context, userId string) (user.User, error) {
+func (ur *UserRepo) GetUserById(ctx context.Context, userId uuid.UUID) (user.User, error) {
 	rows, err := ur.db.Query(ctx, "SELECT * FROM users WHERE id = $1", userId)
 	if err != nil {
 		log.Error().Err(err).Msg("err get user by id")

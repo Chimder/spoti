@@ -3,16 +3,15 @@ package testhelpers
 import (
 	"context"
 	"database/sql"
-	"testing"
+	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
-	"github.com/stretchr/testify/require"
 	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
 )
 
-func setupTestDB(t *testing.T) *pgxpool.Pool {
+func SetupContainerDB() *pgxpool.Pool {
 	ctx := context.Background()
 
 	pgContainer, err := tcpostgres.Run(ctx,
@@ -22,23 +21,29 @@ func setupTestDB(t *testing.T) *pgxpool.Pool {
 		tcpostgres.WithPassword("password"),
 		tcpostgres.BasicWaitStrategies(),
 	)
-	require.NoError(t, err)
-
-	t.Cleanup(func() {
-		_ = pgContainer.Terminate(ctx)
-	})
+	if err != nil {
+		panic(fmt.Sprintf("err start pgContainer: %v", err))
+	}
 
 	connStr, err := pgContainer.ConnectionString(ctx, "sslmode=disable")
-	require.NoError(t, err)
+	if err != nil {
+		panic(fmt.Sprintf("err pgContainer conn: %v", err))
+	}
 
 	sqlDB, err := sql.Open("pgx", connStr)
-	require.NoError(t, err)
+	if err != nil {
+		panic(fmt.Sprintf("err to open sql: %v", err))
+	}
 
-	err = goose.Up(sqlDB, "../../sql/migration")
-	require.NoError(t, err)
+	err = goose.Up(sqlDB, "../../../../sql/migrations/postgres")
+	if err != nil {
+		panic(fmt.Sprintf("err goose up: %v", err))
+	}
 
 	pool, err := pgxpool.New(ctx, connStr)
-	require.NoError(t, err)
+	if err != nil {
+		panic(fmt.Sprintf("err pgxpoolNew: %v", err))
+	}
 
 	return pool
 }

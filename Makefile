@@ -4,6 +4,9 @@ export $(shell sed 's/=.*//' .env)
 PostgresDIR = sql/migrations/postgres
 ClickhouseDIR = sql/migrations/clickhouse
 
+test:
+	go test ./...
+
 dev:
 	go run ./cmd
 

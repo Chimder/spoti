@@ -1,4 +1,4 @@
-package postgres
+package artistrepo
 
 import (
 	"spoti/internal/domain/artist"

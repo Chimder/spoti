@@ -38,7 +38,7 @@ services:
       CLICKHOUSE_USER: default
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     volumes:
-      - spotiData:/var/lib/clickhouse
+      - clickhouseData:/var/lib/clickhouse
     ports:
       - "8123:8123"
       - "9000:9000"
@@ -68,3 +68,4 @@ services:
 
 volumes:
   spotiData:
+  clickhouseData:
