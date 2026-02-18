@@ -8,7 +8,7 @@ import (
 )
 
 type Artist struct {
-	ID         uuid.UUID `db:"id"`
+	Id         uuid.UUID `db:"id"`
 	URL        string    `db:"url"`
 	URI        string    `db:"uri"`
 	ArtistName string    `db:"artist_name"`
@@ -21,7 +21,7 @@ type Artist struct {
 
 func (a *Artist) ToDomain() artist.Artist {
 	return artist.Artist{
-		ID:         a.ID,
+		Id:         a.Id,
 		Url:        a.URL,
 		URI:        a.URI,
 		Name:       a.ArtistName,
@@ -35,8 +35,8 @@ func (a *Artist) ToDomain() artist.Artist {
 
 func ArtistsToDomain(rows []Artist) []artist.Artist {
 	result := make([]artist.Artist, len(rows))
-	for _, row := range rows {
-		result = append(result, row.ToDomain())
+	for i, row := range rows {
+		result[i] = row.ToDomain()
 	}
 	return result
 }

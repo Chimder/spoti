@@ -10,8 +10,11 @@ import (
 	"spoti/internal/domain/recording"
 	"spoti/internal/domain/track"
 	"spoti/internal/domain/user"
+	albumrepo "spoti/internal/repository/postgres/album"
 	artistrepo "spoti/internal/repository/postgres/artist"
 	playlistrepo "spoti/internal/repository/postgres/playlist"
+	recordingrepo "spoti/internal/repository/postgres/recording"
+	trackrepo "spoti/internal/repository/postgres/track"
 	userrepo "spoti/internal/repository/postgres/user"
 	"testing"
 	"time"
@@ -37,10 +40,36 @@ func CreateTestArtist(t *testing.T, repo *artistrepo.ArtistRepo) uuid.UUID {
 
 	return id
 }
+func CreateTestAlbum(t *testing.T, repo *albumrepo.AlbumRepo) uuid.UUID {
+	t.Helper()
+
+	id, err := repo.CreateAlbum(context.Background(), GetFakeAlbums())
+	require.NoError(t, err)
+
+	return id
+}
 func CreateTestPlaylist(t *testing.T, repo *playlistrepo.PlaylistRepo, owner uuid.UUID) uuid.UUID {
 	t.Helper()
 
 	id, err := repo.CreatePlaylist(context.Background(), GetFakePlaylist(owner))
+	require.NoError(t, err)
+
+	return id
+}
+
+func CreateTestRecording(t *testing.T, repo *recordingrepo.RecordingRepo) uuid.UUID {
+	t.Helper()
+
+	id, err := repo.CreateRecording(context.Background(), GetFakeRecording())
+	require.NoError(t, err)
+
+	return id
+}
+
+func CreateTestTrack(t *testing.T, repo *trackrepo.TrackRepo, albumId, recordingId uuid.UUID, trackNum, discNum int) uuid.UUID {
+	t.Helper()
+
+	id, err := repo.CreateTrack(context.Background(), GetFakeTrack(albumId, recordingId, trackNum, discNum))
 	require.NoError(t, err)
 
 	return id

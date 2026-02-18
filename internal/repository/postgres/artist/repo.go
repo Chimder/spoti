@@ -54,7 +54,7 @@ func (art *ArtistRepo) GetArtist(ctx context.Context, artistId string) (artist.A
 func (art *ArtistRepo) GetArtistsByIDs(ctx context.Context, artistIds []string) ([]artist.Artist, error) {
 	query := `
         SELECT * FROM artists
-        WHERE id = ANY($1)
+        WHERE id = ANY($1::uuid[])
         ORDER BY created_at DESC
     `
 

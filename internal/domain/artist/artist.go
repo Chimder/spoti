@@ -7,7 +7,7 @@ import (
 )
 
 type Artist struct {
-	ID         uuid.UUID
+	Id         uuid.UUID
 	Url        string
 	Followers  uint64
 	Genres     []string

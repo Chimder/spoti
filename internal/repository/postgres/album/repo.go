@@ -25,7 +25,7 @@ func NewAlbumRepo(db *pgxpool.Pool) *AlbumRepo {
 func (al *AlbumRepo) CreateAlbum(ctx context.Context, a album.CreateAlbumReq) (uuid.UUID, error) {
 	query := `
 	INSERT INTO albums (album_type, total_tracks, image, album_name, uri, copyrights, album_label, release_date)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	RETURNING id
 `
 	var id uuid.UUID

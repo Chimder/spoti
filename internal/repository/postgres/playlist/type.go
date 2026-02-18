@@ -30,9 +30,9 @@ func (p *PlaylistRow) ToDomain() playlist.Playlist {
 	}
 }
 func PlayListsToDomain(rows []PlaylistRow) []playlist.Playlist {
-	result := make([]playlist.Playlist, 0, len(rows))
-	for _, row := range rows {
-		result = append(result, row.ToDomain())
+	result := make([]playlist.Playlist, len(rows))
+	for i, row := range rows {
+		result[i] = row.ToDomain()
 	}
 	return result
 }

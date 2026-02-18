@@ -1,4 +1,4 @@
-package postgres
+package trackrepo
 
 import (
 	"spoti/internal/domain/track"
@@ -7,7 +7,7 @@ import (
 )
 
 type Track struct {
-	ID          uuid.UUID `db:"id"`
+	Id          uuid.UUID `db:"id"`
 	AlbumID     uuid.UUID `db:"album_id"`
 	RecordingID uuid.UUID `db:"recording_id"`
 	TrackName   string    `db:"track_name"`
@@ -18,13 +18,18 @@ type Track struct {
 	TrackType   string    `db:"track_type"`
 	URI         string    `db:"uri"`
 	IsLocal     bool      `db:"islocal"`
+	ISRC        string    `db:"isrc"`
+	DurationMs  int64     `db:"duration_ms"`
+	Popularity  int32     `db:"popularity"`
+	PlayCount   int64     `db:"play_count"`
+	AudioURI    string    `db:"audio_uri"`
 }
 
 func (t *Track) ToDomain() track.Track {
 	return track.Track{
-		ID:          t.ID,
-		AlbumID:     t.AlbumID,
-		RecordingID: t.RecordingID,
+		Id:          t.Id,
+		AlbumId:     t.AlbumID,
+		RecordingId: t.RecordingID,
 		Name:        t.TrackName,
 		Number:      t.TrackNumber,
 		DiscNumber:  t.DiscNumber,
@@ -33,13 +38,17 @@ func (t *Track) ToDomain() track.Track {
 		Type:        t.TrackType,
 		URI:         t.URI,
 		IsLocal:     t.IsLocal,
+		ISRC:        t.ISRC,
+		DurationMs:  t.DurationMs,
+		Popularity:  t.Popularity,
+		PlayCount:   t.PlayCount,
+		AudioURI:    t.AudioURI,
 	}
 }
-
 func TracksToDomain(rows []Track) []track.Track {
 	result := make([]track.Track, len(rows))
-	for _, row := range rows {
-		result = append(result, row.ToDomain())
+	for i, row := range rows {
+		result[i] = row.ToDomain()
 	}
 	return result
 }

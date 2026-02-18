@@ -1,4 +1,4 @@
-package postgres
+package recordingrepo
 
 import (
 	"spoti/internal/domain/recording"
@@ -8,7 +8,7 @@ import (
 )
 
 type RecordingDB struct {
-	ID         uuid.UUID `db:"id"`
+	Id         uuid.UUID `db:"id"`
 	ISRC       string    `db:"isrc"`
 	DurationMs int64     `db:"duration_ms"`
 	Popularity int       `db:"popularity"`
@@ -19,7 +19,7 @@ type RecordingDB struct {
 
 func (r *RecordingDB) ToDomain() recording.Recording {
 	return recording.Recording{
-		ID:         r.ID,
+		Id:         r.Id,
 		ISRC:       r.ISRC,
 		DurationMs: r.DurationMs,
 		Popularity: r.Popularity,

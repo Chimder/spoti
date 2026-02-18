@@ -30,8 +30,8 @@ func (u *User) ToDomain() user.User {
 
 func UsersToDomain(rows []User) []user.User {
 	result := make([]user.User, len(rows))
-	for _, row := range rows {
-		result = append(result, row.ToDomain())
+	for i, row := range rows {
+		result[i] = row.ToDomain()
 	}
 	return result
 }

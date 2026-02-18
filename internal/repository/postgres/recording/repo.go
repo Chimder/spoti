@@ -1,4 +1,4 @@
-package postgres
+package recordingrepo
 
 import (
 	"context"
@@ -41,13 +41,13 @@ func (rc *RecordingRepo) GetRecordingById(ctx context.Context, recordingId strin
 
 	rows, err := rc.db.Query(ctx, query, recordingId)
 	if err != nil {
-		log.Error().Err(err).Msg("err get track by id")
+		log.Error().Err(err).Msg("err get recording by id")
 		return recording.Recording{}, err
 	}
 
 	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[RecordingDB])
 	if err != nil {
-		log.Error().Err(err).Msg("err collect track by id")
+		log.Error().Err(err).Msg("err collect recording by id")
 		return recording.Recording{}, err
 	}
 

@@ -7,7 +7,7 @@ import (
 )
 
 type Recording struct {
-	ID         uuid.UUID
+	Id         uuid.UUID
 	ISRC       string
 	DurationMs int64
 	Popularity int
