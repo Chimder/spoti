@@ -3,22 +3,23 @@ package recordingrepo
 import (
 	"context"
 	"spoti/internal/domain/recording"
+	"spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
 type RecordingRepo struct {
-	db *pgxpool.Pool
+	db pgiface.Querier
 }
 
-func NewRecordingRepo(db *pgxpool.Pool) *RecordingRepo {
+func NewRecordingRepo(db pgiface.Querier) *RecordingRepo {
 	return &RecordingRepo{
 		db: db,
 	}
 }
+
 func (rc *RecordingRepo) CreateRecording(ctx context.Context, r recording.CreateRecordingReq) (uuid.UUID, error) {
 	query := `
 			INSERT INTO recordings (isrc, duration_ms, audio_uri)

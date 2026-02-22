@@ -4,18 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"spoti/internal/domain/playlist"
+	"spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
 type PlaylistRepo struct {
-	db *pgxpool.Pool
+	db pgiface.Querier
 }
 
-func NewPlaylistRepo(db *pgxpool.Pool) *PlaylistRepo {
+func NewPlaylistRepo(db pgiface.Querier) *PlaylistRepo {
 	return &PlaylistRepo{
 		db: db,
 	}
@@ -124,13 +124,7 @@ WHERE playlist_id = $1;
 	return err
 }
 
-type UpdatePlaylistReq struct {
-	Name        *string `json:"name"`
-	Description *string `json:"description"`
-	Public      *bool   `json:"public"`
-}
-
-func (pl *PlaylistRepo) UpdatePlaylist(ctx context.Context, playlistId string, req UpdatePlaylistReq) error {
+func (pl *PlaylistRepo) UpdatePlaylist(ctx context.Context, playlistId string, req playlist.UpdatePlaylistReq) error {
 	query := `
         UPDATE playlists
         SET

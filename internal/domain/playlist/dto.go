@@ -9,3 +9,9 @@ type CreatePlaylistReq struct {
 	Image        string
 	IsPublic     bool
 }
+
+type UpdatePlaylistReq struct {
+	Name        *string `json:"name"`
+	Description *string `json:"description"`
+	Public      *bool   `json:"public"`
+}

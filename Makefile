@@ -7,6 +7,9 @@ ClickhouseDIR = sql/migrations/clickhouse
 test:
 	go test ./...
 
+test-cache:
+	go clean -testcache && go test ./...
+
 dev:
 	go run ./cmd
 

@@ -3,22 +3,24 @@ package userrepo
 import (
 	"context"
 	"spoti/internal/domain/user"
+	"spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
 type UserRepo struct {
-	db *pgxpool.Pool
+	db pgiface.Querier
 }
 
-func NewUserRepo(db *pgxpool.Pool) *UserRepo {
+func NewUserRepo(db pgiface.Querier) *UserRepo {
 	return &UserRepo{
 		db: db,
 	}
 }
+
+
 func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
 	query := `
 			INSERT INTO users (user_name, email, image)

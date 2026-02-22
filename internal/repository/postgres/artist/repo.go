@@ -4,18 +4,18 @@ import (
 	"context"
 	"fmt"
 	"spoti/internal/domain/artist"
+	"spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
 type ArtistRepo struct {
-	db *pgxpool.Pool
+	db pgiface.Querier
 }
 
-func NewArtistRepo(db *pgxpool.Pool) *ArtistRepo {
+func NewArtistRepo(db pgiface.Querier) *ArtistRepo {
 	return &ArtistRepo{
 		db: db,
 	}

@@ -3,18 +3,18 @@ package trackrepo
 import (
 	"context"
 	"spoti/internal/domain/track"
+	"spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
 type TrackRepo struct {
-	db *pgxpool.Pool
+	db pgiface.Querier
 }
 
-func NewTrackRepo(db *pgxpool.Pool) *TrackRepo {
+func NewTrackRepo(db pgiface.Querier) *TrackRepo {
 	return &TrackRepo{
 		db: db,
 	}

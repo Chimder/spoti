@@ -5,18 +5,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"spoti/internal/domain/album"
+	"spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
 
 type AlbumRepo struct {
-	db *pgxpool.Pool
+	db pgiface.Querier
 }
 
-func NewAlbumRepo(db *pgxpool.Pool) *AlbumRepo {
+func NewAlbumRepo(db pgiface.Querier) *AlbumRepo {
 	return &AlbumRepo{
 		db: db,
 	}

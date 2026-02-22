@@ -2,6 +2,7 @@ package playlistrepo_test
 
 import (
 	"context"
+	"spoti/internal/domain/playlist"
 	albumrepo "spoti/internal/repository/postgres/album"
 	playlistrepo "spoti/internal/repository/postgres/playlist"
 	recordingrepo "spoti/internal/repository/postgres/recording"
@@ -137,7 +138,7 @@ func TestPlaylistRepo_UpdatePlaylist(t *testing.T) {
 
 	t.Run("update name only", func(t *testing.T) {
 		newName := "Updated Name"
-		err := playlistRepo.UpdatePlaylist(ctx, playlistId.String(), playlistrepo.UpdatePlaylistReq{
+		err := playlistRepo.UpdatePlaylist(ctx, playlistId.String(), playlist.UpdatePlaylistReq{
 			Name: &newName,
 		})
 		require.NoError(t, err)
@@ -153,7 +154,7 @@ func TestPlaylistRepo_UpdatePlaylist(t *testing.T) {
 		desc := "New"
 		public := true
 
-		err := playlistRepo.UpdatePlaylist(ctx, playlistId.String(), playlistrepo.UpdatePlaylistReq{
+		err := playlistRepo.UpdatePlaylist(ctx, playlistId.String(), playlist.UpdatePlaylistReq{
 			Name:        &name,
 			Description: &desc,
 			Public:      &public,
@@ -162,13 +163,13 @@ func TestPlaylistRepo_UpdatePlaylist(t *testing.T) {
 	})
 
 	t.Run("update with nil", func(t *testing.T) {
-		err := playlistRepo.UpdatePlaylist(ctx, playlistId.String(), playlistrepo.UpdatePlaylistReq{})
+		err := playlistRepo.UpdatePlaylist(ctx, playlistId.String(), playlist.UpdatePlaylistReq{})
 		require.NoError(t, err)
 	})
 
 	t.Run("update non-exis playlist", func(t *testing.T) {
 		name := "bad"
-		err := playlistRepo.UpdatePlaylist(ctx, uuid.New().String(), playlistrepo.UpdatePlaylistReq{
+		err := playlistRepo.UpdatePlaylist(ctx, uuid.New().String(), playlist.UpdatePlaylistReq{
 			Name: &name,
 		})
 		require.NoError(t, err)
