@@ -56,7 +56,7 @@ func (ur *UserRepo) GetUserById(ctx context.Context, userId uuid.UUID) (user.Use
 	return data.ToDomain(), nil
 }
 
-func (ur *UserRepo) FollowUserToPlaylist(ctx context.Context, userId, playlistId string) error {
+func (ur *UserRepo) FollowUserToPlaylist(ctx context.Context, userId, playlistId uuid.UUID) error {
 	query := `
 	INSERT INTO user_saved_playlists (user_id, playlist_id)
 	VALUES ($1, $2)
@@ -71,7 +71,7 @@ func (ur *UserRepo) FollowUserToPlaylist(ctx context.Context, userId, playlistId
 
 	return nil
 }
-func (ur *UserRepo) UnfollowUserFromPlaylist(ctx context.Context, userId, playlistId string) error {
+func (ur *UserRepo) UnfollowUserFromPlaylist(ctx context.Context, userId, playlistId uuid.UUID) error {
 	query := `
 	DELETE FROM user_saved_playlists
 	WHERE user_id = $1 AND playlist_id = $2
@@ -86,7 +86,7 @@ func (ur *UserRepo) UnfollowUserFromPlaylist(ctx context.Context, userId, playli
 	return nil
 }
 
-func (ur *UserRepo) FollowUserToArtist(ctx context.Context, userId, artistId string) error {
+func (ur *UserRepo) FollowUserToArtist(ctx context.Context, userId, artistId uuid.UUID) error {
 	query := `
 	INSERT INTO user_saved_artists (user_id, artist_id)
 	VALUES ($1, $2)
@@ -101,7 +101,7 @@ func (ur *UserRepo) FollowUserToArtist(ctx context.Context, userId, artistId str
 
 	return nil
 }
-func (ur *UserRepo) UnfollowUserFromArtist(ctx context.Context, userId, artistId string) error {
+func (ur *UserRepo) UnfollowUserFromArtist(ctx context.Context, userId, artistId uuid.UUID) error {
 	query := `
 	DELETE FROM user_saved_artists
 	WHERE user_id = $1 AND artist_id = $2

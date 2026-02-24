@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func Conn(ctx context.Context, url string) (*pgxpool.Pool, error) {
+func NewConn(ctx context.Context, url string) (*pgxpool.Pool, error) {
 
 	config, err := pgxpool.ParseConfig(url)
 	if err != nil {

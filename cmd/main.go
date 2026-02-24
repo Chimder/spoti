@@ -25,14 +25,14 @@ func main() {
 	cfg := config.LoadEnv()
 	SetupLogger(cfg)
 
-	dbconn, err := postgres_db.Conn(ctx, cfg.PostgresUrl)
+	dbconn, err := postgres_db.NewConn(ctx, cfg.PostgresUrl)
 	if err != nil {
 		log.Panic().Msg("Err conn to db")
 		return
 	}
 
 	log.Info().Any("", dbconn).Msg("d")
-	r := httpgin.Init()
+	r := httpgin.Init(ctx, dbconn)
 	srv := &http.Server{
 		Addr:         ":8080",
 		Handler:      r,
