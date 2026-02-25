@@ -40,7 +40,21 @@ func (al *AlbumRepo) CreateAlbum(ctx context.Context, a album.CreateAlbumReq) (u
 	return id, err
 }
 
-func (al *AlbumRepo) GetAlbum(ctx context.Context, albumID string) (json.RawMessage, error) {
+func (al *AlbumRepo) GetAlbum(ctx context.Context, albumID string) (album.Album, error) {
+	query := `SELECT * FROM albums WHERE id = $1`
+
+	rows, err := al.db.Query(ctx, query, albumID)
+	if err != nil {
+		return album.Album{}, fmt.Errorf("err fetch album by id %w", err)
+	}
+	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[Album])
+	if err != nil {
+		return album.Album{}, fmt.Errorf("err row album %w", err)
+	}
+	return data.ToDomain(), nil
+}
+
+func (al *AlbumRepo) GetAlbumJson(ctx context.Context, albumID string) (json.RawMessage, error) {
 	query := `
 		WITH album AS (
     SELECT
@@ -329,6 +343,12 @@ func (al *AlbumRepo) SaveAlbumsForCurrentUser(ctx context.Context, albumIds []st
 		return err
 	}
 	return nil
+}
+
+func (r *AlbumRepo) AddArtistToAlbum(ctx context.Context, albumID, artistID uuid.UUID) error {
+	query := `INSERT INTO album_artists (album_id, artist_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`
+	_, err := r.db.Exec(ctx, query, albumID, artistID)
+	return err
 }
 
 func (al *AlbumRepo) RemoveAlbumsFromCurrentUser(ctx context.Context, albumIds []string, userId string) error {

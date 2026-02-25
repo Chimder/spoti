@@ -10,7 +10,7 @@ import (
 type Album struct {
 	ID          uuid.UUID `db:"id"`
 	AlbumType   string    `db:"album_type"`
-	TotalTracks int16     `db:"total_tracks"`
+	TotalTracks int     `db:"total_tracks"`
 	Image       string    `db:"image"`
 	AlbumName   string    `db:"album_name"`
 	URI         string    `db:"uri"`

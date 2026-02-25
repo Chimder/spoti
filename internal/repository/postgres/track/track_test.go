@@ -16,8 +16,8 @@ import (
 
 func setTrackDeps(t *testing.T, albumRepo *albumrepo.AlbumRepo, recRepo *recordingrepo.RecordingRepo) (uuid.UUID, uuid.UUID) {
 	t.Helper()
-	albumId := testhelpers.CreateTestAlbum(t, albumRepo)
-	recId := testhelpers.CreateTestRecording(t, recRepo)
+	albumId, err := testhelpers.CreateAlbum(albumRepo)
+	recId, err := testhelpers.CreateRecording(recRepo)
 	return albumId, recId
 }
 
@@ -30,7 +30,7 @@ func TestTrackRepo_CreateTrack(t *testing.T) {
 	t.Run("ok create track", func(t *testing.T) {
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
 
-		id := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId, 1, 1)
+		id, err := testhelpers.CreateTrack(trackRepo, albumId, recId, 1, 1)
 
 		assert.NotEqual(t, uuid.Nil, id)
 	})
@@ -39,23 +39,23 @@ func TestTrackRepo_CreateTrack(t *testing.T) {
 		ctx := context.Background()
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
 
-		_, err := trackRepo.CreateTrack(ctx, testhelpers.GetFakeTrack(albumId, recId, 1, 1))
+		_, err := trackRepo.CreateTrack(ctx, testhelpers.FakeTrack(albumId, recId, 1, 1))
 		require.NoError(t, err)
 
-		recId2 := testhelpers.CreateTestRecording(t, recRepo)
-		_, err = trackRepo.CreateTrack(ctx, testhelpers.GetFakeTrack(albumId, recId2, 1, 1))
+		recId2,err := testhelpers.CreateRecording(recRepo)
+		_, err = trackRepo.CreateTrack(ctx, testhelpers.FakeTrack(albumId, recId2, 1, 1))
 		assert.Error(t, err)
 	})
 
 	t.Run("same track number on not same disc", func(t *testing.T) {
 		ctx := context.Background()
 		albumId, recId1 := setTrackDeps(t, albumRepo, recRepo)
-		recId2 := testhelpers.CreateTestRecording(t, recRepo)
+		recId2,err := testhelpers.CreateRecording(t, recRepo)
 
-		_, err := trackRepo.CreateTrack(ctx, testhelpers.GetFakeTrack(albumId, recId1, 1, 1))
+		_, err := trackRepo.CreateTrack(ctx, testhelpers.FakeTrack(albumId, recId1, 1, 1))
 		require.NoError(t, err)
 
-		_, err = trackRepo.CreateTrack(ctx, testhelpers.GetFakeTrack(albumId, recId2, 1, 2))
+		_, err = trackRepo.CreateTrack(ctx, testhelpers.FakeTrack(albumId, recId2, 1, 2))
 		require.NoError(t, err)
 	})
 }
@@ -69,7 +69,7 @@ func TestTrackRepo_GetTrackById(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
-		id := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId, 1, 1)
+		id,err := testhelpers.CreateTrack(t, trackRepo, albumId, recId, 1, 1)
 
 		got, err := trackRepo.GetTrackById(ctx, id.String())
 
@@ -97,10 +97,10 @@ func TestTrackRepo_GetTracksByIds(t *testing.T) {
 
 	t.Run("return all tracks", func(t *testing.T) {
 		albumId, recId1 := setTrackDeps(t, albumRepo, recRepo)
-		recId2 := testhelpers.CreateTestRecording(t, recRepo)
+		recId2 := testhelpers.CreateRecording(t, recRepo)
 
-		id1 := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId1, 1, 1)
-		id2 := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId2, 2, 1)
+		id1,err := testhelpers.CreateTrack(t, trackRepo, albumId, recId1, 1, 1)
+		id2,err := testhelpers.CreateTrack(t, trackRepo, albumId, recId2, 2, 1)
 
 		got, err := trackRepo.GetTracksByIds(ctx, []string{id1.String(), id2.String()})
 
@@ -110,7 +110,7 @@ func TestTrackRepo_GetTracksByIds(t *testing.T) {
 
 	t.Run("miss id", func(t *testing.T) {
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
-		id := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId, 1, 1)
+		id,err := testhelpers.CreateTrack(t, trackRepo, albumId, recId, 1, 1)
 
 		got, err := trackRepo.GetTracksByIds(ctx, []string{id.String(), uuid.New().String()})
 
@@ -135,11 +135,11 @@ func TestTrackRepo_GetArtistTracks(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("all artist tracks", func(t *testing.T) {
-		artistId := testhelpers.CreateTestArtist(t, artistRepo)
+		artistId,err := testhelpers.CreateArtist( artistRepo)
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
-		trackId := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId, 1, 1)
+		trackId,err := testhelpers.CreateTrack( trackRepo, albumId, recId, 1, 1)
 
-		_, err := db.Exec(ctx,
+		_, err = db.Exec(ctx,
 			`INSERT INTO artist_tracks (artist_id, track_id) VALUES ($1, $2)`,
 			artistId, trackId,
 		)
@@ -153,7 +153,7 @@ func TestTrackRepo_GetArtistTracks(t *testing.T) {
 	})
 
 	t.Run("artist with no tracks", func(t *testing.T) {
-		artistId := testhelpers.CreateTestArtist(t, artistRepo)
+		artistId := testhelpers.CreateArtist(t, artistRepo)
 
 		got, err := trackRepo.GetArtistTracks(ctx, artistId.String())
 

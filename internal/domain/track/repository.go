@@ -11,4 +11,5 @@ type TrackRepository interface {
 	GetTrackById(ctx context.Context, trackId string) (Track, error)
 	GetTracksByIds(ctx context.Context, trackIds []string) ([]Track, error)
 	GetArtistTracks(ctx context.Context, artistId string) ([]Track, error)
+	AddArtistToTrack(ctx context.Context, trackID, artistID uuid.UUID) error
 }

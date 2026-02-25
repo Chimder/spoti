@@ -5,9 +5,11 @@ import (
 	// "csTrade/internal/handlers/middleware"
 
 	"context"
+	"spoti/internal/repository/clickhouse"
 	"spoti/internal/repository/postgres"
 	"spoti/internal/service"
 
+	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -15,7 +17,7 @@ import (
 	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Init(ctx context.Context, dbconn *pgxpool.Pool) *gin.Engine {
+func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn) *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://*", "http://*"},
@@ -26,7 +28,8 @@ func Init(ctx context.Context, dbconn *pgxpool.Pool) *gin.Engine {
 		MaxAge:           300,
 	}))
 
-	repo := postgres.NewRepository(dbconn)
+	repo := postgres.NewRepository(dbConn)
+	clickHouseRepo := clickhouse.NewListeningEventRepo(clkhConn)
 
 	userService := service.NewUserService(repo)
 	albumService := service.NewAlbumService(repo)
@@ -40,12 +43,19 @@ func Init(ctx context.Context, dbconn *pgxpool.Pool) *gin.Engine {
 	playlistHandler := NewPlaylistHandler(playlistService)
 	trackHandler := NewTrackHandler(*trackService)
 
+	listeningEventHandler := NewListeningEventHandler(clickHouseRepo)
+
 	{
 		// r.GET("/swagger", ginSwagger.WrapHandler(swaggerfiles.Handler))
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 		r.GET("/healthz", func(c *gin.Context) {
 			c.String(200, "ok")
 		})
+	}
+
+	event := r.Group("/event")
+	{
+		event.GET("/listening", listeningEventHandler.AddEvent)
 	}
 
 	users := r.Group("/users")

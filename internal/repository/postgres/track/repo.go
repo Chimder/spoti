@@ -111,3 +111,12 @@ func (tr *TrackRepo) GetArtistTracks(ctx context.Context, artistId string) ([]tr
 
 	return TracksToDomain(data), nil
 }
+func (r *TrackRepo) AddArtistToTrack(ctx context.Context, trackID, artistID uuid.UUID) error {
+	query := `
+        INSERT INTO artist_tracks (artist_id, track_id)
+        VALUES ($1, $2)
+        ON CONFLICT DO NOTHING
+    `
+	_, err := r.db.Exec(ctx, query, artistID, trackID)
+	return err
+}

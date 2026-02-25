@@ -25,8 +25,8 @@ func (as *AlbumService) CreateAlbum(ctx context.Context, a album.CreateAlbumReq)
 	return nil
 }
 
-func (as *AlbumService) GetAlbum(ctx context.Context, albumID string) (json.RawMessage, error) {
-	return as.repo.Album.GetAlbum(ctx, albumID)
+func (as *AlbumService) GetAlbumJson(ctx context.Context, albumID string) (json.RawMessage, error) {
+	return as.repo.Album.GetAlbumJson(ctx, albumID)
 }
 
 func (as *AlbumService) GetAlbumsByIds(ctx context.Context, albumIDs []string) (json.RawMessage, error) {

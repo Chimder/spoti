@@ -20,13 +20,14 @@ func TestUserRepo_CreateUser(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success create user", func(t *testing.T) {
-		userId := testhelpers.CreateTestUser(t, repo)
+		userId, err := testhelpers.CreateUser(repo)
+		require.NoError(t, err)
 
 		assert.NotEqual(t, uuid.Nil, userId)
 	})
 
 	t.Run("error duplicate email", func(t *testing.T) {
-		fakeUser := testhelpers.GetFakeUser()
+		fakeUser := testhelpers.FakeUser()
 
 		_, err := repo.CreateUser(ctx, fakeUser)
 		require.NoError(t, err)
@@ -42,7 +43,7 @@ func TestUserRepo_GetUserById(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("success existing user", func(t *testing.T) {
-		userId := testhelpers.CreateTestUser(t, repo)
+		userId, err := testhelpers.CreateUser(repo)
 
 		user, err := repo.GetUserById(ctx, userId)
 
@@ -68,8 +69,10 @@ func TestUserRepo_FollowUnfollowPlaylist(t *testing.T) {
 
 	ctx := context.Background()
 
-	userId := testhelpers.CreateTestUser(t, userRepo)
-	playlistId := testhelpers.CreateTestPlaylist(t, playlistRepo, userId)
+	userId, err := testhelpers.CreateUser(userRepo)
+	require.NoError(t, err)
+
+	playlistId, err := testhelpers.CreatePlaylist(playlistRepo, userId)
 
 	t.Run("follow success", func(t *testing.T) {
 		err := userRepo.FollowUserToPlaylist(ctx, userId, playlistId)
@@ -107,8 +110,11 @@ func TestUserRepo_FollowUnfollowArtist(t *testing.T) {
 	artistRepo := artistrepo.NewArtistRepo(db)
 	ctx := context.Background()
 
-	userId := testhelpers.CreateTestUser(t, userRepo)
-	artistId := testhelpers.CreateTestArtist(t, artistRepo)
+	userId, err := testhelpers.CreateUser(userRepo)
+	require.NoError(t, err)
+
+	artistId, err := testhelpers.CreateArtist(artistRepo)
+	require.NoError(t, err)
 
 	t.Run("follow success", func(t *testing.T) {
 		err := userRepo.FollowUserToArtist(ctx, userId, artistId)

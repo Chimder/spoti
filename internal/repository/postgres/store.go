@@ -6,6 +6,7 @@ import (
 	"spoti/internal/domain/album"
 	"spoti/internal/domain/artist"
 	"spoti/internal/domain/playlist"
+	"spoti/internal/domain/recording"
 	"spoti/internal/domain/track"
 	"spoti/internal/domain/user"
 	albumrepo "spoti/internal/repository/postgres/album"
@@ -28,6 +29,8 @@ type Repository struct {
 	Album    album.AlbumRepository
 	Playlist playlist.PlaylistRepository
 	Track    track.TrackRepository
+	Recording recording.RecordingRepository
+
 }
 
 func NewRepository(pool *pgxpool.Pool) *Repository {

@@ -25,7 +25,7 @@ import (
 type Album struct {
 	ID          uuid.UUID
 	AlbumType   string
-	TotalTracks int16
+	TotalTracks int
 	Image       string
 	Name        string
 	URI         string

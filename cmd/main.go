@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"spoti/config"
 	httpgin "spoti/internal/handler/http"
+	"spoti/internal/repository/clickhouse"
 	postgres_db "spoti/internal/repository/postgres"
 	"syscall"
 	"time"
@@ -25,14 +26,19 @@ func main() {
 	cfg := config.LoadEnv()
 	SetupLogger(cfg)
 
-	dbconn, err := postgres_db.NewConn(ctx, cfg.PostgresUrl)
+	dbConn, err := postgres_db.NewConn(ctx, cfg.PostgresUrl)
 	if err != nil {
-		log.Panic().Msg("Err conn to db")
+		log.Panic().Msg("Err conn to postgres")
 		return
 	}
 
-	log.Info().Any("", dbconn).Msg("d")
-	r := httpgin.Init(ctx, dbconn)
+	clkhConn, err := clickhouse.Conn(ctx)
+	if err != nil {
+		log.Panic().Msg("Err conn to clickhouse")
+		return
+	}
+
+	r := httpgin.Init(ctx, dbConn, clkhConn)
 	srv := &http.Server{
 		Addr:         ":8080",
 		Handler:      r,

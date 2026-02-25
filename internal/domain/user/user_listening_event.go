@@ -1,16 +1,14 @@
 package user
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
-type ListeningEvent struct {
-	Id         uuid.UUID
+type ListeningEventReq struct {
 	UserId     uuid.UUID
 	TrackId    uuid.UUID
-	StartedAt  time.Time
-	DurationMs uint32
-	Skipped    bool
+	AlbumId    uuid.UUID
+	ArtistId   uuid.UUID
+	DurationMs int
+	IsSkipped  bool
 }

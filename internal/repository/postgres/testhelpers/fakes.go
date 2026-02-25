@@ -10,72 +10,17 @@ import (
 	"spoti/internal/domain/recording"
 	"spoti/internal/domain/track"
 	"spoti/internal/domain/user"
-	albumrepo "spoti/internal/repository/postgres/album"
-	artistrepo "spoti/internal/repository/postgres/artist"
-	playlistrepo "spoti/internal/repository/postgres/playlist"
-	recordingrepo "spoti/internal/repository/postgres/recording"
-	trackrepo "spoti/internal/repository/postgres/track"
-	userrepo "spoti/internal/repository/postgres/user"
-	"testing"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
-	"github.com/stretchr/testify/require"
 )
 
-func CreateTestUser(t *testing.T, repo *userrepo.UserRepo) uuid.UUID {
-	t.Helper()
-
-	id, err := repo.CreateUser(context.Background(), GetFakeUser())
-	require.NoError(t, err)
-
-	return id
-}
-func CreateTestArtist(t *testing.T, repo *artistrepo.ArtistRepo) uuid.UUID {
-	t.Helper()
-
-	id, err := repo.CreateArtist(context.Background(), GetFakeArtist())
-	require.NoError(t, err)
-
-	return id
-}
-func CreateTestAlbum(t *testing.T, repo *albumrepo.AlbumRepo) uuid.UUID {
-	t.Helper()
-
-	id, err := repo.CreateAlbum(context.Background(), GetFakeAlbums())
-	require.NoError(t, err)
-
-	return id
-}
-func CreateTestPlaylist(t *testing.T, repo *playlistrepo.PlaylistRepo, owner uuid.UUID) uuid.UUID {
-	t.Helper()
-
-	id, err := repo.CreatePlaylist(context.Background(), GetFakePlaylist(owner))
-	require.NoError(t, err)
-
-	return id
+func CreateUser(repo user.UserRepository) (uuid.UUID, error) {
+	return repo.CreateUser(context.Background(), FakeUser())
 }
 
-func CreateTestRecording(t *testing.T, repo *recordingrepo.RecordingRepo) uuid.UUID {
-	t.Helper()
-
-	id, err := repo.CreateRecording(context.Background(), GetFakeRecording())
-	require.NoError(t, err)
-
-	return id
-}
-
-func CreateTestTrack(t *testing.T, repo *trackrepo.TrackRepo, albumId, recordingId uuid.UUID, trackNum, discNum int) uuid.UUID {
-	t.Helper()
-
-	id, err := repo.CreateTrack(context.Background(), GetFakeTrack(albumId, recordingId, trackNum, discNum))
-	require.NoError(t, err)
-
-	return id
-}
-
-func GetFakeUser() user.CreateUserReq {
+func FakeUser() user.CreateUserReq {
 	return user.CreateUserReq{
 		Name:          gofakeit.Username(),
 		Email:         gofakeit.Email(),
@@ -85,11 +30,15 @@ func GetFakeUser() user.CreateUserReq {
 	}
 }
 
-func GetFakeArtist() artist.CreateArtistReq {
+func CreateArtist(repo artist.ArtistRepository) (uuid.UUID, error) {
+	return repo.CreateArtist(context.Background(), FakeArtist())
+}
+
+func FakeArtist() artist.CreateArtistReq {
 	genres := []string{"rock", "pop", "jazz", "hip-hop", "electronic", "classical", "indie", "metal", "folk", "r&b"}
 	numGenres := gofakeit.Number(1, 4)
 	newGenres := make([]string, numGenres)
-	for i := range numGenres {
+	for i := range newGenres {
 		newGenres[i] = genres[rand.Intn(len(genres))]
 	}
 
@@ -105,9 +54,14 @@ func GetFakeArtist() artist.CreateArtistReq {
 	}
 }
 
-func GetFakeAlbums() album.CreateAlbumReq {
+func CreateAlbum(repo album.AlbumRepository) (uuid.UUID, error) {
+	return repo.CreateAlbum(context.Background(), FakeAlbum())
+}
+
+func FakeAlbum() album.CreateAlbumReq {
 	albumTypes := []string{"album", "single", "compilation"}
 	albumType := albumTypes[rand.Intn(len(albumTypes))]
+
 	var totalTracks int
 	switch albumType {
 	case "single":
@@ -117,15 +71,11 @@ func GetFakeAlbums() album.CreateAlbumReq {
 	case "compilation":
 		totalTracks = gofakeit.Number(15, 40)
 	}
+
 	albumID := uuid.New().String()
-	albumName := fmt.Sprintf("%s - %s (%s)",
-		gofakeit.BuzzWord(),
-		gofakeit.Noun(),
-		uuid.New().String()[:8])
-	releaseDate := gofakeit.DateRange(
-		time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
-		time.Now(),
-	)
+	releaseDate := gofakeit.DateRange(time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC), time.Now())
+	albumName := fmt.Sprintf("%s - %s (%s)", gofakeit.BuzzWord(), gofakeit.Noun(), albumID[:8])
+
 	return album.CreateAlbumReq{
 		AlbumType:   albumType,
 		TotalTracks: totalTracks,
@@ -139,9 +89,13 @@ func GetFakeAlbums() album.CreateAlbumReq {
 	}
 }
 
-func GetFakePlaylist(OwnerId uuid.UUID) playlist.CreatePlaylistReq {
+func CreatePlaylist(repo playlist.PlaylistRepository, owner uuid.UUID) (uuid.UUID, error) {
+	return repo.CreatePlaylist(context.Background(), FakePlaylist(owner))
+}
+
+func FakePlaylist(owner uuid.UUID) playlist.CreatePlaylistReq {
 	return playlist.CreatePlaylistReq{
-		OwnerId:      OwnerId,
+		OwnerId:      owner,
 		PlaylistName: gofakeit.Sentence(2),
 		Description:  gofakeit.Sentence(10),
 		Image:        fmt.Sprintf("https://i.scdn.co/image/%s", gofakeit.UUID()),
@@ -149,7 +103,11 @@ func GetFakePlaylist(OwnerId uuid.UUID) playlist.CreatePlaylistReq {
 	}
 }
 
-func GetFakeRecording() recording.CreateRecordingReq {
+func CreateRecording(repo recording.RecordingRepository) (uuid.UUID, error) {
+	return repo.CreateRecording(context.Background(), FakeRecording())
+}
+
+func FakeRecording() recording.CreateRecordingReq {
 	isrc := fmt.Sprintf("US%s%02d%05d", gofakeit.LetterN(3), gofakeit.Number(0, 99), gofakeit.Number(0, 99999))
 	recordingID := uuid.New().String()
 	return recording.CreateRecordingReq{
@@ -159,10 +117,14 @@ func GetFakeRecording() recording.CreateRecordingReq {
 	}
 }
 
-func GetFakeTrack(albumId, recordingId uuid.UUID, trackNum, discNum int) track.CreateTrackReq {
+func CreateTrack(repo track.TrackRepository, albumID, recordingID uuid.UUID, trackNum, discNum int) (uuid.UUID, error) {
+	return repo.CreateTrack(context.Background(), FakeTrack(albumID, recordingID, trackNum, discNum))
+}
+
+func FakeTrack(albumID, recordingID uuid.UUID, trackNum, discNum int) track.CreateTrackReq {
 	return track.CreateTrackReq{
-		AlbumId:     albumId,
-		RecordingId: recordingId,
+		AlbumId:     albumID,
+		RecordingId: recordingID,
 		Name:        fmt.Sprintf("%s %s", gofakeit.Adjective(), gofakeit.Noun()),
 		Number:      int16(trackNum),
 		DiscNumber:  int16(discNum),
