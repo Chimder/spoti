@@ -22,7 +22,7 @@ func TestArtistRepo_CreateArtist(t *testing.T) {
 
 	t.Run("duplicate uri", func(t *testing.T) {
 		ctx := context.Background()
-		fake := testhelpers.GetFakeArtist()
+		fake := testhelpers.FakeArtist()
 
 		_, err := repo.CreateArtist(ctx, fake)
 		require.NoError(t, err)

@@ -71,7 +71,7 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn) *gin.
 	albums := r.Group("/albums")
 	{
 		albums.POST("", albumHandler.CreateAlbum)
-		albums.GET("/:id", albumHandler.GetAlbum)
+		albums.GET("/:id", albumHandler.GetAlbumJson)
 		albums.GET("", albumHandler.GetAlbumsByIds)
 		albums.GET("/:id/tracks", albumHandler.GetAlbumTracks)
 

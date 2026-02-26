@@ -46,7 +46,7 @@ func FakeArtist() artist.CreateArtistReq {
 	return artist.CreateArtistReq{
 		Url:        fmt.Sprintf("https://open.spotify.com/artist/%s", artistID),
 		Uri:        fmt.Sprintf("spotify:artist:%s", artistID),
-		ArtistName: gofakeit.Name(),
+		ArtistName: gofakeit.Name() + "_" + uuid.New().String()[:8],
 		Image:      fmt.Sprintf("https://i.scdn.co/image/%s", gofakeit.UUID()),
 		Followers:  gofakeit.Number(100, 5000000),
 		Popularity: gofakeit.Number(0, 100),

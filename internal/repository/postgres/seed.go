@@ -3,12 +3,11 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
+	"spoti/internal/repository/clickhouse"
 	"spoti/internal/repository/postgres/testhelpers"
 	"time"
-
-	// "spoti/internal/repository/postgres"
-	// "spoti/internal/testhelpers"
 
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
@@ -30,7 +29,7 @@ var (
 	playlistIDs []uuid.UUID
 )
 
-func main() {
+func RunSeed() {
 	ctx := context.Background()
 
 	pool, err := pgxpool.New(ctx, "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
@@ -44,53 +43,53 @@ func main() {
 
 	fmt.Println("Starting seed...")
 
-	err = repo.WithTx(ctx, func(txRepo *Repository) error {
-		if err := seedUsers(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedArtists(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedAlbums(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedAlbumArtists(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedTracks(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedArtistTracks(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedUserSaveAlbums(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedUserSavedArtists(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedPlaylists(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedPlaylistTracks(ctx, txRepo); err != nil {
-			return err
-		}
-		if err := seedUserSavedPlaylists(ctx, txRepo); err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		panic(err)
+	if err := seedUsers(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedArtists(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedAlbums(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedAlbumArtists(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedTracks(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedArtistTracks(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedUserSaveAlbums(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedUserSavedArtists(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedPlaylists(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedPlaylistTracks(ctx, repo); err != nil {
+		log.Fatal(err)
+	}
+	if err := seedUserSavedPlaylists(ctx, repo); err != nil {
+		log.Fatal(err)
 	}
 
-	fmt.Println("Seed completed successfully.")
+	if err = clickhouse.SeedListeningEvents(ctx, repo.pool); err != nil {
+		fmt.Println("Err seed clickhouse")
+		log.Fatal(err)
+	}
+
+	printStatistics(ctx, repo.pool)
+	fmt.Println("Seed success")
 }
 
 // Seed //
 
 func seedUsers(ctx context.Context, repo *Repository) error {
-	for i := 0; i < UsersCount; i++ {
+	for range UsersCount {
 		id, err := testhelpers.CreateUser(repo.User)
 		if err != nil {
 			return fmt.Errorf("seed user: %w", err)
@@ -102,7 +101,7 @@ func seedUsers(ctx context.Context, repo *Repository) error {
 }
 
 func seedArtists(ctx context.Context, repo *Repository) error {
-	for i := 0; i < ArtistsCount; i++ {
+	for range ArtistsCount {
 		id, err := testhelpers.CreateArtist(repo.Artist)
 		if err != nil {
 			return fmt.Errorf("seed artist: %w", err)
@@ -114,7 +113,7 @@ func seedArtists(ctx context.Context, repo *Repository) error {
 }
 
 func seedAlbums(ctx context.Context, repo *Repository) error {
-	for i := 0; i < AlbumsCount; i++ {
+	for range AlbumsCount {
 		id, err := testhelpers.CreateAlbum(repo.Album)
 		if err != nil {
 			return fmt.Errorf("seed album: %w", err)
@@ -129,7 +128,7 @@ func seedAlbumArtists(ctx context.Context, repo *Repository) error {
 	for _, albumID := range albumIDs {
 		numArtists := rand.Intn(3) + 1
 		selected := make(map[uuid.UUID]bool)
-		for i := 0; i < numArtists; i++ {
+		for range numArtists {
 			artistID := artistIDs[rand.Intn(len(artistIDs))]
 			if selected[artistID] {
 				continue
@@ -152,7 +151,7 @@ func seedTracks(ctx context.Context, repo *Repository) error {
 			return err
 		}
 
-		totalTracks :=album.TotalTracks
+		totalTracks := album.TotalTracks
 		numDiscs := rand.Intn(2) + 1
 		trackNum := 1
 
@@ -184,7 +183,7 @@ func seedArtistTracks(ctx context.Context, repo *Repository) error {
 	for _, trackID := range trackIDs {
 		numArtists := rand.Intn(3) + 1
 		selected := map[uuid.UUID]bool{}
-		for i := 0; i < numArtists; i++ {
+		for range numArtists {
 			artistID := artistIDs[rand.Intn(len(artistIDs))]
 			if selected[artistID] {
 				continue
@@ -254,7 +253,7 @@ func seedUserSavedAlbums(ctx context.Context, repo *Repository) error {
 	for _, userID := range userIDs {
 		numAlbums := rand.Intn(25) + 1
 		selected := map[uuid.UUID]bool{}
-		for i := 0; i < numAlbums; i++ {
+		for range numAlbums {
 			albumID := albumIDs[rand.Intn(len(albumIDs))]
 			if selected[albumID] {
 				continue
@@ -274,7 +273,7 @@ func SeedUserSavedArtists(ctx context.Context, repo *Repository) error {
 	for _, userID := range userIDs {
 		numArtists := rand.Intn(16)
 		selected := map[uuid.UUID]bool{}
-		for i := 0; i < numArtists; i++ {
+		for range numArtists {
 			artistID := artistIDs[rand.Intn(len(artistIDs))]
 			if selected[artistID] {
 				continue
@@ -291,7 +290,7 @@ func SeedUserSavedArtists(ctx context.Context, repo *Repository) error {
 }
 
 func seedPlaylists(ctx context.Context, repo *Repository) error {
-	for i := 0; i < PlaylistsCount; i++ {
+	for range PlaylistsCount {
 		ownerID := userIDs[rand.Intn(len(userIDs))]
 		playlistID, err := testhelpers.CreatePlaylist(repo.Playlist, ownerID)
 		if err != nil {
@@ -330,7 +329,7 @@ func seedUserSavedPlaylists(ctx context.Context, repo *Repository) error {
 	for _, userID := range userIDs {
 		numPlaylists := rand.Intn(16)
 		selected := map[uuid.UUID]bool{}
-		for i := 0; i < numPlaylists; i++ {
+		for range numPlaylists {
 			playlistID := playlistIDs[rand.Intn(len(playlistIDs))]
 			if selected[playlistID] {
 				continue
@@ -344,4 +343,29 @@ func seedUserSavedPlaylists(ctx context.Context, repo *Repository) error {
 	}
 	fmt.Println("User saved playlists seeded")
 	return nil
+}
+func printStatistics(ctx context.Context, pool *pgxpool.Pool) {
+	stats := []struct {
+		table string
+		query string
+	}{
+		{"users", "SELECT COUNT(*) FROM users"},
+		{"artists", "SELECT COUNT(*) FROM artists"},
+		{"albums", "SELECT COUNT(*) FROM albums"},
+		{"recordings", "SELECT COUNT(*) FROM recordings"},
+		{"tracks", "SELECT COUNT(*) FROM tracks"},
+		{"album artist relations", "SELECT COUNT(*) FROM album_artists"},
+		{"artist track relations", "SELECT COUNT(*) FROM artist_tracks"},
+		{"user saved album", "SELECT COUNT(*) FROM user_saved_albums"},
+		{"user saved artists", "SELECT COUNT(*) FROM user_saved_artists"},
+		{"playlists", "SELECT COUNT(*) FROM playlists"},
+		{"playlist track relations", "SELECT COUNT(*) FROM playlist_tracks"},
+		{"user saved playlists", "SELECT COUNT(*) FROM user_saved_playlists"},
+	}
+
+	for _, stat := range stats {
+		var count int
+		pool.QueryRow(ctx, stat.query).Scan(&count)
+		fmt.Printf("  • %s: %d\n", stat.table, count)
+	}
 }

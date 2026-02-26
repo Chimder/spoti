@@ -17,12 +17,13 @@ func TestRecordingRepo_CreateRecording(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("ok create recording", func(t *testing.T) {
-		id := testhelpers.CreateTestRecording(t, repo)
+		id, err := testhelpers.CreateRecording(repo)
+		require.NoError(t, err)
 		assert.NotEqual(t, uuid.Nil, id)
 	})
 
 	t.Run("duplicate isrc", func(t *testing.T) {
-		fake := testhelpers.GetFakeRecording()
+		fake := testhelpers.FakeRecording()
 
 		_, err := repo.CreateRecording(ctx, fake)
 		require.NoError(t, err)
@@ -38,10 +39,10 @@ func TestRecordingRepo_GetRecordingById(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("Ok get recording", func(t *testing.T) {
-		id := testhelpers.CreateTestRecording(t, repo)
+		id, err := testhelpers.CreateRecording(repo)
+		require.NoError(t, err)
 
 		got, err := repo.GetRecordingById(ctx, id.String())
-
 		require.NoError(t, err)
 		assert.Equal(t, id, got.Id)
 	})

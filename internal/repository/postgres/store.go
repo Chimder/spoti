@@ -13,6 +13,7 @@ import (
 	artistrepo "spoti/internal/repository/postgres/artist"
 	"spoti/internal/repository/postgres/pgiface"
 	playlistrepo "spoti/internal/repository/postgres/playlist"
+	recordingrepo "spoti/internal/repository/postgres/recording"
 	trackrepo "spoti/internal/repository/postgres/track"
 	userrepo "spoti/internal/repository/postgres/user"
 
@@ -22,15 +23,14 @@ import (
 )
 
 type Repository struct {
-	db       pgiface.Querier
-	pool     *pgxpool.Pool
-	User     user.UserRepository
-	Artist   artist.ArtistRepository
-	Album    album.AlbumRepository
-	Playlist playlist.PlaylistRepository
-	Track    track.TrackRepository
+	db        pgiface.Querier
+	pool      *pgxpool.Pool
+	User      user.UserRepository
+	Artist    artist.ArtistRepository
+	Album     album.AlbumRepository
+	Playlist  playlist.PlaylistRepository
+	Track     track.TrackRepository
 	Recording recording.RecordingRepository
-
 }
 
 func NewRepository(pool *pgxpool.Pool) *Repository {
@@ -39,13 +39,14 @@ func NewRepository(pool *pgxpool.Pool) *Repository {
 
 func newRepository(db pgiface.Querier, pool *pgxpool.Pool) *Repository {
 	return &Repository{
-		db:       db,
-		pool:     pool,
-		User:     userrepo.NewUserRepo(db),
-		Artist:   artistrepo.NewArtistRepo(db),
-		Album:    albumrepo.NewAlbumRepo(db),
-		Playlist: playlistrepo.NewPlaylistRepo(db),
-		Track:    trackrepo.NewTrackRepo(db),
+		db:        db,
+		pool:      pool,
+		User:      userrepo.NewUserRepo(db),
+		Artist:    artistrepo.NewArtistRepo(db),
+		Album:     albumrepo.NewAlbumRepo(db),
+		Playlist:  playlistrepo.NewPlaylistRepo(db),
+		Recording: recordingrepo.NewRecordingRepo(db),
+		Track:     trackrepo.NewTrackRepo(db),
 	}
 }
 

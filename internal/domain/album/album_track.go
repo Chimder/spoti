@@ -6,8 +6,8 @@ type AlbumTracks struct {
 	Href     string
 	Limit    int
 	Offset   int
-	Next     interface{}
-	Previous interface{}
+	Next     any
+	Previous any
 	Total    int
 	Tracks   []track.Track
 }

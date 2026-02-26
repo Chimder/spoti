@@ -111,7 +111,7 @@ func main() {
 }
 
 func seedUsers(ctx context.Context, pool *pgxpool.Pool) error {
-	for i := 0; i < UsersCount; i++ {
+	for i := range UsersCount {
 		user := GetFakeUser()
 		var id uuid.UUID
 		err := pool.QueryRow(ctx, `

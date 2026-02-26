@@ -34,7 +34,7 @@ func Conn(ctx context.Context) (driver.Conn, error) {
 					{Name: "go-client-spoti", Version: "0.1"},
 				},
 			},
-			Debugf: func(format string, v ...interface{}) {
+			Debugf: func(format string, v ...any) {
 				fmt.Printf("[ClickHouse DEBUG] "+format+"\n", v...)
 			},
 			// TLS: &tls.Config{

@@ -30,7 +30,7 @@ func TestPlaylistRepo_CreatePlaylist(t *testing.T) {
 
 	t.Run("err owner id", func(t *testing.T) {
 		ctx := context.Background()
-		fake := testhelpers.GetFakePlaylist(uuid.New())
+		fake := testhelpers.FakePlaylist(uuid.New())
 
 		_, err := playlistRepo.CreatePlaylist(ctx, fake)
 		assert.Error(t, err)

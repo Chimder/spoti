@@ -50,7 +50,7 @@ ch_down:
 	goose clickhouse -dir $(ClickhouseDIR) ${CLICKHOUSEURL} down
 
 seed_db:
-	go run sql/migrations/seed/*.go
+	go run ./cmd/seed/main.go
 
 swag:
 	swag init -g cmd/main.go

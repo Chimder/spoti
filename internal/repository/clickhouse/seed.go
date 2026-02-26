@@ -1,4 +1,4 @@
-package main
+package clickhouse
 
 import (
 	"context"
@@ -26,6 +26,7 @@ var (
 )
 
 func SeedListeningEvents(ctx context.Context, pool *pgxpool.Pool) error {
+
 	conn, err := connToClick()
 	if err != nil {
 		return fmt.Errorf("err connection to clickhouse: %w", err)
@@ -44,13 +45,18 @@ func SeedListeningEvents(ctx context.Context, pool *pgxpool.Pool) error {
 		return fmt.Errorf("err to getTracksFromPostgres: %w", err)
 	}
 
+	ids, err := getUsersFromPostgres(ctx, pool)
+	if err != nil {
+		return fmt.Errorf("err to getTracksFromPostgres: %w", err)
+	}
+
 	eventsCount := 0
 
 	for _, t := range tracks {
 
-		eventsRand := rand.Intn(1000)
+		eventsRand := rand.Intn(500)
 		for range eventsRand {
-			userID := userIDs[rand.Intn(len(userIDs))]
+			userID := ids[rand.Intn(len(ids))]
 
 			listenPercent := 0.3 + rand.Float64()*0.7
 			listenDuration := uint32(float64(t.DurationMs) * listenPercent)
@@ -71,7 +77,7 @@ func SeedListeningEvents(ctx context.Context, pool *pgxpool.Pool) error {
 		}
 	}
 
-	fmt.Printf("Generated %d\n", eventsCount)
+	fmt.Printf("Generated event clickhouse %d\n", eventsCount)
 
 	if err := batch.Send(); err != nil {
 		return fmt.Errorf("err to send batch: %w", err)
@@ -105,6 +111,20 @@ func getTracksFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]TracksDat
 	return data, nil
 }
 
+func getUsersFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]uuid.UUID, error) {
+	rows, err := pool.Query(ctx, `SELECT id FROM users`)
+	if err != nil {
+		return nil, err
+	}
+
+	ids, err := pgx.CollectRows(rows, pgx.RowTo[uuid.UUID])
+	if err != nil {
+		return nil, err
+	}
+
+	return ids, nil
+}
+
 type TracksData struct {
 	TrackId    uuid.UUID `db:"track_id"`
 	AlbumId    uuid.UUID `db:"album_id"`
@@ -131,7 +151,7 @@ func connToClick() (driver.Conn, error) {
 				{Name: "go-client-spoti", Version: "0.1"},
 			},
 		},
-		Debugf: func(format string, v ...interface{}) {
+		Debugf: func(format string, v ...any) {
 			fmt.Printf("[ClickHouse DEBUG] "+format+"\n", v...)
 		},
 	})

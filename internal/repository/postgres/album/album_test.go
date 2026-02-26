@@ -23,7 +23,7 @@ func TestAlbumRepo_CreateAlbum(t *testing.T) {
 
 	t.Run("duplicate album name", func(t *testing.T) {
 		ctx := context.Background()
-		fake := testhelpers.GetFakeAlbums()
+		fake := testhelpers.FakeAlbum()
 
 		_, err := repo.CreateAlbum(ctx, fake)
 		require.NoError(t, err)
