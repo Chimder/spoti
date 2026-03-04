@@ -4,6 +4,8 @@ import (
 	"context"
 	"spoti/internal/domain/track"
 	"spoti/internal/repository/postgres"
+
+	"github.com/google/uuid"
 )
 
 type TrackService struct {
@@ -25,7 +27,7 @@ func (ts *TrackService) CreateTrack(ctx context.Context, t track.CreateTrackReq)
 	return nil
 }
 
-func (ts *TrackService) GetTrackById(ctx context.Context, trackId string) (track.Track, error) {
+func (ts *TrackService) GetTrackById(ctx context.Context, trackId uuid.UUID) (track.Track, error) {
 	return ts.repo.Track.GetTrackById(ctx, trackId)
 }
 

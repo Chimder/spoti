@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type AlbumHandler struct {
@@ -19,6 +20,7 @@ func NewAlbumHandler(srv *service.AlbumService) *AlbumHandler {
 func (h *AlbumHandler) CreateAlbum(c *gin.Context) {
 	var req album.CreateAlbumReq
 
+	// log.Info().Str("PARAM", c.Param("id")).Msg("CREATE")
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid request body",
@@ -40,6 +42,7 @@ func (h *AlbumHandler) GetAlbumJson(c *gin.Context) {
 
 	data, err := h.srv.GetAlbumJson(c.Request.Context(), albumID)
 	if err != nil {
+		log.Error().Err(err).Msg("ERROR GET")
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to get album",
 		})
@@ -50,16 +53,14 @@ func (h *AlbumHandler) GetAlbumJson(c *gin.Context) {
 }
 
 func (h *AlbumHandler) GetAlbumsByIds(c *gin.Context) {
-	var req struct {
-		IDs []string `json:"ids"`
-	}
+	ids := c.QueryArray("id")
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+	if len(ids) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ids required"})
 		return
 	}
 
-	data, err := h.srv.GetAlbumsByIds(c.Request.Context(), req.IDs)
+	data, err := h.srv.GetAlbumsByIds(c.Request.Context(), ids)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to get albums",
@@ -96,9 +97,9 @@ func (h *AlbumHandler) GetUserSavedAlbums(c *gin.Context) {
 	c.JSON(http.StatusOK, albums)
 }
 func (h *AlbumHandler) SaveAlbumsForCurrentUser(c *gin.Context) {
+	userID := c.Param("userId")
 	var req struct {
-		UserID string   `json:"user_id"`
-		IDs    []string `json:"album_ids"`
+		IDs []string `json:"album_ids"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -106,19 +107,23 @@ func (h *AlbumHandler) SaveAlbumsForCurrentUser(c *gin.Context) {
 		return
 	}
 
-	if err := h.srv.SaveAlbumsForCurrentUser(c.Request.Context(), req.IDs, req.UserID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to save albums",
-		})
+	if len(req.IDs) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "album_ids required"})
+		return
+	}
+
+	if err := h.srv.SaveAlbumsForCurrentUser(c.Request.Context(), req.IDs, userID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save albums"})
 		return
 	}
 
 	c.Status(http.StatusNoContent)
 }
+
 func (h *AlbumHandler) RemoveAlbumsFromCurrentUser(c *gin.Context) {
+	userID := c.Param("userId")
 	var req struct {
-		UserID string   `json:"user_id"`
-		IDs    []string `json:"album_ids"`
+		IDs []string `json:"album_ids"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -126,7 +131,12 @@ func (h *AlbumHandler) RemoveAlbumsFromCurrentUser(c *gin.Context) {
 		return
 	}
 
-	if err := h.srv.RemoveAlbumsFromCurrentUser(c.Request.Context(), req.IDs, req.UserID); err != nil {
+	if len(req.IDs) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "album_ids required"})
+		return
+	}
+
+	if err := h.srv.RemoveAlbumsFromCurrentUser(c.Request.Context(), req.IDs, userID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to remove albums",
 		})
@@ -136,9 +146,9 @@ func (h *AlbumHandler) RemoveAlbumsFromCurrentUser(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 func (h *AlbumHandler) CheckUsersSavedAlbums(c *gin.Context) {
+	userID := c.Param("userId")
 	var req struct {
-		UserID string   `json:"user_id"`
-		IDs    []string `json:"album_ids"`
+		IDs []string `json:"album_ids"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -146,7 +156,12 @@ func (h *AlbumHandler) CheckUsersSavedAlbums(c *gin.Context) {
 		return
 	}
 
-	result, err := h.srv.CheckUsersSavedAlbums(c.Request.Context(), req.IDs, req.UserID)
+	if len(req.IDs) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "album_ids required"})
+		return
+	}
+
+	result, err := h.srv.CheckUsersSavedAlbums(c.Request.Context(), req.IDs, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to check albums",
@@ -156,6 +171,7 @@ func (h *AlbumHandler) CheckUsersSavedAlbums(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
+
 func (h *AlbumHandler) GetNewReleases(c *gin.Context) {
 	limitStr := c.Query("limit")
 

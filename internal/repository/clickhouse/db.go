@@ -21,7 +21,7 @@ func Conn(ctx context.Context) (driver.Conn, error) {
 			Auth: clickhouse.Auth{
 				Database: "default",
 				Username: "default",
-				Password: "default",
+				Password: "",
 			},
 			Compression: &clickhouse.Compression{
 				Method: clickhouse.CompressionLZ4,

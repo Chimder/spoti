@@ -3,6 +3,7 @@ package clickhouse
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
@@ -114,11 +115,13 @@ func getTracksFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]TracksDat
 func getUsersFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]uuid.UUID, error) {
 	rows, err := pool.Query(ctx, `SELECT id FROM users`)
 	if err != nil {
+		log.Printf("Err ch query users id")
 		return nil, err
 	}
 
 	ids, err := pgx.CollectRows(rows, pgx.RowTo[uuid.UUID])
 	if err != nil {
+		log.Printf("Err ch collect users id")
 		return nil, err
 	}
 

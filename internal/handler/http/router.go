@@ -64,7 +64,7 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn) *gin.
 		users.GET("/:id", userHandler.GetUserByID)
 		users.POST("/:userId/playlists/:playlistId/follow", userHandler.FollowPlaylist)
 		users.DELETE("/:userId/playlists/:playlistId/follow", userHandler.UnfollowPlaylist)
-		users.POST("/:userId/artists/:artistId/follow", userHandler.FollowPlaylist)
+		users.POST("/:userId/artists/:artistId/follow", userHandler.FollowArtist)
 		users.DELETE("/:userId/artists/:artistId/follow", userHandler.UnfollowArtist)
 	}
 
@@ -74,6 +74,7 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn) *gin.
 		albums.GET("/:id", albumHandler.GetAlbumJson)
 		albums.GET("", albumHandler.GetAlbumsByIds)
 		albums.GET("/:id/tracks", albumHandler.GetAlbumTracks)
+		albums.GET("/new", albumHandler.GetNewReleases)
 
 		albums.GET("/users/:userId", albumHandler.GetUserSavedAlbums)
 		albums.PUT("/users/:userId", albumHandler.SaveAlbumsForCurrentUser)

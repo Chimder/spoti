@@ -39,7 +39,7 @@ func (tr *TrackRepo) CreateTrack(ctx context.Context, t track.CreateTrackReq) (u
 	return id, err
 }
 
-func (tr *TrackRepo) GetTrackById(ctx context.Context, trackId string) (track.Track, error) {
+func (tr *TrackRepo) GetTrackById(ctx context.Context, trackId uuid.UUID) (track.Track, error) {
 	query := `
 		SELECT t.*, r.isrc, r.duration_ms, r.popularity, r.play_count, r.audio_uri
 		FROM tracks t

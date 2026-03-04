@@ -22,7 +22,7 @@ func (u *User) ToDomain() user.User {
 		Id:            u.ID,
 		Name:          u.UserName,
 		Email:         u.Email,
-		Image:         u.Email,
+		Image:         u.Image,
 		Followers:     uint32(u.Followers),
 		PremiumStatus: u.PremiumStatus,
 	}

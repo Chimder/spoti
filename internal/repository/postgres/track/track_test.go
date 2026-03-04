@@ -71,19 +71,19 @@ func TestTrackRepo_GetTrackById(t *testing.T) {
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
 		id := testhelpers.CreateTestTrack(t, trackRepo, albumId, recId, 1, 1)
 
-		got, err := trackRepo.GetTrackById(ctx, id.String())
+		got, err := trackRepo.GetTrackById(ctx, id)
 
 		require.NoError(t, err)
 		assert.Equal(t, id, got.Id)
 	})
 
 	t.Run("not found", func(t *testing.T) {
-		_, err := trackRepo.GetTrackById(ctx, uuid.New().String())
+		_, err := trackRepo.GetTrackById(ctx, uuid.New())
 		assert.Error(t, err)
 	})
 
 	t.Run("bad uuid", func(t *testing.T) {
-		_, err := trackRepo.GetTrackById(ctx, "badUuid")
+		_, err := trackRepo.GetTrackById(ctx, uuid.New())
 		assert.Error(t, err)
 	})
 }

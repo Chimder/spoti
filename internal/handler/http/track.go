@@ -6,6 +6,7 @@ import (
 	"spoti/internal/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type TrackHandler struct {
@@ -32,7 +33,14 @@ func (h *TrackHandler) CreateTrack(c *gin.Context) {
 }
 
 func (h *TrackHandler) GetTrackById(c *gin.Context) {
-	trackID := c.Param("id")
+	trackID, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid Track id",
+		})
+		return
+	}
+
 	tr, err := h.srv.GetTrackById(c.Request.Context(), trackID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get track"})

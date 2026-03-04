@@ -101,9 +101,9 @@ func main() {
 	if err := seedUserSavedPlaylists(ctx, pool); err != nil {
 		log.Fatal(err)
 	}
-	if err := SeedListeningEvents(ctx, pool); err != nil {
-		log.Fatal(err)
-	}
+	// if err := SeedListeningEvents(ctx, pool); err != nil {
+	// 	log.Fatal(err)
+	// }
 	fmt.Println("\n user saved playlist OK")
 	fmt.Printf("time %v\n", time.Since(now))
 

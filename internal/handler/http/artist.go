@@ -51,6 +51,11 @@ func (h *ArtistHandler) GetArtistsByIDs(c *gin.Context) {
 		return
 	}
 
+	if len(req.IDs) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "album_ids required"})
+		return
+	}
+
 	artists, err := h.srv.GetArtistsByIDs(c.Request.Context(), req.IDs)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get artists"})

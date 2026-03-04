@@ -9,16 +9,10 @@ import (
 )
 
 type EnvVars struct {
-	Username       string
-	Password       string
-	SteamID        string
-	SharedSecret   string
-	IdentitySecret string
-	DeviceID       string
-	PostgresUrl    string
-	Debug          bool
-	Env            string
-	LogLevel       string
+	PostgresUrl string
+	Debug       bool
+	Env         string
+	LogLevel    string
 }
 
 var config *EnvVars
@@ -35,18 +29,14 @@ func GetEnv() *EnvVars {
 func LoadEnv() *EnvVars {
 	once.Do(func() {
 		if err := godotenv.Load(); err != nil {
-			log.Warn().Msg(".env not found")
+			log.Warn().Err(err).Msg(".env not found")
+		} else {
+			log.Info().Msg(".env loaded")
 		}
 		config = &EnvVars{
-			Username:       setEnv("USERNAME", ""),
-			Password:       setEnv("PASSWORD", ""),
-			SteamID:        setEnv("STEAM_ID", ""),
-			SharedSecret:   setEnv("SHARED_SECRET", ""),
-			IdentitySecret: setEnv("IDENTITY_SECRET", ""),
-			DeviceID:       setEnv("DEVICE_ID", ""),
-			PostgresUrl:    setEnv("POSTGRES_URL", ""),
-			Env:            setEnv("ENV", "dev"),
-			LogLevel:       setEnv("LOG_LEVEL", "debug"),
+			PostgresUrl: setEnv("POSTGRES_URL", ""),
+			Env:         setEnv("ENV", "dev"),
+			LogLevel:    setEnv("LOG_LEVEL", "debug"),
 		}
 	})
 

@@ -11,6 +11,7 @@ import (
 
 func NewConn(ctx context.Context, url string) (*pgxpool.Pool, error) {
 
+	log.Info().Str("DB_URL", url).Msg("pg url")
 	config, err := pgxpool.ParseConfig(url)
 	if err != nil {
 		log.Ctx(ctx).Fatal().Err(err).Msg("Failed to parse db cfg")
