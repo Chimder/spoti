@@ -22,12 +22,20 @@ type ListeningEvent struct {
 }
 
 var (
-	ListeningEventsCount = 50000
+	ListeningEventsCount = 100_000
 	DaysToGenerate       = 90
 )
 
-func SeedListeningEvents(ctx context.Context, pool *pgxpool.Pool) error {
+func StartSeedListeningEvents() error {
+	fmt.Print("start seed clickhouse")
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
+	pool, err := pgxpool.New(ctx, "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+	defer pool.Close()
 	conn, err := connToClick()
 	if err != nil {
 		return fmt.Errorf("err connection to clickhouse: %w", err)

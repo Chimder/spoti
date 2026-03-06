@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"spoti/internal/repository/clickhouse"
 	"spoti/internal/repository/postgres/testhelpers"
 	"time"
 
@@ -77,12 +76,12 @@ func RunSeed() {
 		log.Fatal(err)
 	}
 
-	if err = clickhouse.SeedListeningEvents(ctx, repo.pool); err != nil {
-		fmt.Println("Err seed clickhouse")
-		log.Fatal(err)
-	}
+	// if err = clickhouse.SeedListeningEvents(ctx, repo.Pool); err != nil {
+	// 	fmt.Println("Err seed clickhouse")
+	// 	log.Fatal(err)
+	// }
 
-	printStatistics(ctx, repo.pool)
+	printStatistics(ctx, repo.Pool)
 	fmt.Println("Seed success")
 }
 
@@ -209,7 +208,7 @@ func seedUserSaveAlbums(ctx context.Context, repo *Repository) error {
 			query := `
 			INSERT INTO user_saved_albums (album_id, user_id) VALUES ($1, $2)
 			ON CONFLICT DO NOTHING`
-			_, err := repo.pool.Exec(ctx, query, albumId, userId)
+			_, err := repo.Pool.Exec(ctx, query, albumId, userId)
 			if err != nil {
 				return err
 			}
@@ -236,7 +235,7 @@ func seedUserSavedArtists(ctx context.Context, repo *Repository) error {
 			}
 			selectedArtists[artistID] = true
 
-			_, err := repo.pool.Exec(ctx, `
+			_, err := repo.Pool.Exec(ctx, `
 				INSERT INTO user_saved_artists (user_id, artist_id)
 				VALUES ($1, $2)
 				ON CONFLICT DO NOTHING
