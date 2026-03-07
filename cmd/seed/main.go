@@ -1,8 +1,6 @@
 package main
 
-import (
-	"spoti/internal/repository/clickhouse"
-)
+import "spoti/internal/repository/clickhouse"
 
 func main() {
 	// postgres.RunSeed()

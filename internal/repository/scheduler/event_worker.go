@@ -3,7 +3,6 @@ package scheduler
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"time"
 
@@ -22,7 +21,7 @@ type EventWorker struct {
 	cancel    context.CancelFunc
 }
 
-type TracksData struct {
+type TrackDatas struct {
 	TrackId    uuid.UUID `db:"track_id"`
 	AlbumId    uuid.UUID `db:"album_id"`
 	DurationMs int       `db:"duration_ms"`
@@ -46,21 +45,22 @@ func (ew *EventWorker) Start() {
 }
 
 func (ew *EventWorker) EventWorker() {
+	countEvents := 0
 	for {
-		// userIds, err := getUsersFromPostgres(ew.ctx, ew.db.Pool)
-		tracksData, err := getTracksFromPostgres(ew.ctx, ew.db)
+		trackDatas, err := getTracksFromPostgres(ew.ctx, ew.db)
 		if err != nil {
-			log.Error().Err(err).Msg("err fetch postgres id for event")
+			log.Error().Err(err).Msg("err fetch postgres tracks")
 			select {
 			case <-ew.ctx.Done():
 				return
-			case <-time.After(2 * time.Minute):
+			case <-time.After(10 * time.Minute):
 				continue
 			}
 		}
-		fmt.Printf("fetch %d users id", len(tracksData))
+		fmt.Printf("fetch %d tracks\n", len(trackDatas))
 
-		stats, err := getStatsFromClickhouse(ew.ctx, ew.clickDb, tracksData)
+		boundary := time.Now().UTC()
+		stats, err := getStatsFromClickhouse(ew.ctx, ew.clickDb, trackDatas, boundary)
 		if err != nil {
 			log.Error().Err(err).Msg("err fetch clickhouse stats")
 			select {
@@ -70,47 +70,31 @@ func (ew *EventWorker) EventWorker() {
 				continue
 			}
 		}
-
 		fmt.Printf("Get all stats %d\n", len(stats))
-		trackDurationMap := make(map[string]int, len(tracksData))
-		for _, t := range tracksData {
-			trackDurationMap[t.TrackId.String()] = t.DurationMs
+
+		err = updateRecordingsBulk(ew.ctx, ew.db, stats, trackDatas)
+		if err != nil {
+			log.Error().Err(err).Msg("err update recor batch")
 		}
 
-		sem := make(chan struct{}, 300)
-		var wg sync.WaitGroup
+		processedIDs := make([]string, len(stats))
 		for i, s := range stats {
-			sem <- struct{}{}
-			wg.Add(1)
-
-			go func(i int, trackStats TrackStats) {
-				defer func() {
-					<-sem
-					wg.Done()
-				}()
-
-				durationMs, ok := trackDurationMap[trackStats.TrackID]
-				if !ok || durationMs == 0 {
-					return
-				}
-
-				playCount := int64(trackStats.TotalListenedMs) / int64(durationMs)
-
-				err := updateRecording(ew.ctx, ew.db, trackStats.TrackID, playCount)
-				if err != nil {
-					log.Error().Err(err).Msg("Err update recording")
-					return
-				}
-			}(i, s)
+			processedIDs[i] = s.TrackID
 		}
-		wg.Wait()
+
+		err = deleteProcessedEvents(ew.ctx, ew.clickDb, processedIDs, boundary)
+		if err != nil {
+			log.Error().Err(err).Msg("Err delete CH events")
+		}
+
+		countEvents++
+		fmt.Printf("End %d event \n", countEvents)
 
 		select {
 		case <-ew.ctx.Done():
-			// close(sem)
-			log.Info().Msg("Stopping processing")
+			log.Info().Msg("Stop event worker")
 			return
-		case <-time.After(15 * time.Minute):
+		case <-time.After(10 * time.Minute):
 		}
 	}
 }
@@ -120,7 +104,7 @@ type TrackStats struct {
 	TotalListenedMs uint64 `ch:"total_listened_ms"`
 }
 
-func getStatsFromClickhouse(ctx context.Context, db driver.Conn, tracksData []TracksData) ([]TrackStats, error) {
+func getStatsFromClickhouse(ctx context.Context, db driver.Conn, tracksData []TrackDatas, boundary time.Time) ([]TrackStats, error) {
 	trackIds := make([]string, len(tracksData))
 	for i, t := range tracksData {
 		trackIds[i] = t.TrackId.String()
@@ -131,13 +115,8 @@ func getStatsFromClickhouse(ctx context.Context, db driver.Conn, tracksData []Tr
 	total := len(trackIds)
 
 	for i := 0; i < total; i += batchSize {
-		end := i + batchSize
-		if end > total {
-			end = total
-		}
+		end := min(i+batchSize, total)
 		batch := trackIds[i:end]
-
-		log.Info().Msgf("CH query batch %d-%d of %d", i, end, total)
 
 		rows, err := db.Query(ctx, `
             SELECT
@@ -145,60 +124,82 @@ func getStatsFromClickhouse(ctx context.Context, db driver.Conn, tracksData []Tr
                 sum(duration_ms) AS total_listened_ms
             FROM spotify.listening_events
             WHERE track_id IN (?)
+              AND created_at <= ?
             GROUP BY track_id
-        `, batch)
+        `, batch, boundary)
 		if err != nil {
 			return nil, fmt.Errorf("batch %d-%d query err: %w", i, end, err)
 		}
 
-		batchCount := 0
 		for rows.Next() {
 			var s TrackStats
 			if err := rows.ScanStruct(&s); err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("scan err: %w", err)
 			}
-			log.Info().Msgf("track_id=%s total_listened_ms=%d", s.TrackID, s.TotalListenedMs)
 			allStats = append(allStats, s)
-			batchCount++
 		}
 		rows.Close()
 
 		if err := rows.Err(); err != nil {
 			return nil, fmt.Errorf("rows err: %w", err)
 		}
-
-		log.Info().Msgf("batch %d-%d got %d rows from CH", i, end, batchCount)
 	}
 
-	log.Info().Msgf("total CH stats: %d", len(allStats))
 	return allStats, nil
 }
 
-func updateRecording(ctx context.Context, pool *pgxpool.Pool, trackId string, playCount int64) error {
-	id, err := uuid.Parse(trackId)
-	if err != nil {
-		return fmt.Errorf("err parse track id: %w", err)
+func updateRecordingsBulk(ctx context.Context, pool *pgxpool.Pool, stats []TrackStats, trackDatas []TrackDatas) error {
+	durationMap := make(map[string]int, len(trackDatas))
+	for _, t := range trackDatas {
+		durationMap[t.TrackId.String()] = t.DurationMs
 	}
 
-	query := `
-        UPDATE recordings r
-        SET play_count = $1
-        FROM tracks t
-        WHERE t.recording_id = r.id
-          AND t.id = $2
-    `
+	trackIDs := make([]uuid.UUID, 0, len(stats))
+	playCounts := make([]int64, 0, len(stats))
 
-	tag, err := pool.Exec(ctx, query, playCount, id)
-	if err != nil {
-		return err
+	for _, s := range stats {
+		durationMs, ok := durationMap[s.TrackID]
+		if !ok || durationMs == 0 {
+			continue
+		}
+
+		pc := int64(s.TotalListenedMs) / int64(durationMs)
+		if pc == 0 {
+			continue
+		}
+
+		id, err := uuid.Parse(s.TrackID)
+		if err != nil {
+			log.Error().Err(err).Str("track_id", s.TrackID).Msg("bad track id")
+			continue
+		}
+
+		trackIDs = append(trackIDs, id)
+		playCounts = append(playCounts, pc)
 	}
 
-	log.Info().Str("track_id", trackId).Int64("play_count", playCount).Int64("rows_affected", tag.RowsAffected()).Msg("recording updated")
+	if len(trackIDs) == 0 {
+		return nil
+	}
+
+	tag, err := pool.Exec(ctx, `
+		UPDATE recordings r
+		SET play_count = r.play_count + v.play_count
+		FROM unnest($1::uuid[], $2::bigint[]) AS v(track_id, play_count),
+		tracks t
+		WHERE t.id = v.track_id
+		  AND t.recording_id = r.id
+	`, trackIDs, playCounts)
+	if err != nil {
+		return fmt.Errorf("err bulk update: %w", err)
+	}
+
+	log.Info().Int64("rows", tag.RowsAffected()).Msg("recordings upd")
 	return nil
 }
 
-func getTracksFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]TracksData, error) {
+func getTracksFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]TrackDatas, error) {
 	query := `
 		SELECT
 			t.id as track_id,
@@ -215,7 +216,7 @@ func getTracksFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]TracksDat
 		return nil, err
 	}
 
-	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[TracksData])
+	data, err := pgx.CollectRows(rows, pgx.RowToStructByName[TrackDatas])
 	if err != nil {
 		return nil, err
 	}
@@ -237,6 +238,27 @@ func getUsersFromPostgres(ctx context.Context, pool *pgxpool.Pool) ([]uuid.UUID,
 	}
 
 	return ids, nil
+}
+
+func deleteProcessedEvents(ctx context.Context, db driver.Conn, trackIDs []string, boundary time.Time) error {
+	batchSize := 500
+	total := len(trackIDs)
+
+	for i := 0; i < total; i += batchSize {
+		end := min(i+batchSize, total)
+		batch := trackIDs[i:end]
+
+		err := db.Exec(ctx, `
+            ALTER TABLE spotify.listening_events
+            DELETE WHERE track_id IN (?) AND created_at <= ?
+        `, batch, boundary)
+		if err != nil {
+			return fmt.Errorf("err delete events: %w", err)
+		}
+
+	}
+
+	return nil
 }
 
 func (ew *EventWorker) Stop() {
