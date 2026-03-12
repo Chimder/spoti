@@ -5,16 +5,17 @@ import (
 	"encoding/json"
 	"spoti/internal/domain/album"
 	"spoti/internal/repository/postgres"
+	rediscache "spoti/internal/repository/redis"
+	"time"
 )
 
 type AlbumService struct {
-	repo *postgres.Repository
+	repo  *postgres.Repository
+	cache rediscache.Cache
 }
 
-func NewAlbumService(r *postgres.Repository) *AlbumService {
-	return &AlbumService{
-		repo: r,
-	}
+func NewAlbumService(r *postgres.Repository, cache rediscache.Cache) *AlbumService {
+	return &AlbumService{repo: r, cache: cache}
 }
 
 func (as *AlbumService) CreateAlbum(ctx context.Context, a album.CreateAlbumReq) error {
@@ -38,7 +39,20 @@ func (as *AlbumService) GetAlbumsTracks(ctx context.Context, albumID string) (js
 }
 
 func (as *AlbumService) GetUserSavedAlbums(ctx context.Context, userId string) ([]album.Album, error) {
-	return as.repo.Album.GetUserSavedAlbums(ctx, userId)
+	op := "GetUserSavedAlbums"
+	var album []album.Album
+	if err := as.cache.Get(ctx, userId+op, &album); err == nil {
+		return album, nil
+	}
+
+	albumData, err := as.repo.Album.GetUserSavedAlbums(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = as.cache.Set(ctx, userId+op, albumData, 60*time.Minute)
+
+	return albumData, nil
 }
 
 func (as *AlbumService) SaveAlbumsForCurrentUser(ctx context.Context, albumIds []string, userId string) error {

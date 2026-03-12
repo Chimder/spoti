@@ -4,16 +4,21 @@ import (
 	"context"
 	"spoti/internal/domain/playlist"
 	"spoti/internal/repository/postgres"
+	rediscache "spoti/internal/repository/redis"
+	"time"
 )
 
+const playlistTTL = 60 * time.Minute
+
+func userPlaylistsKey(id string) string { return "user:" + id + ":playlists" }
+
 type PlaylistService struct {
-	repo *postgres.Repository
+	repo  *postgres.Repository
+	cache rediscache.Cache
 }
 
-func NewPlaylistService(repo *postgres.Repository) *PlaylistService {
-	return &PlaylistService{
-		repo: repo,
-	}
+func NewPlaylistService(repo *postgres.Repository, cache rediscache.Cache) *PlaylistService {
+	return &PlaylistService{repo: repo, cache: cache}
 }
 
 func (ps *PlaylistService) CreatePlaylist(ctx context.Context, p playlist.CreatePlaylistReq) error {
@@ -24,8 +29,8 @@ func (ps *PlaylistService) CreatePlaylist(ctx context.Context, p playlist.Create
 	return nil
 }
 
-func (ps *PlaylistService) GetPlaylistById(ctx context.Context, playlistId string, limit, offset int) (playlist.PlaylistJson, error) {
-	return ps.repo.Playlist.GetPlaylistById(ctx, playlistId, limit, offset)
+func (ps *PlaylistService) GetPlaylistById(ctx context.Context, playlistID string, limit, offset int) (playlist.PlaylistJson, error) {
+	return ps.repo.Playlist.GetPlaylistById(ctx, playlistID, limit, offset)
 }
 
 func (ps *PlaylistService) AddToPlaylist(ctx context.Context, playlist_id, track_id string) error {
@@ -40,6 +45,17 @@ func (ps *PlaylistService) DeleteFromPlaylist(ctx context.Context, playlistId, t
 	return ps.repo.Playlist.DeleteFromPlaylist(ctx, playlistId, trackId)
 }
 
-func (ps *PlaylistService) GetAllUserPlaylists(ctx context.Context, userId string) ([]playlist.Playlist, error) {
-	return ps.repo.Playlist.GetAllUserPlaylists(ctx, userId)
+func (ps *PlaylistService) GetAllUserPlaylists(ctx context.Context, userID string) ([]playlist.Playlist, error) {
+	var playlists []playlist.Playlist
+	if err := ps.cache.Get(ctx, userPlaylistsKey(userID), &playlists); err == nil {
+		return playlists, nil
+	}
+
+	playlists, err := ps.repo.Playlist.GetAllUserPlaylists(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = ps.cache.Set(ctx, userPlaylistsKey(userID), playlists, playlistTTL)
+	return playlists, nil
 }

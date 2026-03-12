@@ -2,13 +2,17 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"os"
 	"os/signal"
 	"spoti/config"
+	httpgin "spoti/internal/handler/http"
 	"spoti/internal/repository/clickhouse"
+	"spoti/internal/repository/elastic"
 	postgres_db "spoti/internal/repository/postgres"
-	"spoti/internal/repository/scheduler"
+	rediscache "spoti/internal/repository/redis"
 	"syscall"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
@@ -35,36 +39,38 @@ func main() {
 		log.Panic().Msg("Err conn to clickhouse")
 		return
 	}
+	redisConn := rediscache.Conn(cfg.RedisUrl)
 
-	// postgres.NewRepository(dbConn)
-	event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
-	event.Start()
-	defer event.Stop()
-	// r := httpgin.Init(ctx, dbConn, clkhConn)
-	// srv := &http.Server{
-	// 	Addr:         ":8080",
-	// 	Handler:      r,
-	// 	ReadTimeout:  5 * time.Second,
-	// 	WriteTimeout: 10 * time.Second,
-	// 	IdleTimeout:  120 * time.Second,
-	// }
+	elasticConn := elastic.NewElasticDB(cfg.ElasticSearchUrl)
+	// 	event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
+	// 	event.Start()
+	// 	defer event.Stop()
 
-	// go func() {
-	// 	if err := srv.ListenAndServe(); err != nil {
-	// 		log.Error().Err(err).Msg("Server error")
-	// 	}
-	// }()
+	r := httpgin.Init(ctx, dbConn, clkhConn, redisConn, elasticConn)
+	srv := &http.Server{
+		Addr:         ":8080",
+		Handler:      r,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil {
+			log.Error().Err(err).Msg("Server error")
+		}
+	}()
 
 	log.Info().Msg("Server is running...")
 	<-ctx.Done()
 	log.Info().Msg("Shutting down server...")
 
-	// shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	// defer cancel()
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	// if err := srv.Shutdown(shutdownCtx); err != nil {
-	// 	log.Error().Err(err).Msg("Server shutdown error")
-	// } else {
-	// 	log.Info().Msg("Server stopped gracefully")
-	// }
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Error().Err(err).Msg("Server shutdown error")
+	} else {
+		log.Info().Msg("Server stopped gracefully")
+	}
 }

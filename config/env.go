@@ -9,10 +9,12 @@ import (
 )
 
 type EnvVars struct {
-	PostgresUrl string
-	Debug       bool
-	Env         string
-	LogLevel    string
+	PostgresUrl      string
+	Debug            bool
+	Env              string
+	LogLevel         string
+	RedisUrl         string
+	ElasticSearchUrl string
 }
 
 var config *EnvVars
@@ -34,9 +36,11 @@ func LoadEnv() *EnvVars {
 			log.Info().Msg(".env loaded")
 		}
 		config = &EnvVars{
-			PostgresUrl: setEnv("POSTGRES_URL", ""),
-			Env:         setEnv("ENV", "dev"),
-			LogLevel:    setEnv("LOG_LEVEL", "debug"),
+			PostgresUrl:      setEnv("POSTGRES_URL", ""),
+			Env:              setEnv("ENV", "dev"),
+			RedisUrl:         setEnv("REDIS_URL", ""),
+			LogLevel:         setEnv("LOG_LEVEL", "debug"),
+			ElasticSearchUrl: setEnv("ELASTIC_SEARCH_URL", ""),
 		}
 	})
 

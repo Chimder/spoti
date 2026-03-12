@@ -5,11 +5,11 @@ import "time"
 type CreateAlbumReq struct {
 	AlbumType   string
 	TotalTracks int
-	Image        string
+	Image       string
 	AlbumName   string
-	Uri          string
-	Copyrights   string
+	Uri         string
+	Copyrights  string
 	AlbumLabel  string
-	Popularity   int
+	Popularity  int
 	ReleaseDate time.Time
 }

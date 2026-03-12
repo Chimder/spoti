@@ -20,7 +20,6 @@ func NewUserRepo(db pgiface.Querier) *UserRepo {
 	}
 }
 
-
 func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
 	query := `
 			INSERT INTO users (user_name, email, image)

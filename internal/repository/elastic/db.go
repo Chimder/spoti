@@ -1,106 +1,61 @@
 package elastic
 
 import (
-	"bytes"
-	"fmt"
+	"context"
 	"log"
 
 	"github.com/elastic/go-elasticsearch/v9"
+	"github.com/elastic/go-elasticsearch/v9/typedapi/esdsl"
 )
 
-type ElastiDB struct {
-	client *elasticsearch.Client
+// type ElastiDB struct {
+// 	client *elasticsearch.TypedClient
+// }
+
+func NewElasticDB(url string) *elasticsearch.TypedClient {
+	client := elasticConn(url)
+	if err := mappingIndex(client, spotiIndexName); err != nil {
+		log.Panicf("err Mapping elastic: %v", err)
+		return nil
+	}
+
+	return client
 }
 
-func NewElasticDB() ElastiDB {
-	cfg := elasticsearch.Config{
+func elasticConn(url string) *elasticsearch.TypedClient {
+	client, err := elasticsearch.NewTypedClient(elasticsearch.Config{
 		Addresses: []string{
-			"http://localhost:9200",
+			url,
 		},
-	}
-
-	es, err := elasticsearch.NewClient(cfg)
+	})
 	if err != nil {
-		log.Fatalf("Error creating the client: %s", err)
+		log.Fatalf("err elastic connection %s", err)
 	}
-	return ElastiDB{client: es}
+	return client
 }
 
-func (el *ElastiDB) GetClient() *elasticsearch.Client {
-	return el.client
-}
-
-func (el *ElastiDB) Mapping() error {
-	indexName := "stream_stats"
-
-	existsRes, err := el.client.Indices.Exists([]string{indexName})
+func mappingIndex(client *elasticsearch.TypedClient, indexName string) error {
+	exists, err := client.Indices.Exists(indexName).IsSuccess(context.Background())
 	if err != nil {
-		return fmt.Errorf("error checking if index exists: %w", err)
+		return err
 	}
-	defer existsRes.Body.Close()
-
-	if existsRes.StatusCode == 200 {
+	if exists {
 		log.Println("index exists")
 		return nil
 	}
 
-	mapping := `
-	{
-	  "mappings": {
-	    "properties": {
-	      "user_id": { "type": "keyword" },
-	      "title": { "type": "text" }
-	    }
-	  }
-	}`
+	mappings := esdsl.NewTypeMapping().
+		AddProperty("id", esdsl.NewKeywordProperty().Index(false)).
+		AddProperty("type", esdsl.NewKeywordProperty()).
+		AddProperty("name", esdsl.NewSearchAsYouTypeProperty())
 
-	createRes, err := el.client.Indices.Create(indexName, el.client.Indices.Create.WithBody(bytes.NewReader([]byte(mapping))))
+	_, err = client.Indices.Create(indexName).
+		Mappings(mappings).
+		Do(context.Background())
 	if err != nil {
-		return fmt.Errorf("cannot create index: %w", err)
+		return err
 	}
-	defer createRes.Body.Close()
 
 	log.Println("index created")
 	return nil
 }
-
-// func (el *ElastiDB) FromPostToElastic(repo repository.Repository) error {
-
-// 	stats, err := repo.Stats.GetAllStats()
-// 	if err != nil {
-// 		return fmt.Errorf("err create index to elastic from postgres %w", err)
-// 	}
-
-// 	slog.Info("RESP POST", "data", stats)
-
-// 	for _, stat := range stats {
-// 		doc := fmt.Sprintf(`
-// 		{
-// 			"user_id": "%s",
-// 			"title": "%s"
-// 		}`,
-// 			stat.UserID,
-// 			stat.Title,
-// 		)
-
-// 		req := bytes.NewReader([]byte(doc))
-
-// 		res, err := el.client.Index(
-// 			"stream_stats",
-// 			req,
-// 			el.client.Index.WithDocumentID(stat.ID.String()),
-// 			el.client.Index.WithRefresh("true"),
-// 		)
-// 		if err != nil {
-// 			log.Printf("error indexing document ID %s: %s", stat.ID, err)
-// 			continue
-// 		}
-// 		defer res.Body.Close()
-
-// 		if res.IsError() {
-// 			log.Printf("error response indexing document ID %s: %s", stat.ID, res.String())
-// 		}
-// 	}
-
-// 	return nil
-// }

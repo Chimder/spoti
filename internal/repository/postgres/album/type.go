@@ -10,7 +10,7 @@ import (
 type Album struct {
 	ID          uuid.UUID `db:"id"`
 	AlbumType   string    `db:"album_type"`
-	TotalTracks int     `db:"total_tracks"`
+	TotalTracks int       `db:"total_tracks"`
 	Image       string    `db:"image"`
 	AlbumName   string    `db:"album_name"`
 	URI         string    `db:"uri"`
@@ -20,6 +20,7 @@ type Album struct {
 	ReleaseDate time.Time `db:"release_date"`
 	CreatedAt   time.Time `db:"created_at"`
 }
+
 func (a *Album) ToDomain() album.Album {
 	return album.Album{
 		ID:          a.ID,

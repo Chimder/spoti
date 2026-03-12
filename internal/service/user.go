@@ -4,18 +4,18 @@ import (
 	"context"
 	"spoti/internal/domain/user"
 	"spoti/internal/repository/postgres"
+	rediscache "spoti/internal/repository/redis"
 
 	"github.com/google/uuid"
 )
 
 type UserService struct {
-	repo *postgres.Repository
+	repo  *postgres.Repository
+	cache rediscache.Cache
 }
 
-func NewUserService(repo *postgres.Repository) *UserService {
-	return &UserService{
-		repo: repo,
-	}
+func NewUserService(repo *postgres.Repository, cache rediscache.Cache) *UserService {
+	return &UserService{repo: repo, cache: cache}
 }
 func (us *UserService) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
 	id, err := us.repo.User.CreateUser(ctx, user)

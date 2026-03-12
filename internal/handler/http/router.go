@@ -6,18 +6,23 @@ import (
 
 	"context"
 	"spoti/internal/repository/clickhouse"
+	"spoti/internal/repository/elastic"
 	"spoti/internal/repository/postgres"
+	rediscache "spoti/internal/repository/redis"
 	"spoti/internal/service"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
+	"github.com/elastic/go-elasticsearch/v9"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 	// swaggerfiles "github.com/swaggo/files"
 	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn) *gin.Engine {
+func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
+	rdsConn *redis.Client, elasticConn *elasticsearch.TypedClient) *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://*", "http://*"},
@@ -29,13 +34,15 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn) *gin.
 	}))
 
 	repo := postgres.NewRepository(dbConn)
+	_ = elastic.NewElasticRepository(elasticConn)
 	clickHouseRepo := clickhouse.NewListeningEventRepo(clkhConn)
+	redisCache := rediscache.NewRedisCache(rdsConn)
 
-	userService := service.NewUserService(repo)
-	albumService := service.NewAlbumService(repo)
-	artistService := service.NewArtistService(repo)
-	playlistService := service.NewPlaylistService(repo)
-	trackService := service.NewTrackService(repo)
+	userService := service.NewUserService(repo, redisCache)
+	albumService := service.NewAlbumService(repo, redisCache)
+	artistService := service.NewArtistService(repo, redisCache)
+	playlistService := service.NewPlaylistService(repo, redisCache)
+	trackService := service.NewTrackService(repo, redisCache)
 
 	userHandler := NewUserHandler(userService)
 	albumHandler := NewAlbumHandler(albumService)

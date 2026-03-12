@@ -4,31 +4,58 @@ import (
 	"context"
 	"spoti/internal/domain/artist"
 	"spoti/internal/repository/postgres"
+	rediscache "spoti/internal/repository/redis"
+	"time"
 )
 
+const artistTTL = 60 * time.Minute
+
+func artistKey(id string) string       { return "artist:" + id }
+func artistAlbumsKey(id string) string { return "artist:" + id + ":albums" }
+
 type ArtistService struct {
-	repo *postgres.Repository
+	repo  *postgres.Repository
+	cache rediscache.Cache
 }
 
-func NewArtistService(r *postgres.Repository) *ArtistService {
-	return &ArtistService{repo: r}
+func NewArtistService(r *postgres.Repository, cache rediscache.Cache) *ArtistService {
+	return &ArtistService{repo: r, cache: cache}
 }
 func (as *ArtistService) CreateArtist(ctx context.Context, a artist.CreateArtistReq) error {
 	_, err := as.repo.Artist.CreateArtist(ctx, a)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
-func (as *ArtistService) GetArtist(ctx context.Context, artistId string) (artist.Artist, error) {
-	return as.repo.Artist.GetArtist(ctx, artistId)
+func (as *ArtistService) GetArtist(ctx context.Context, artistID string) (artist.Artist, error) {
+	var a artist.Artist
+	if err := as.cache.Get(ctx, artistKey(artistID), &a); err == nil {
+		return a, nil
+	}
+
+	a, err := as.repo.Artist.GetArtist(ctx, artistID)
+	if err != nil {
+		return artist.Artist{}, err
+	}
+
+	_ = as.cache.Set(ctx, artistKey(artistID), a, artistTTL)
+	return a, nil
 }
 
 func (as *ArtistService) GetArtistsByIDs(ctx context.Context, artistIds []string) ([]artist.Artist, error) {
 	return as.repo.Artist.GetArtistsByIDs(ctx, artistIds)
 }
 
-func (as *ArtistService) GetArtistAlbums(ctx context.Context, artistId string) ([]artist.Artist, error) {
-	return as.repo.Artist.GetArtistAlbums(ctx, artistId)
+func (as *ArtistService) GetArtistAlbums(ctx context.Context, artistID string) ([]artist.Artist, error) {
+	var albums []artist.Artist
+	if err := as.cache.Get(ctx, artistAlbumsKey(artistID), &albums); err == nil {
+		return albums, nil
+	}
+
+	albums, err := as.repo.Artist.GetArtistAlbums(ctx, artistID)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = as.cache.Set(ctx, artistAlbumsKey(artistID), albums, artistTTL)
+	return albums, nil
 }
