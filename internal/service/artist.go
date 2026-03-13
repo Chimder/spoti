@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"spoti/internal/domain/artist"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 	"time"
@@ -16,13 +17,19 @@ func artistAlbumsKey(id string) string { return "artist:" + id + ":albums" }
 type ArtistService struct {
 	repo  *postgres.Repository
 	cache rediscache.Cache
+	meili *meilisearchrepo.MeiliRepository
 }
 
-func NewArtistService(r *postgres.Repository, cache rediscache.Cache) *ArtistService {
-	return &ArtistService{repo: r, cache: cache}
+func NewArtistService(r *postgres.Repository, cache rediscache.Cache,
+	meili *meilisearchrepo.MeiliRepository) *ArtistService {
+	return &ArtistService{repo: r, cache: cache, meili: meili}
 }
 func (as *ArtistService) CreateArtist(ctx context.Context, a artist.CreateArtistReq) error {
-	_, err := as.repo.Artist.CreateArtist(ctx, a)
+	id, err := as.repo.Artist.CreateArtist(ctx, a)
+	if err != nil {
+		return err
+	}
+	err = as.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "artist", Name: a.ArtistName})
 	return err
 }
 

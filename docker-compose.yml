@@ -46,21 +46,32 @@ services:
       nofile:
         soft: 262144
         hard: 262144
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.0
-    container_name: spElastic
-    restart: always
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: spMeilisearch
+    ports: ["7700:7700"]
     environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      # - MEILI_MASTER_KEY=your-master-key-optional
+      - MEILI_ENV=development
     volumes:
-      - elasticData:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+      - meili_data:/meili_data
+
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:9.3.0
+  #   container_name: spElastic
+  #   restart: always
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  #   volumes:
+  #     - elasticData:/usr/share/elasticsearch/data
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
 
 volumes:
   spotiData:
   clickhouseData:
-  elasticData:
+  meili_data:

@@ -15,6 +15,7 @@ type EnvVars struct {
 	LogLevel         string
 	RedisUrl         string
 	ElasticSearchUrl string
+	MeiliSearchUrl   string
 }
 
 var config *EnvVars
@@ -41,6 +42,7 @@ func LoadEnv() *EnvVars {
 			RedisUrl:         setEnv("REDIS_URL", ""),
 			LogLevel:         setEnv("LOG_LEVEL", "debug"),
 			ElasticSearchUrl: setEnv("ELASTIC_SEARCH_URL", ""),
+			MeiliSearchUrl:   setEnv("MEILI_SEARCH_URL", ""),
 		}
 	})
 

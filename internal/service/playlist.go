@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"spoti/internal/domain/playlist"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 	"time"
@@ -15,18 +16,21 @@ func userPlaylistsKey(id string) string { return "user:" + id + ":playlists" }
 type PlaylistService struct {
 	repo  *postgres.Repository
 	cache rediscache.Cache
+	meili *meilisearchrepo.MeiliRepository
 }
 
-func NewPlaylistService(repo *postgres.Repository, cache rediscache.Cache) *PlaylistService {
-	return &PlaylistService{repo: repo, cache: cache}
+func NewPlaylistService(repo *postgres.Repository, cache rediscache.Cache,
+	meili *meilisearchrepo.MeiliRepository) *PlaylistService {
+	return &PlaylistService{repo: repo, cache: cache, meili: meili}
 }
 
 func (ps *PlaylistService) CreatePlaylist(ctx context.Context, p playlist.CreatePlaylistReq) error {
-	_, err := ps.repo.Playlist.CreatePlaylist(ctx, p)
+	id, err := ps.repo.Playlist.CreatePlaylist(ctx, p)
 	if err != nil {
 		return err
 	}
-	return nil
+	err = ps.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "playlist", Name: p.PlaylistName})
+	return err
 }
 
 func (ps *PlaylistService) GetPlaylistById(ctx context.Context, playlistID string, limit, offset int) (playlist.PlaylistJson, error) {

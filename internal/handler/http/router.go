@@ -6,23 +6,24 @@ import (
 
 	"context"
 	"spoti/internal/repository/clickhouse"
-	"spoti/internal/repository/elastic"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 	"spoti/internal/service"
 
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
-	"github.com/elastic/go-elasticsearch/v9"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/meilisearch/meilisearch-go"
 	"github.com/redis/go-redis/v9"
 	// swaggerfiles "github.com/swaggo/files"
 	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
-	rdsConn *redis.Client, elasticConn *elasticsearch.TypedClient) *gin.Engine {
+	// rdsConn *redis.Client, elasticConn *elasticsearch.TypedClient) *gin.Engine {
+	rdsConn *redis.Client, meiliConn meilisearch.ServiceManager) *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://*", "http://*"},
@@ -34,15 +35,16 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 	}))
 
 	repo := postgres.NewRepository(dbConn)
-	_ = elastic.NewElasticRepository(elasticConn)
+	// _ = elastic.NewElasticRepository(elasticConn)
+	meiliSearchRepo := meilisearchrepo.NewMeiliRepository(meiliConn)
 	clickHouseRepo := clickhouse.NewListeningEventRepo(clkhConn)
 	redisCache := rediscache.NewRedisCache(rdsConn)
 
-	userService := service.NewUserService(repo, redisCache)
-	albumService := service.NewAlbumService(repo, redisCache)
-	artistService := service.NewArtistService(repo, redisCache)
-	playlistService := service.NewPlaylistService(repo, redisCache)
-	trackService := service.NewTrackService(repo, redisCache)
+	userService := service.NewUserService(repo, redisCache, meiliSearchRepo)
+	albumService := service.NewAlbumService(repo, redisCache, meiliSearchRepo)
+	artistService := service.NewArtistService(repo, redisCache, meiliSearchRepo)
+	playlistService := service.NewPlaylistService(repo, redisCache, meiliSearchRepo)
+	trackService := service.NewTrackService(repo, redisCache, meiliSearchRepo)
 
 	userHandler := NewUserHandler(userService)
 	albumHandler := NewAlbumHandler(albumService)

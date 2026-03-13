@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"spoti/internal/domain/track"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 	"time"
@@ -18,14 +19,21 @@ func artistTracksKey(id string) string { return "artist:" + id + ":tracks" }
 type TrackService struct {
 	repo  *postgres.Repository
 	cache rediscache.Cache
+	meili *meilisearchrepo.MeiliRepository
 }
 
-func NewTrackService(repo *postgres.Repository, cache rediscache.Cache) *TrackService {
-	return &TrackService{repo: repo, cache: cache}
+func NewTrackService(repo *postgres.Repository, cache rediscache.Cache,
+	meili *meilisearchrepo.MeiliRepository) *TrackService {
+	return &TrackService{repo: repo, cache: cache, meili: meili}
 }
 
 func (ts *TrackService) CreateTrack(ctx context.Context, t track.CreateTrackReq) error {
-	_, err := ts.repo.Track.CreateTrack(ctx, t)
+	id, err := ts.repo.Track.CreateTrack(ctx, t)
+	if err != nil {
+		return err
+	}
+
+	err = ts.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "track", Name: t.Name})
 	return err
 }
 

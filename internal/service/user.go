@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"spoti/internal/domain/user"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 
@@ -12,9 +13,11 @@ import (
 type UserService struct {
 	repo  *postgres.Repository
 	cache rediscache.Cache
+	meili *meilisearchrepo.MeiliRepository
 }
 
-func NewUserService(repo *postgres.Repository, cache rediscache.Cache) *UserService {
+func NewUserService(repo *postgres.Repository, cache rediscache.Cache,
+	meili *meilisearchrepo.MeiliRepository) *UserService {
 	return &UserService{repo: repo, cache: cache}
 }
 func (us *UserService) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {

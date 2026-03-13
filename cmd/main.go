@@ -8,7 +8,7 @@ import (
 	"spoti/config"
 	httpgin "spoti/internal/handler/http"
 	"spoti/internal/repository/clickhouse"
-	"spoti/internal/repository/elastic"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	postgres_db "spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 	"syscall"
@@ -41,12 +41,16 @@ func main() {
 	}
 	redisConn := rediscache.Conn(cfg.RedisUrl)
 
-	elasticConn := elastic.NewElasticDB(cfg.ElasticSearchUrl)
+	meiliConn := meilisearchrepo.NewMeiliDB(cfg.MeiliSearchUrl)
+	// elasticConn := elastic.NewElasticDB(cfg.ElasticSearchUrl)
+
+	// {
 	// 	event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
 	// 	event.Start()
 	// 	defer event.Stop()
+	// }
 
-	r := httpgin.Init(ctx, dbConn, clkhConn, redisConn, elasticConn)
+	r := httpgin.Init(ctx, dbConn, clkhConn, redisConn, meiliConn)
 	srv := &http.Server{
 		Addr:         ":8080",
 		Handler:      r,

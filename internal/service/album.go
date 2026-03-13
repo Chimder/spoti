@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"spoti/internal/domain/album"
+	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"spoti/internal/repository/postgres"
 	rediscache "spoti/internal/repository/redis"
 	"time"
@@ -12,18 +13,22 @@ import (
 type AlbumService struct {
 	repo  *postgres.Repository
 	cache rediscache.Cache
+	meili *meilisearchrepo.MeiliRepository
 }
 
-func NewAlbumService(r *postgres.Repository, cache rediscache.Cache) *AlbumService {
-	return &AlbumService{repo: r, cache: cache}
+func NewAlbumService(r *postgres.Repository, cache rediscache.Cache,
+	meili *meilisearchrepo.MeiliRepository) *AlbumService {
+	return &AlbumService{repo: r, cache: cache, meili: meili}
 }
 
 func (as *AlbumService) CreateAlbum(ctx context.Context, a album.CreateAlbumReq) error {
-	_, err := as.repo.Album.CreateAlbum(ctx, a)
+	id, err := as.repo.Album.CreateAlbum(ctx, a)
 	if err != nil {
 		return err
 	}
-	return nil
+
+	err = as.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "album", Name: a.AlbumName})
+	return err
 }
 
 func (as *AlbumService) GetAlbumJson(ctx context.Context, albumID string) (json.RawMessage, error) {
