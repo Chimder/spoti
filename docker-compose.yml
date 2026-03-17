@@ -50,13 +50,62 @@ services:
   meilisearch:
     image: getmeili/meilisearch:latest
     container_name: spMeilisearch
-    ports: ["7700:7700"]
+    ports:
+      - "7700:7700"
     environment:
       # - MEILI_MASTER_KEY=your-master-key-optional
       - MEILI_ENV=development
     volumes:
       - meili_data:/meili_data
 
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    container_name: victoriametrics
+    restart: unless-stopped
+    ports:
+      - "8428:8428"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - vmdata:/storage
+      - ./promscrape.yml:/etc/vm/promscrape.yml:ro
+    command:
+      - "--storageDataPath=/storage"
+      - "--httpListenAddr=:8428"
+      - "--promscrape.config=/etc/vm/promscrape.yml"
+      - "--retentionPeriod=1M"
+      - "--loggerLevel=INFO"
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - victoriametrics
+    configs:
+      - source: grafana-datasource
+        target: /etc/grafana/provisioning/datasources/vm.yml
+
+configs:
+  grafana-datasource:
+    content: |
+      apiVersion: 1
+      datasources:
+        - name: VictoriaMetrics
+          type: prometheus
+          access: proxy
+          url: http://victoriametrics:8428
+          isDefault: true
+          jsonData:
+            timeInterval: 15s
+          editable: true
   # elasticsearch:
   #   image: docker.elastic.co/elasticsearch/elasticsearch:9.3.0
   #   container_name: spElastic
@@ -75,3 +124,5 @@ volumes:
   spotiData:
   clickhouseData:
   meili_data:
+  vmdata:
+  grafana-data:

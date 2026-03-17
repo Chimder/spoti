@@ -16,7 +16,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	// swaggerfiles "github.com/swaggo/files"
 	// ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -24,7 +26,8 @@ import (
 func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 	// rdsConn *redis.Client, elasticConn *elasticsearch.TypedClient) *gin.Engine {
 	rdsConn *redis.Client, meiliConn meilisearch.ServiceManager) *gin.Engine {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://*", "http://*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -33,6 +36,12 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 		AllowCredentials: false,
 		MaxAge:           300,
 	}))
+
+	r.Use(otelgin.Middleware("spoti-api"))
+	r.Use(gin.LoggerWithConfig(gin.LoggerConfig{
+		SkipPaths: []string{"/metrics", "/healthz"},
+	}))
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	repo := postgres.NewRepository(dbConn)
 	// _ = elastic.NewElasticRepository(elasticConn)

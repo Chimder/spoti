@@ -79,6 +79,7 @@ func TestIndexAndSearch(t *testing.T) {
 	})
 
 	t.Run("search artist type", func(t *testing.T) {
+
 		res, err := repo.SearchByType(ctx, "drake", "artist")
 		require.NoError(t, err)
 		require.Len(t, res, 2)

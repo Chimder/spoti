@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"spoti/config"
 	httpgin "spoti/internal/handler/http"
+	"spoti/internal/otel"
 	"spoti/internal/repository/clickhouse"
 	meilisearchrepo "spoti/internal/repository/meilisearch"
 	postgres_db "spoti/internal/repository/postgres"
@@ -28,6 +29,16 @@ func main() {
 	cfg := config.LoadEnv()
 	SetupLogger(cfg)
 
+	otelShutdown, err := otel.Setup(ctx)
+	if err != nil {
+		log.Panic().Err(err).Msg("err setup OTel")
+	}
+	defer func() {
+		if err := otelShutdown(ctx); err != nil {
+			log.Error().Err(err).Msg("OTel shutdown error")
+		}
+	}()
+
 	dbConn, err := postgres_db.NewConn(ctx, cfg.PostgresUrl)
 	if err != nil {
 		log.Panic().Msg("Err conn to postgres")
@@ -44,11 +55,9 @@ func main() {
 	meiliConn := meilisearchrepo.NewMeiliDB(cfg.MeiliSearchUrl)
 	// elasticConn := elastic.NewElasticDB(cfg.ElasticSearchUrl)
 
-	// {
-	// 	event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
-	// 	event.Start()
-	// 	defer event.Stop()
-	// }
+	// event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
+	// event.Start()
+	// defer event.Stop()
 
 	r := httpgin.Init(ctx, dbConn, clkhConn, redisConn, meiliConn)
 	srv := &http.Server{
