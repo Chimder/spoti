@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/type/money.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/Chimder/spoti/proto/gen/user";
+
+service TransferService {
+  rpc Create(CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Создать перевод"
+      description: "desc"
+      tags: "user"
+    };
+  }
+}
+
+message CreateRequest {
+  string from_account = 1 [
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+
+  string to_account = 2 [
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+
+  google.type.Money amount = 3 [(buf.validate.field).required = true];
+
+  google.protobuf.Timestamp scheduled_at = 4 [(buf.validate.field).timestamp.gt_now = true];
+
+  repeated string tags = 5 [
+    (buf.validate.field).repeated.min_items = 1,
+    (buf.validate.field).repeated.max_items = 10,
+    (buf.validate.field).repeated.unique = true,
+    (buf.validate.field).repeated.items.string = {
+      min_len: 3
+      max_len: 20
+      pattern: "^[a-z0-9_]+$"
+    }
+  ];
+
+  string description = 6 [(buf.validate.field).string.max_len = 500];
+
+  google.protobuf.FieldMask update_mask = 7;
+}
+
+message CreateResponse {
+  string tx_id = 1;
+  string status = 2 [(buf.validate.field).string = {
+    in: [
+      "PENDING",
+      "COMPLETED",
+      "FAILED"
+    ]
+  }];
+  google.protobuf.Timestamp created_at = 3;
+}
