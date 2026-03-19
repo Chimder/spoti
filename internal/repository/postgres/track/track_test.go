@@ -2,11 +2,11 @@ package trackrepo_test
 
 import (
 	"context"
-	albumrepo "spoti/internal/repository/postgres/album"
-	artistrepo "spoti/internal/repository/postgres/artist"
-	recordingrepo "spoti/internal/repository/postgres/recording"
-	"spoti/internal/repository/postgres/testhelpers"
-	trackrepo "spoti/internal/repository/postgres/track"
+	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
+	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
+	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
+	trackrepo "github.com/Chimder/spoti/internal/repository/postgres/track"
 	"testing"
 
 	"github.com/google/uuid"

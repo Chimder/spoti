@@ -1,6 +1,7 @@
 package album
 
-import "spoti/internal/domain/track"
+import "github.com/Chimder/spoti/internal/domain/track"
+
 
 type AlbumTracks struct {
 	Href     string

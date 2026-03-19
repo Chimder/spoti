@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package artist.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/Chimder/spoti/proto/gen/artist";
+
+service PlaylistService {
+  rpc GetArtist(GetArtistRequest) returns (GetArtistResponse);
+  rpc GetArtistsByIds(GetArtistsByIdsRequest) returns (GetArtistsByIdsResponse);
+  rpc GetArtistAlbums(GetArtistAlbumsRequest) returns (GetArtistAlbumsResponse);
+  rpc CreateArtist(CreateArtistRequest) returns (CreateArtistResponse);
+}
+message Artist {
+  string id = 1;
+  string url = 2;
+  uint64 followers = 3;
+  repeated string genres = 4;
+  string image = 5;
+  string name = 6;
+  uint32 popularity = 7;
+  string uri = 8;
+  google.protobuf.Timestamp created_at = 9;
+}
+
+message GetArtistRequest {
+  string artist_id = 1;
+}
+
+message GetArtistResponse {
+  Artist artist = 1;
+}
+
+message GetArtistsByIdsRequest {
+  repeated string artists_ids = 1;
+}
+message GetArtistsByIdsResponse {
+  repeated Artist artists = 1;
+}
+message GetArtistAlbumsRequest {}
+message GetArtistAlbumsResponse {}
+
+message CreateArtistRequest {
+  string url = 1;
+  string uri = 2;
+  string artist_name = 3;
+  string image = 4;
+  uint64 followers = 5;
+  uint32 popularity = 6;
+  repeated string genres = 7;
+}
+message CreateArtistResponse {
+  string id = 1;
+}

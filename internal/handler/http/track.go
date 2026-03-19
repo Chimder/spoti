@@ -2,9 +2,9 @@ package httpgin
 
 import (
 	"net/http"
-	"spoti/internal/domain/track"
-	"spoti/internal/service"
 
+	"github.com/Chimder/spoti/internal/domain/track"
+	"github.com/Chimder/spoti/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )

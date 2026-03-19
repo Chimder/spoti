@@ -1,7 +1,7 @@
 package trackrepo
 
 import (
-	"spoti/internal/domain/track"
+	"github.com/Chimder/spoti/internal/domain/track"
 
 	"github.com/google/uuid"
 )

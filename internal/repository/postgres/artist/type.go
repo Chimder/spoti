@@ -1,9 +1,9 @@
 package artistrepo
 
 import (
-	"spoti/internal/domain/artist"
 	"time"
 
+	"github.com/Chimder/spoti/internal/domain/artist"
 	"github.com/google/uuid"
 )
 

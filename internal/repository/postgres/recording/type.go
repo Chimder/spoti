@@ -1,9 +1,9 @@
 package recordingrepo
 
 import (
-	"spoti/internal/domain/recording"
 	"time"
 
+	"github.com/Chimder/spoti/internal/domain/recording"
 	"github.com/google/uuid"
 )
 

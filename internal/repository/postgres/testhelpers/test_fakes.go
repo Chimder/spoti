@@ -1,14 +1,14 @@
 package testhelpers
 
 import (
-	albumrepo "spoti/internal/repository/postgres/album"
-	artistrepo "spoti/internal/repository/postgres/artist"
-	playlistrepo "spoti/internal/repository/postgres/playlist"
-	recordingrepo "spoti/internal/repository/postgres/recording"
-	trackrepo "spoti/internal/repository/postgres/track"
-	userrepo "spoti/internal/repository/postgres/user"
 	"testing"
 
+	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
+	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
+	playlistrepo "github.com/Chimder/spoti/internal/repository/postgres/playlist"
+	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
+	trackrepo "github.com/Chimder/spoti/internal/repository/postgres/track"
+	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )

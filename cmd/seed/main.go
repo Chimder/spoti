@@ -1,9 +1,9 @@
 package main
 
 import (
-	"spoti/internal/repository/clickhouse"
-	meilisearchrepo "spoti/internal/repository/meilisearch"
-	"spoti/internal/repository/postgres"
+	"github.com/Chimder/spoti/internal/repository/clickhouse"
+	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
+	"github.com/Chimder/spoti/internal/repository/postgres"
 )
 
 func main() {

@@ -3,9 +3,9 @@ package artistrepo
 import (
 	"context"
 	"fmt"
-	"spoti/internal/domain/artist"
-	"spoti/internal/repository/postgres/pgiface"
 
+	"github.com/Chimder/spoti/internal/domain/artist"
+	"github.com/Chimder/spoti/internal/repository/postgres/pgiface"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog/log"

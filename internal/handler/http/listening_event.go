@@ -2,9 +2,9 @@ package httpgin
 
 import (
 	"net/http"
-	"spoti/internal/domain/user"
-	"spoti/internal/repository/clickhouse"
 
+	"github.com/Chimder/spoti/internal/domain/user"
+	"github.com/Chimder/spoti/internal/repository/clickhouse"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )

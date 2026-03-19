@@ -2,10 +2,10 @@ package recordingrepo_test
 
 import (
 	"context"
-	recordingrepo "spoti/internal/repository/postgres/recording"
-	"spoti/internal/repository/postgres/testhelpers"
 	"testing"
 
+	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

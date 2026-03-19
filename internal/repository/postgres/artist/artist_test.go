@@ -2,10 +2,10 @@ package artistrepo_test
 
 import (
 	"context"
-	artistrepo "spoti/internal/repository/postgres/artist"
-	"spoti/internal/repository/postgres/testhelpers"
 	"testing"
 
+	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

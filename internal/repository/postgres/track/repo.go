@@ -2,8 +2,8 @@ package trackrepo
 
 import (
 	"context"
-	"spoti/internal/domain/track"
-	"spoti/internal/repository/postgres/pgiface"
+	"github.com/Chimder/spoti/internal/domain/track"
+	"github.com/Chimder/spoti/internal/repository/postgres/pgiface"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"

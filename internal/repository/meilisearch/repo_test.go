@@ -3,10 +3,10 @@ package meilisearchrepo_test
 import (
 	"context"
 	"fmt"
-	meilisearchrepo "spoti/internal/repository/meilisearch"
 	"testing"
 	"time"
 
+	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"

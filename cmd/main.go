@@ -5,16 +5,16 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"spoti/config"
-	httpgin "spoti/internal/handler/http"
-	"spoti/internal/otel"
-	"spoti/internal/repository/clickhouse"
-	meilisearchrepo "spoti/internal/repository/meilisearch"
-	postgres_db "spoti/internal/repository/postgres"
-	rediscache "spoti/internal/repository/redis"
 	"syscall"
 	"time"
 
+	"github.com/Chimder/spoti/config"
+	httpgin "github.com/Chimder/spoti/internal/handler/http"
+	"github.com/Chimder/spoti/internal/otel"
+	"github.com/Chimder/spoti/internal/repository/clickhouse"
+	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
+	"github.com/Chimder/spoti/internal/repository/postgres"
+	rediscache "github.com/Chimder/spoti/internal/repository/redis"
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
 )
@@ -39,7 +39,7 @@ func main() {
 		}
 	}()
 
-	dbConn, err := postgres_db.NewConn(ctx, cfg.PostgresUrl)
+	dbConn, err := postgres.NewConn(ctx, cfg.PostgresUrl)
 	if err != nil {
 		log.Panic().Msg("Err conn to postgres")
 		return

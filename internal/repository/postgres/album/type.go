@@ -1,9 +1,9 @@
 package albumrepo
 
 import (
-	"spoti/internal/domain/album"
 	"time"
 
+	"github.com/Chimder/spoti/internal/domain/album"
 	"github.com/google/uuid"
 )
 

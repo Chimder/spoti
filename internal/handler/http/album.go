@@ -2,10 +2,10 @@ package httpgin
 
 import (
 	"net/http"
-	"spoti/internal/domain/album"
-	"spoti/internal/service"
 	"strconv"
 
+	"github.com/Chimder/spoti/internal/domain/album"
+	"github.com/Chimder/spoti/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 )

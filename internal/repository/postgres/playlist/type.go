@@ -1,9 +1,9 @@
 package playlistrepo
 
 import (
-	"spoti/internal/domain/playlist"
 	"time"
 
+	"github.com/Chimder/spoti/internal/domain/playlist"
 	"github.com/google/uuid"
 )
 

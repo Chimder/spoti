@@ -2,11 +2,11 @@ package clickhouse_test
 
 import (
 	"context"
-	"spoti/internal/domain/user"
-	"spoti/internal/repository/clickhouse"
-	"spoti/internal/repository/clickhouse/testhelpers"
 	"testing"
 
+	"github.com/Chimder/spoti/internal/domain/user"
+	"github.com/Chimder/spoti/internal/repository/clickhouse"
+	"github.com/Chimder/spoti/internal/repository/clickhouse/testhelpers"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

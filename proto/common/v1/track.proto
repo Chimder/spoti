@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package track.v1;
+
+option go_package = "github.com/Chimder/spoti/proto/gen/track";
+
+service TrackService {
+  rpc CreateTrack(CreateTrackRequest) returns (CreateTrackResponse);
+  rpc GetTrackById(GetTrackByIdRequest) returns (GetTrackByIdResponse);
+  rpc GetTracksByIds(GetTracksByIdsRequest) returns (GetTracksByIdsResponse);
+  rpc GetArtistTracks(GetArtistTracksRequest) returns (GetArtistTracksResponse);
+}
+
+message CreateTrackRequest {
+  string album_id = 1;
+  string recording_id = 2;
+  string name = 3;
+  int32 number = 4;
+  int32 disc_number = 5;
+  bool explicit = 6;
+  bool is_playable = 7;
+  string type = 8;
+  string uri = 9;
+  bool is_local = 10;
+}
+
+message CreateTrackResponse {
+  string id = 1;
+}
+
+message GetTrackByIdRequest {
+  string track_id = 1;
+}
+
+message Track {
+  string id = 1;
+  string album_id = 2;
+  string recording_id = 3;
+  string name = 4;
+  int32 number = 5;
+  int32 disc_number = 6;
+  bool explicit = 7;
+  bool is_playable = 8;
+  string type = 9;
+  string uri = 10;
+  string audio_uri = 11;
+  bool is_local = 12;
+  string isrc = 13;
+  int64 duration_ms = 14;
+  int32 popularity = 15;
+  int64 play_count = 16;
+}
+
+message GetTrackByIdResponse {
+  Track track = 1;
+}
+
+message GetTracksByIdsRequest {
+  repeated string track_ids = 1;
+}
+
+message GetTracksByIdsResponse {
+  repeated Track tracks = 1;
+}
+
+message GetArtistTracksRequest {
+  string artist_id = 1;
+}
+message GetArtistTracksResponse {
+  repeated Track tracks = 1;
+}

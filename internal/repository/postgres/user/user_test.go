@@ -2,12 +2,12 @@ package userrepo_test
 
 import (
 	"context"
-	artistrepo "spoti/internal/repository/postgres/artist"
-	playlistrepo "spoti/internal/repository/postgres/playlist"
-	"spoti/internal/repository/postgres/testhelpers"
-	userrepo "spoti/internal/repository/postgres/user"
 	"testing"
 
+	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
+	playlistrepo "github.com/Chimder/spoti/internal/repository/postgres/playlist"
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
+	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/assert"

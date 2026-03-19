@@ -1,6 +1,7 @@
 package user
 
-import "spoti/internal/domain/artist"
+import "github.com/Chimder/spoti/internal/domain/artist"
+
 
 type UserTopArtists struct {
 	Href     string

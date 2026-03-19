@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"spoti/internal/domain/artist"
-	meilisearchrepo "spoti/internal/repository/meilisearch"
-	"spoti/internal/repository/postgres"
-	rediscache "spoti/internal/repository/redis"
+	"github.com/Chimder/spoti/internal/domain/artist"
+	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
+	"github.com/Chimder/spoti/internal/repository/postgres"
+	rediscache "github.com/Chimder/spoti/internal/repository/redis"
 	"time"
 )
 

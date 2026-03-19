@@ -3,9 +3,9 @@ package playlistrepo
 import (
 	"context"
 	"encoding/json"
-	"spoti/internal/domain/playlist"
-	"spoti/internal/repository/postgres/pgiface"
 
+	"github.com/Chimder/spoti/internal/domain/playlist"
+	"github.com/Chimder/spoti/internal/repository/postgres/pgiface"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog/log"

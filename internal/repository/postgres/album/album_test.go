@@ -2,11 +2,11 @@ package albumrepo_test
 
 import (
 	"context"
-	albumrepo "spoti/internal/repository/postgres/album"
-	"spoti/internal/repository/postgres/testhelpers"
-	userrepo "spoti/internal/repository/postgres/user"
 	"testing"
 
+	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
+	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

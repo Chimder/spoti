@@ -4,14 +4,15 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"spoti/internal/domain/album"
-	"spoti/internal/domain/artist"
-	"spoti/internal/domain/playlist"
-	"spoti/internal/domain/recording"
-	"spoti/internal/domain/track"
-	"spoti/internal/domain/user"
+
 	"time"
 
+	"github.com/Chimder/spoti/internal/domain/album"
+	"github.com/Chimder/spoti/internal/domain/artist"
+	"github.com/Chimder/spoti/internal/domain/playlist"
+	"github.com/Chimder/spoti/internal/domain/recording"
+	"github.com/Chimder/spoti/internal/domain/track"
+	"github.com/Chimder/spoti/internal/domain/user"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 )

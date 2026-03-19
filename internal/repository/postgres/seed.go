@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"spoti/internal/repository/postgres/testhelpers"
 	"time"
 
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"

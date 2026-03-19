@@ -2,8 +2,8 @@ package clickhouse
 
 import (
 	"context"
-	"spoti/internal/domain/user"
 
+	"github.com/Chimder/spoti/internal/domain/user"
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/rs/zerolog/log"
 )

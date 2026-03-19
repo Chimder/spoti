@@ -2,10 +2,10 @@ package testhelpers
 
 import (
 	"context"
-	"spoti/internal/domain/user"
-	"spoti/internal/repository/clickhouse"
 	"testing"
 
+	"github.com/Chimder/spoti/internal/domain/user"
+	"github.com/Chimder/spoti/internal/repository/clickhouse"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"

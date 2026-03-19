@@ -5,12 +5,12 @@ import (
 	// "csTrade/internal/handlers/middleware"
 
 	"context"
-	"spoti/internal/repository/clickhouse"
-	meilisearchrepo "spoti/internal/repository/meilisearch"
-	"spoti/internal/repository/postgres"
-	rediscache "spoti/internal/repository/redis"
-	"spoti/internal/service"
 
+	"github.com/Chimder/spoti/internal/repository/clickhouse"
+	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
+	"github.com/Chimder/spoti/internal/repository/postgres"
+	rediscache "github.com/Chimder/spoti/internal/repository/redis"
+	"github.com/Chimder/spoti/internal/service"
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

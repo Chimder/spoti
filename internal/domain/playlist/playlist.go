@@ -15,7 +15,8 @@ type Playlist struct {
 	Img         string
 	Public      bool
 	Total       uint
-	Tracks      []PlayListTrack
+	CreatedAt   time.Time
+	// Tracks      []PlayListTrack
 }
 
 type PlaylistJson struct {
@@ -26,6 +27,7 @@ type PlaylistJson struct {
 	Img         string         `json:"image"`
 	Public      bool           `json:"is_public"`
 	Total       uint           `json:"total"`
+	CreatedAt   time.Time      `json:"created_at"`
 	Tracks      PlaylistTracks `json:"tracks"`
 }
 

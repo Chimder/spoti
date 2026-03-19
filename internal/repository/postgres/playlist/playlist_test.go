@@ -2,15 +2,15 @@ package playlistrepo_test
 
 import (
 	"context"
-	"spoti/internal/domain/playlist"
-	albumrepo "spoti/internal/repository/postgres/album"
-	playlistrepo "spoti/internal/repository/postgres/playlist"
-	recordingrepo "spoti/internal/repository/postgres/recording"
-	"spoti/internal/repository/postgres/testhelpers"
-	trackrepo "spoti/internal/repository/postgres/track"
-	userrepo "spoti/internal/repository/postgres/user"
 	"testing"
 
+	"github.com/Chimder/spoti/internal/domain/playlist"
+	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
+	playlistrepo "github.com/Chimder/spoti/internal/repository/postgres/playlist"
+	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
+	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
+	trackrepo "github.com/Chimder/spoti/internal/repository/postgres/track"
+	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

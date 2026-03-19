@@ -3,7 +3,7 @@ package rediscache_test
 import (
 	"context"
 	"fmt"
-	rediscache "spoti/internal/repository/redis"
+	rediscache "github.com/Chimder/spoti/internal/repository/redis"
 	"testing"
 	"time"
 

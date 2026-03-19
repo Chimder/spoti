@@ -2,9 +2,9 @@ package httpgin
 
 import (
 	"net/http"
-	"spoti/internal/domain/artist"
-	"spoti/internal/service"
 
+	"github.com/Chimder/spoti/internal/domain/artist"
+	"github.com/Chimder/spoti/internal/service"
 	"github.com/gin-gonic/gin"
 )
 

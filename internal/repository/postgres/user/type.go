@@ -1,9 +1,9 @@
 package userrepo
 
 import (
-	"spoti/internal/domain/user"
 	"time"
 
+	"github.com/Chimder/spoti/internal/domain/user"
 	"github.com/google/uuid"
 )
 

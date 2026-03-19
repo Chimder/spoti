@@ -2,8 +2,8 @@ package main
 
 import (
 	"os"
-	"spoti/config"
 
+	"github.com/Chimder/spoti/config"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
