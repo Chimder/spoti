@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        (unknown)
-// source: playlist.proto
+// source: playlist/v1/playlist.proto
 
-package playlist
+package playlistv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -39,7 +39,7 @@ type Playlist struct {
 
 func (x *Playlist) Reset() {
 	*x = Playlist{}
-	mi := &file_playlist_proto_msgTypes[0]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -51,7 +51,7 @@ func (x *Playlist) String() string {
 func (*Playlist) ProtoMessage() {}
 
 func (x *Playlist) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[0]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,7 +64,7 @@ func (x *Playlist) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Playlist.ProtoReflect.Descriptor instead.
 func (*Playlist) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{0}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Playlist) GetId() string {
@@ -140,7 +140,7 @@ type PlaylistJson struct {
 
 func (x *PlaylistJson) Reset() {
 	*x = PlaylistJson{}
-	mi := &file_playlist_proto_msgTypes[1]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -152,7 +152,7 @@ func (x *PlaylistJson) String() string {
 func (*PlaylistJson) ProtoMessage() {}
 
 func (x *PlaylistJson) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[1]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -165,7 +165,7 @@ func (x *PlaylistJson) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlaylistJson.ProtoReflect.Descriptor instead.
 func (*PlaylistJson) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{1}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *PlaylistJson) GetPlaylist() *Playlist {
@@ -195,7 +195,7 @@ type CreatePlaylistRequest struct {
 
 func (x *CreatePlaylistRequest) Reset() {
 	*x = CreatePlaylistRequest{}
-	mi := &file_playlist_proto_msgTypes[2]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -207,7 +207,7 @@ func (x *CreatePlaylistRequest) String() string {
 func (*CreatePlaylistRequest) ProtoMessage() {}
 
 func (x *CreatePlaylistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[2]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -220,7 +220,7 @@ func (x *CreatePlaylistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePlaylistRequest.ProtoReflect.Descriptor instead.
 func (*CreatePlaylistRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{2}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreatePlaylistRequest) GetOwnerId() string {
@@ -267,7 +267,7 @@ type CreatePlaylistResponse struct {
 
 func (x *CreatePlaylistResponse) Reset() {
 	*x = CreatePlaylistResponse{}
-	mi := &file_playlist_proto_msgTypes[3]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -279,7 +279,7 @@ func (x *CreatePlaylistResponse) String() string {
 func (*CreatePlaylistResponse) ProtoMessage() {}
 
 func (x *CreatePlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[3]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -292,7 +292,7 @@ func (x *CreatePlaylistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePlaylistResponse.ProtoReflect.Descriptor instead.
 func (*CreatePlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{3}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreatePlaylistResponse) GetId() string {
@@ -311,7 +311,7 @@ type GetPlaylistByIdRequest struct {
 
 func (x *GetPlaylistByIdRequest) Reset() {
 	*x = GetPlaylistByIdRequest{}
-	mi := &file_playlist_proto_msgTypes[4]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -323,7 +323,7 @@ func (x *GetPlaylistByIdRequest) String() string {
 func (*GetPlaylistByIdRequest) ProtoMessage() {}
 
 func (x *GetPlaylistByIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[4]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -336,7 +336,7 @@ func (x *GetPlaylistByIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPlaylistByIdRequest.ProtoReflect.Descriptor instead.
 func (*GetPlaylistByIdRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{4}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetPlaylistByIdRequest) GetPlaylistId() string {
@@ -355,7 +355,7 @@ type GetPlaylistByIdResponse struct {
 
 func (x *GetPlaylistByIdResponse) Reset() {
 	*x = GetPlaylistByIdResponse{}
-	mi := &file_playlist_proto_msgTypes[5]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -367,7 +367,7 @@ func (x *GetPlaylistByIdResponse) String() string {
 func (*GetPlaylistByIdResponse) ProtoMessage() {}
 
 func (x *GetPlaylistByIdResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[5]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -380,7 +380,7 @@ func (x *GetPlaylistByIdResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPlaylistByIdResponse.ProtoReflect.Descriptor instead.
 func (*GetPlaylistByIdResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{5}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetPlaylistByIdResponse) GetPlaylist() *PlaylistJson {
@@ -400,7 +400,7 @@ type AddToPlaylistRequest struct {
 
 func (x *AddToPlaylistRequest) Reset() {
 	*x = AddToPlaylistRequest{}
-	mi := &file_playlist_proto_msgTypes[6]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -412,7 +412,7 @@ func (x *AddToPlaylistRequest) String() string {
 func (*AddToPlaylistRequest) ProtoMessage() {}
 
 func (x *AddToPlaylistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[6]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -425,7 +425,7 @@ func (x *AddToPlaylistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddToPlaylistRequest.ProtoReflect.Descriptor instead.
 func (*AddToPlaylistRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{6}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AddToPlaylistRequest) GetPlaylistId() string {
@@ -450,7 +450,7 @@ type AddToPlaylistResponse struct {
 
 func (x *AddToPlaylistResponse) Reset() {
 	*x = AddToPlaylistResponse{}
-	mi := &file_playlist_proto_msgTypes[7]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -462,7 +462,7 @@ func (x *AddToPlaylistResponse) String() string {
 func (*AddToPlaylistResponse) ProtoMessage() {}
 
 func (x *AddToPlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[7]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,7 +475,7 @@ func (x *AddToPlaylistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddToPlaylistResponse.ProtoReflect.Descriptor instead.
 func (*AddToPlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{7}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{7}
 }
 
 type UpdatePlaylistRequest struct {
@@ -490,7 +490,7 @@ type UpdatePlaylistRequest struct {
 
 func (x *UpdatePlaylistRequest) Reset() {
 	*x = UpdatePlaylistRequest{}
-	mi := &file_playlist_proto_msgTypes[8]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -502,7 +502,7 @@ func (x *UpdatePlaylistRequest) String() string {
 func (*UpdatePlaylistRequest) ProtoMessage() {}
 
 func (x *UpdatePlaylistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[8]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -515,7 +515,7 @@ func (x *UpdatePlaylistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePlaylistRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePlaylistRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{8}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdatePlaylistRequest) GetPlaylistId() string {
@@ -554,7 +554,7 @@ type UpdatePlaylistResponse struct {
 
 func (x *UpdatePlaylistResponse) Reset() {
 	*x = UpdatePlaylistResponse{}
-	mi := &file_playlist_proto_msgTypes[9]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -566,7 +566,7 @@ func (x *UpdatePlaylistResponse) String() string {
 func (*UpdatePlaylistResponse) ProtoMessage() {}
 
 func (x *UpdatePlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[9]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -579,7 +579,7 @@ func (x *UpdatePlaylistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePlaylistResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{9}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{9}
 }
 
 type DeleteFromPlaylistRequest struct {
@@ -592,7 +592,7 @@ type DeleteFromPlaylistRequest struct {
 
 func (x *DeleteFromPlaylistRequest) Reset() {
 	*x = DeleteFromPlaylistRequest{}
-	mi := &file_playlist_proto_msgTypes[10]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -604,7 +604,7 @@ func (x *DeleteFromPlaylistRequest) String() string {
 func (*DeleteFromPlaylistRequest) ProtoMessage() {}
 
 func (x *DeleteFromPlaylistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[10]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -617,7 +617,7 @@ func (x *DeleteFromPlaylistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFromPlaylistRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFromPlaylistRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{10}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteFromPlaylistRequest) GetPlaylistId() string {
@@ -642,7 +642,7 @@ type DeleteFromPlaylistResponse struct {
 
 func (x *DeleteFromPlaylistResponse) Reset() {
 	*x = DeleteFromPlaylistResponse{}
-	mi := &file_playlist_proto_msgTypes[11]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -654,7 +654,7 @@ func (x *DeleteFromPlaylistResponse) String() string {
 func (*DeleteFromPlaylistResponse) ProtoMessage() {}
 
 func (x *DeleteFromPlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[11]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -667,7 +667,7 @@ func (x *DeleteFromPlaylistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFromPlaylistResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFromPlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{11}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{11}
 }
 
 type GetAllUserPlaylistsRequest struct {
@@ -679,7 +679,7 @@ type GetAllUserPlaylistsRequest struct {
 
 func (x *GetAllUserPlaylistsRequest) Reset() {
 	*x = GetAllUserPlaylistsRequest{}
-	mi := &file_playlist_proto_msgTypes[12]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -691,7 +691,7 @@ func (x *GetAllUserPlaylistsRequest) String() string {
 func (*GetAllUserPlaylistsRequest) ProtoMessage() {}
 
 func (x *GetAllUserPlaylistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[12]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -704,7 +704,7 @@ func (x *GetAllUserPlaylistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllUserPlaylistsRequest.ProtoReflect.Descriptor instead.
 func (*GetAllUserPlaylistsRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{12}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetAllUserPlaylistsRequest) GetUserId() string {
@@ -723,7 +723,7 @@ type GetAllUserPlaylistsResponse struct {
 
 func (x *GetAllUserPlaylistsResponse) Reset() {
 	*x = GetAllUserPlaylistsResponse{}
-	mi := &file_playlist_proto_msgTypes[13]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -735,7 +735,7 @@ func (x *GetAllUserPlaylistsResponse) String() string {
 func (*GetAllUserPlaylistsResponse) ProtoMessage() {}
 
 func (x *GetAllUserPlaylistsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[13]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -748,7 +748,7 @@ func (x *GetAllUserPlaylistsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllUserPlaylistsResponse.ProtoReflect.Descriptor instead.
 func (*GetAllUserPlaylistsResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{13}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetAllUserPlaylistsResponse) GetPlaylist() *Playlist {
@@ -770,7 +770,7 @@ type PlaylistTracks struct {
 
 func (x *PlaylistTracks) Reset() {
 	*x = PlaylistTracks{}
-	mi := &file_playlist_proto_msgTypes[14]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -782,7 +782,7 @@ func (x *PlaylistTracks) String() string {
 func (*PlaylistTracks) ProtoMessage() {}
 
 func (x *PlaylistTracks) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[14]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -795,7 +795,7 @@ func (x *PlaylistTracks) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlaylistTracks.ProtoReflect.Descriptor instead.
 func (*PlaylistTracks) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{14}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *PlaylistTracks) GetTotal() uint32 {
@@ -837,7 +837,7 @@ type PlaylistTrack struct {
 
 func (x *PlaylistTrack) Reset() {
 	*x = PlaylistTrack{}
-	mi := &file_playlist_proto_msgTypes[15]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -849,7 +849,7 @@ func (x *PlaylistTrack) String() string {
 func (*PlaylistTrack) ProtoMessage() {}
 
 func (x *PlaylistTrack) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[15]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -862,7 +862,7 @@ func (x *PlaylistTrack) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlaylistTrack.ProtoReflect.Descriptor instead.
 func (*PlaylistTrack) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{15}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *PlaylistTrack) GetAddedAt() *timestamppb.Timestamp {
@@ -900,7 +900,7 @@ type Track struct {
 
 func (x *Track) Reset() {
 	*x = Track{}
-	mi := &file_playlist_proto_msgTypes[16]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -912,7 +912,7 @@ func (x *Track) String() string {
 func (*Track) ProtoMessage() {}
 
 func (x *Track) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[16]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -925,7 +925,7 @@ func (x *Track) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Track.ProtoReflect.Descriptor instead.
 func (*Track) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{16}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *Track) GetId() string {
@@ -981,7 +981,7 @@ type Artist struct {
 
 func (x *Artist) Reset() {
 	*x = Artist{}
-	mi := &file_playlist_proto_msgTypes[17]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -993,7 +993,7 @@ func (x *Artist) String() string {
 func (*Artist) ProtoMessage() {}
 
 func (x *Artist) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_proto_msgTypes[17]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1006,7 +1006,7 @@ func (x *Artist) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Artist.ProtoReflect.Descriptor instead.
 func (*Artist) Descriptor() ([]byte, []int) {
-	return file_playlist_proto_rawDescGZIP(), []int{17}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *Artist) GetId() string {
@@ -1030,11 +1030,11 @@ func (x *Artist) GetUri() string {
 	return ""
 }
 
-var File_playlist_proto protoreflect.FileDescriptor
+var File_playlist_v1_playlist_proto protoreflect.FileDescriptor
 
-const file_playlist_proto_rawDesc = "" +
+const file_playlist_v1_playlist_proto_rawDesc = "" +
 	"\n" +
-	"\x0eplaylist.proto\x12\vplaylist.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
+	"\x1aplaylist/v1/playlist.proto\x12\vplaylist.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
 	"\bPlaylist\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x12\n" +
@@ -1115,23 +1115,23 @@ const file_playlist_proto_rawDesc = "" +
 	"\rAddToPlaylist\x12!.playlist.v1.AddToPlaylistRequest\x1a\".playlist.v1.AddToPlaylistResponse\x12Y\n" +
 	"\x0eUpdatePlaylist\x12\".playlist.v1.UpdatePlaylistRequest\x1a#.playlist.v1.UpdatePlaylistResponse\x12e\n" +
 	"\x12DeleteFromPlaylist\x12&.playlist.v1.DeleteFromPlaylistRequest\x1a'.playlist.v1.DeleteFromPlaylistResponse\x12h\n" +
-	"\x13GetAllUserPlaylists\x12'.playlist.v1.GetAllUserPlaylistsRequest\x1a(.playlist.v1.GetAllUserPlaylistsResponseB\x9a\x01\n" +
-	"\x0fcom.playlist.v1B\rPlaylistProtoP\x01Z+github.com/Chimder/spoti/proto/gen/playlist\xa2\x02\x03PXX\xaa\x02\vPlaylist.V1\xca\x02\vPlaylist\\V1\xe2\x02\x17Playlist\\V1\\GPBMetadata\xea\x02\fPlaylist::V1b\x06proto3"
+	"\x13GetAllUserPlaylists\x12'.playlist.v1.GetAllUserPlaylistsRequest\x1a(.playlist.v1.GetAllUserPlaylistsResponseB\xab\x01\n" +
+	"\x0fcom.playlist.v1B\rPlaylistProtoP\x01Z<github.com/Chimder/spoti/internal/gen/playlist/v1;playlistv1\xa2\x02\x03PXX\xaa\x02\vPlaylist.V1\xca\x02\vPlaylist\\V1\xe2\x02\x17Playlist\\V1\\GPBMetadata\xea\x02\fPlaylist::V1b\x06proto3"
 
 var (
-	file_playlist_proto_rawDescOnce sync.Once
-	file_playlist_proto_rawDescData []byte
+	file_playlist_v1_playlist_proto_rawDescOnce sync.Once
+	file_playlist_v1_playlist_proto_rawDescData []byte
 )
 
-func file_playlist_proto_rawDescGZIP() []byte {
-	file_playlist_proto_rawDescOnce.Do(func() {
-		file_playlist_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_playlist_proto_rawDesc), len(file_playlist_proto_rawDesc)))
+func file_playlist_v1_playlist_proto_rawDescGZIP() []byte {
+	file_playlist_v1_playlist_proto_rawDescOnce.Do(func() {
+		file_playlist_v1_playlist_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_playlist_v1_playlist_proto_rawDesc), len(file_playlist_v1_playlist_proto_rawDesc)))
 	})
-	return file_playlist_proto_rawDescData
+	return file_playlist_v1_playlist_proto_rawDescData
 }
 
-var file_playlist_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
-var file_playlist_proto_goTypes = []any{
+var file_playlist_v1_playlist_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_playlist_v1_playlist_proto_goTypes = []any{
 	(*Playlist)(nil),                    // 0: playlist.v1.Playlist
 	(*PlaylistJson)(nil),                // 1: playlist.v1.PlaylistJson
 	(*CreatePlaylistRequest)(nil),       // 2: playlist.v1.CreatePlaylistRequest
@@ -1152,7 +1152,7 @@ var file_playlist_proto_goTypes = []any{
 	(*Artist)(nil),                      // 17: playlist.v1.Artist
 	(*timestamppb.Timestamp)(nil),       // 18: google.protobuf.Timestamp
 }
-var file_playlist_proto_depIdxs = []int32{
+var file_playlist_v1_playlist_proto_depIdxs = []int32{
 	18, // 0: playlist.v1.Playlist.created_at:type_name -> google.protobuf.Timestamp
 	0,  // 1: playlist.v1.PlaylistJson.playlist:type_name -> playlist.v1.Playlist
 	14, // 2: playlist.v1.PlaylistJson.tracks:type_name -> playlist.v1.PlaylistTracks
@@ -1181,27 +1181,27 @@ var file_playlist_proto_depIdxs = []int32{
 	0,  // [0:9] is the sub-list for field type_name
 }
 
-func init() { file_playlist_proto_init() }
-func file_playlist_proto_init() {
-	if File_playlist_proto != nil {
+func init() { file_playlist_v1_playlist_proto_init() }
+func file_playlist_v1_playlist_proto_init() {
+	if File_playlist_v1_playlist_proto != nil {
 		return
 	}
-	file_playlist_proto_msgTypes[8].OneofWrappers = []any{}
+	file_playlist_v1_playlist_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_playlist_proto_rawDesc), len(file_playlist_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_playlist_v1_playlist_proto_rawDesc), len(file_playlist_v1_playlist_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_playlist_proto_goTypes,
-		DependencyIndexes: file_playlist_proto_depIdxs,
-		MessageInfos:      file_playlist_proto_msgTypes,
+		GoTypes:           file_playlist_v1_playlist_proto_goTypes,
+		DependencyIndexes: file_playlist_v1_playlist_proto_depIdxs,
+		MessageInfos:      file_playlist_v1_playlist_proto_msgTypes,
 	}.Build()
-	File_playlist_proto = out.File
-	file_playlist_proto_goTypes = nil
-	file_playlist_proto_depIdxs = nil
+	File_playlist_v1_playlist_proto = out.File
+	file_playlist_v1_playlist_proto_goTypes = nil
+	file_playlist_v1_playlist_proto_depIdxs = nil
 }

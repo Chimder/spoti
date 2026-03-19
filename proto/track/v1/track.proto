@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package track.v1;
 
-option go_package = "github.com/Chimder/spoti/proto/gen/track";
+// option go_package = "github.com/Chimder/spoti/proto/gen/track";
 
 service TrackService {
   rpc CreateTrack(CreateTrackRequest) returns (CreateTrackResponse);

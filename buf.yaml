@@ -1,6 +1,6 @@
 version: v2
 modules:
-  - path: proto/common/v1
+  - path: proto
 deps:
   - buf.build/bufbuild/protovalidate
   - buf.build/googleapis/googleapis

@@ -2,34 +2,37 @@ version: v2
 clean: true
 
 inputs:
-  - directory: proto/common
+  - directory: proto
 
 managed:
   enabled: true
   disable:
     - file_option: go_package
       module: buf.build/bufbuild/protovalidate
+  override:
+    - file_option: go_package_prefix
+      value: github.com/Chimder/spoti/internal/gen
 
 plugins:
   - remote: buf.build/protocolbuffers/go
-    out: proto/gen
-    opt: paths=source_relative
+    out: internal/gen
+    opt: module=github.com/Chimder/spoti/internal/gen
 
   - remote: buf.build/connectrpc/go
-    out: proto/gen
-    opt: paths=source_relative
+    out: internal/gen
+    opt: module=github.com/Chimder/spoti/internal/gen
 
   - remote: buf.build/bufbuild/validate-go
-    out: proto/gen
-    opt: paths=source_relative
+    out: internal/gen
+    opt: module=github.com/Chimder/spoti/internal/gen
 
   - remote: buf.build/grpc-ecosystem/gateway
-    out: proto/gen
-    opt: paths=source_relative
+    out: internal/gen
+    opt: module=github.com/Chimder/spoti/internal/gen
 
   - remote: buf.build/grpc-ecosystem/openapiv2
-    out: proto/gen/openapi
+    out: internal/gen/openapi
     opt:
       - allow_merge=true
-      - merge_file_name=common
+      - merge_file_name=spoti
       - output_format=json

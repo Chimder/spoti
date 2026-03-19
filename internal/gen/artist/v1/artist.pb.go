@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        (unknown)
-// source: artist.proto
+// source: artist/v1/artist.proto
 
-package artist
+package artistv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -39,7 +39,7 @@ type Artist struct {
 
 func (x *Artist) Reset() {
 	*x = Artist{}
-	mi := &file_artist_proto_msgTypes[0]
+	mi := &file_artist_v1_artist_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -51,7 +51,7 @@ func (x *Artist) String() string {
 func (*Artist) ProtoMessage() {}
 
 func (x *Artist) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[0]
+	mi := &file_artist_v1_artist_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,7 +64,7 @@ func (x *Artist) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Artist.ProtoReflect.Descriptor instead.
 func (*Artist) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{0}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Artist) GetId() string {
@@ -139,7 +139,7 @@ type GetArtistRequest struct {
 
 func (x *GetArtistRequest) Reset() {
 	*x = GetArtistRequest{}
-	mi := &file_artist_proto_msgTypes[1]
+	mi := &file_artist_v1_artist_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -151,7 +151,7 @@ func (x *GetArtistRequest) String() string {
 func (*GetArtistRequest) ProtoMessage() {}
 
 func (x *GetArtistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[1]
+	mi := &file_artist_v1_artist_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -164,7 +164,7 @@ func (x *GetArtistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistRequest.ProtoReflect.Descriptor instead.
 func (*GetArtistRequest) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{1}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetArtistRequest) GetArtistId() string {
@@ -183,7 +183,7 @@ type GetArtistResponse struct {
 
 func (x *GetArtistResponse) Reset() {
 	*x = GetArtistResponse{}
-	mi := &file_artist_proto_msgTypes[2]
+	mi := &file_artist_v1_artist_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -195,7 +195,7 @@ func (x *GetArtistResponse) String() string {
 func (*GetArtistResponse) ProtoMessage() {}
 
 func (x *GetArtistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[2]
+	mi := &file_artist_v1_artist_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -208,7 +208,7 @@ func (x *GetArtistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistResponse.ProtoReflect.Descriptor instead.
 func (*GetArtistResponse) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{2}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetArtistResponse) GetArtist() *Artist {
@@ -227,7 +227,7 @@ type GetArtistsByIdsRequest struct {
 
 func (x *GetArtistsByIdsRequest) Reset() {
 	*x = GetArtistsByIdsRequest{}
-	mi := &file_artist_proto_msgTypes[3]
+	mi := &file_artist_v1_artist_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -239,7 +239,7 @@ func (x *GetArtistsByIdsRequest) String() string {
 func (*GetArtistsByIdsRequest) ProtoMessage() {}
 
 func (x *GetArtistsByIdsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[3]
+	mi := &file_artist_v1_artist_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -252,7 +252,7 @@ func (x *GetArtistsByIdsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistsByIdsRequest.ProtoReflect.Descriptor instead.
 func (*GetArtistsByIdsRequest) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{3}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetArtistsByIdsRequest) GetArtistsIds() []string {
@@ -271,7 +271,7 @@ type GetArtistsByIdsResponse struct {
 
 func (x *GetArtistsByIdsResponse) Reset() {
 	*x = GetArtistsByIdsResponse{}
-	mi := &file_artist_proto_msgTypes[4]
+	mi := &file_artist_v1_artist_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -283,7 +283,7 @@ func (x *GetArtistsByIdsResponse) String() string {
 func (*GetArtistsByIdsResponse) ProtoMessage() {}
 
 func (x *GetArtistsByIdsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[4]
+	mi := &file_artist_v1_artist_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -296,7 +296,7 @@ func (x *GetArtistsByIdsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistsByIdsResponse.ProtoReflect.Descriptor instead.
 func (*GetArtistsByIdsResponse) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{4}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetArtistsByIdsResponse) GetArtists() []*Artist {
@@ -314,7 +314,7 @@ type GetArtistAlbumsRequest struct {
 
 func (x *GetArtistAlbumsRequest) Reset() {
 	*x = GetArtistAlbumsRequest{}
-	mi := &file_artist_proto_msgTypes[5]
+	mi := &file_artist_v1_artist_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -326,7 +326,7 @@ func (x *GetArtistAlbumsRequest) String() string {
 func (*GetArtistAlbumsRequest) ProtoMessage() {}
 
 func (x *GetArtistAlbumsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[5]
+	mi := &file_artist_v1_artist_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -339,7 +339,7 @@ func (x *GetArtistAlbumsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistAlbumsRequest.ProtoReflect.Descriptor instead.
 func (*GetArtistAlbumsRequest) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{5}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{5}
 }
 
 type GetArtistAlbumsResponse struct {
@@ -350,7 +350,7 @@ type GetArtistAlbumsResponse struct {
 
 func (x *GetArtistAlbumsResponse) Reset() {
 	*x = GetArtistAlbumsResponse{}
-	mi := &file_artist_proto_msgTypes[6]
+	mi := &file_artist_v1_artist_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -362,7 +362,7 @@ func (x *GetArtistAlbumsResponse) String() string {
 func (*GetArtistAlbumsResponse) ProtoMessage() {}
 
 func (x *GetArtistAlbumsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[6]
+	mi := &file_artist_v1_artist_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -375,7 +375,7 @@ func (x *GetArtistAlbumsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistAlbumsResponse.ProtoReflect.Descriptor instead.
 func (*GetArtistAlbumsResponse) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{6}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{6}
 }
 
 type CreateArtistRequest struct {
@@ -393,7 +393,7 @@ type CreateArtistRequest struct {
 
 func (x *CreateArtistRequest) Reset() {
 	*x = CreateArtistRequest{}
-	mi := &file_artist_proto_msgTypes[7]
+	mi := &file_artist_v1_artist_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -405,7 +405,7 @@ func (x *CreateArtistRequest) String() string {
 func (*CreateArtistRequest) ProtoMessage() {}
 
 func (x *CreateArtistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[7]
+	mi := &file_artist_v1_artist_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -418,7 +418,7 @@ func (x *CreateArtistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateArtistRequest.ProtoReflect.Descriptor instead.
 func (*CreateArtistRequest) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{7}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateArtistRequest) GetUrl() string {
@@ -479,7 +479,7 @@ type CreateArtistResponse struct {
 
 func (x *CreateArtistResponse) Reset() {
 	*x = CreateArtistResponse{}
-	mi := &file_artist_proto_msgTypes[8]
+	mi := &file_artist_v1_artist_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -491,7 +491,7 @@ func (x *CreateArtistResponse) String() string {
 func (*CreateArtistResponse) ProtoMessage() {}
 
 func (x *CreateArtistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_artist_proto_msgTypes[8]
+	mi := &file_artist_v1_artist_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -504,7 +504,7 @@ func (x *CreateArtistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateArtistResponse.ProtoReflect.Descriptor instead.
 func (*CreateArtistResponse) Descriptor() ([]byte, []int) {
-	return file_artist_proto_rawDescGZIP(), []int{8}
+	return file_artist_v1_artist_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateArtistResponse) GetId() string {
@@ -514,11 +514,11 @@ func (x *CreateArtistResponse) GetId() string {
 	return ""
 }
 
-var File_artist_proto protoreflect.FileDescriptor
+var File_artist_v1_artist_proto protoreflect.FileDescriptor
 
-const file_artist_proto_rawDesc = "" +
+const file_artist_v1_artist_proto_rawDesc = "" +
 	"\n" +
-	"\fartist.proto\x12\tartist.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf7\x01\n" +
+	"\x16artist/v1/artist.proto\x12\tartist.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf7\x01\n" +
 	"\x06Artist\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x12\x1c\n" +
@@ -560,24 +560,24 @@ const file_artist_proto_rawDesc = "" +
 	"\tGetArtist\x12\x1b.artist.v1.GetArtistRequest\x1a\x1c.artist.v1.GetArtistResponse\x12X\n" +
 	"\x0fGetArtistsByIds\x12!.artist.v1.GetArtistsByIdsRequest\x1a\".artist.v1.GetArtistsByIdsResponse\x12X\n" +
 	"\x0fGetArtistAlbums\x12!.artist.v1.GetArtistAlbumsRequest\x1a\".artist.v1.GetArtistAlbumsResponse\x12O\n" +
-	"\fCreateArtist\x12\x1e.artist.v1.CreateArtistRequest\x1a\x1f.artist.v1.CreateArtistResponseB\x8c\x01\n" +
-	"\rcom.artist.v1B\vArtistProtoP\x01Z)github.com/Chimder/spoti/proto/gen/artist\xa2\x02\x03AXX\xaa\x02\tArtist.V1\xca\x02\tArtist\\V1\xe2\x02\x15Artist\\V1\\GPBMetadata\xea\x02\n" +
+	"\fCreateArtist\x12\x1e.artist.v1.CreateArtistRequest\x1a\x1f.artist.v1.CreateArtistResponseB\x9b\x01\n" +
+	"\rcom.artist.v1B\vArtistProtoP\x01Z8github.com/Chimder/spoti/internal/gen/artist/v1;artistv1\xa2\x02\x03AXX\xaa\x02\tArtist.V1\xca\x02\tArtist\\V1\xe2\x02\x15Artist\\V1\\GPBMetadata\xea\x02\n" +
 	"Artist::V1b\x06proto3"
 
 var (
-	file_artist_proto_rawDescOnce sync.Once
-	file_artist_proto_rawDescData []byte
+	file_artist_v1_artist_proto_rawDescOnce sync.Once
+	file_artist_v1_artist_proto_rawDescData []byte
 )
 
-func file_artist_proto_rawDescGZIP() []byte {
-	file_artist_proto_rawDescOnce.Do(func() {
-		file_artist_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_artist_proto_rawDesc), len(file_artist_proto_rawDesc)))
+func file_artist_v1_artist_proto_rawDescGZIP() []byte {
+	file_artist_v1_artist_proto_rawDescOnce.Do(func() {
+		file_artist_v1_artist_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_artist_v1_artist_proto_rawDesc), len(file_artist_v1_artist_proto_rawDesc)))
 	})
-	return file_artist_proto_rawDescData
+	return file_artist_v1_artist_proto_rawDescData
 }
 
-var file_artist_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_artist_proto_goTypes = []any{
+var file_artist_v1_artist_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_artist_v1_artist_proto_goTypes = []any{
 	(*Artist)(nil),                  // 0: artist.v1.Artist
 	(*GetArtistRequest)(nil),        // 1: artist.v1.GetArtistRequest
 	(*GetArtistResponse)(nil),       // 2: artist.v1.GetArtistResponse
@@ -589,7 +589,7 @@ var file_artist_proto_goTypes = []any{
 	(*CreateArtistResponse)(nil),    // 8: artist.v1.CreateArtistResponse
 	(*timestamppb.Timestamp)(nil),   // 9: google.protobuf.Timestamp
 }
-var file_artist_proto_depIdxs = []int32{
+var file_artist_v1_artist_proto_depIdxs = []int32{
 	9, // 0: artist.v1.Artist.created_at:type_name -> google.protobuf.Timestamp
 	0, // 1: artist.v1.GetArtistResponse.artist:type_name -> artist.v1.Artist
 	0, // 2: artist.v1.GetArtistsByIdsResponse.artists:type_name -> artist.v1.Artist
@@ -608,26 +608,26 @@ var file_artist_proto_depIdxs = []int32{
 	0, // [0:3] is the sub-list for field type_name
 }
 
-func init() { file_artist_proto_init() }
-func file_artist_proto_init() {
-	if File_artist_proto != nil {
+func init() { file_artist_v1_artist_proto_init() }
+func file_artist_v1_artist_proto_init() {
+	if File_artist_v1_artist_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_artist_proto_rawDesc), len(file_artist_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_artist_v1_artist_proto_rawDesc), len(file_artist_v1_artist_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_artist_proto_goTypes,
-		DependencyIndexes: file_artist_proto_depIdxs,
-		MessageInfos:      file_artist_proto_msgTypes,
+		GoTypes:           file_artist_v1_artist_proto_goTypes,
+		DependencyIndexes: file_artist_v1_artist_proto_depIdxs,
+		MessageInfos:      file_artist_v1_artist_proto_msgTypes,
 	}.Build()
-	File_artist_proto = out.File
-	file_artist_proto_goTypes = nil
-	file_artist_proto_depIdxs = nil
+	File_artist_v1_artist_proto = out.File
+	file_artist_v1_artist_proto_goTypes = nil
+	file_artist_v1_artist_proto_depIdxs = nil
 }

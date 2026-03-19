@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        (unknown)
-// source: track.proto
+// source: track/v1/track.proto
 
-package track
+package trackv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -39,7 +39,7 @@ type CreateTrackRequest struct {
 
 func (x *CreateTrackRequest) Reset() {
 	*x = CreateTrackRequest{}
-	mi := &file_track_proto_msgTypes[0]
+	mi := &file_track_v1_track_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -51,7 +51,7 @@ func (x *CreateTrackRequest) String() string {
 func (*CreateTrackRequest) ProtoMessage() {}
 
 func (x *CreateTrackRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[0]
+	mi := &file_track_v1_track_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,7 +64,7 @@ func (x *CreateTrackRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTrackRequest.ProtoReflect.Descriptor instead.
 func (*CreateTrackRequest) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{0}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *CreateTrackRequest) GetAlbumId() string {
@@ -146,7 +146,7 @@ type CreateTrackResponse struct {
 
 func (x *CreateTrackResponse) Reset() {
 	*x = CreateTrackResponse{}
-	mi := &file_track_proto_msgTypes[1]
+	mi := &file_track_v1_track_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -158,7 +158,7 @@ func (x *CreateTrackResponse) String() string {
 func (*CreateTrackResponse) ProtoMessage() {}
 
 func (x *CreateTrackResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[1]
+	mi := &file_track_v1_track_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -171,7 +171,7 @@ func (x *CreateTrackResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTrackResponse.ProtoReflect.Descriptor instead.
 func (*CreateTrackResponse) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{1}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreateTrackResponse) GetId() string {
@@ -190,7 +190,7 @@ type GetTrackByIdRequest struct {
 
 func (x *GetTrackByIdRequest) Reset() {
 	*x = GetTrackByIdRequest{}
-	mi := &file_track_proto_msgTypes[2]
+	mi := &file_track_v1_track_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -202,7 +202,7 @@ func (x *GetTrackByIdRequest) String() string {
 func (*GetTrackByIdRequest) ProtoMessage() {}
 
 func (x *GetTrackByIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[2]
+	mi := &file_track_v1_track_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -215,7 +215,7 @@ func (x *GetTrackByIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTrackByIdRequest.ProtoReflect.Descriptor instead.
 func (*GetTrackByIdRequest) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{2}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetTrackByIdRequest) GetTrackId() string {
@@ -249,7 +249,7 @@ type Track struct {
 
 func (x *Track) Reset() {
 	*x = Track{}
-	mi := &file_track_proto_msgTypes[3]
+	mi := &file_track_v1_track_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -261,7 +261,7 @@ func (x *Track) String() string {
 func (*Track) ProtoMessage() {}
 
 func (x *Track) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[3]
+	mi := &file_track_v1_track_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -274,7 +274,7 @@ func (x *Track) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Track.ProtoReflect.Descriptor instead.
 func (*Track) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{3}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Track) GetId() string {
@@ -398,7 +398,7 @@ type GetTrackByIdResponse struct {
 
 func (x *GetTrackByIdResponse) Reset() {
 	*x = GetTrackByIdResponse{}
-	mi := &file_track_proto_msgTypes[4]
+	mi := &file_track_v1_track_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -410,7 +410,7 @@ func (x *GetTrackByIdResponse) String() string {
 func (*GetTrackByIdResponse) ProtoMessage() {}
 
 func (x *GetTrackByIdResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[4]
+	mi := &file_track_v1_track_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -423,7 +423,7 @@ func (x *GetTrackByIdResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTrackByIdResponse.ProtoReflect.Descriptor instead.
 func (*GetTrackByIdResponse) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{4}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetTrackByIdResponse) GetTrack() *Track {
@@ -442,7 +442,7 @@ type GetTracksByIdsRequest struct {
 
 func (x *GetTracksByIdsRequest) Reset() {
 	*x = GetTracksByIdsRequest{}
-	mi := &file_track_proto_msgTypes[5]
+	mi := &file_track_v1_track_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +454,7 @@ func (x *GetTracksByIdsRequest) String() string {
 func (*GetTracksByIdsRequest) ProtoMessage() {}
 
 func (x *GetTracksByIdsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[5]
+	mi := &file_track_v1_track_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +467,7 @@ func (x *GetTracksByIdsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTracksByIdsRequest.ProtoReflect.Descriptor instead.
 func (*GetTracksByIdsRequest) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{5}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetTracksByIdsRequest) GetTrackIds() []string {
@@ -486,7 +486,7 @@ type GetTracksByIdsResponse struct {
 
 func (x *GetTracksByIdsResponse) Reset() {
 	*x = GetTracksByIdsResponse{}
-	mi := &file_track_proto_msgTypes[6]
+	mi := &file_track_v1_track_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -498,7 +498,7 @@ func (x *GetTracksByIdsResponse) String() string {
 func (*GetTracksByIdsResponse) ProtoMessage() {}
 
 func (x *GetTracksByIdsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[6]
+	mi := &file_track_v1_track_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -511,7 +511,7 @@ func (x *GetTracksByIdsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTracksByIdsResponse.ProtoReflect.Descriptor instead.
 func (*GetTracksByIdsResponse) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{6}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetTracksByIdsResponse) GetTracks() []*Track {
@@ -530,7 +530,7 @@ type GetArtistTracksRequest struct {
 
 func (x *GetArtistTracksRequest) Reset() {
 	*x = GetArtistTracksRequest{}
-	mi := &file_track_proto_msgTypes[7]
+	mi := &file_track_v1_track_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -542,7 +542,7 @@ func (x *GetArtistTracksRequest) String() string {
 func (*GetArtistTracksRequest) ProtoMessage() {}
 
 func (x *GetArtistTracksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[7]
+	mi := &file_track_v1_track_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -555,7 +555,7 @@ func (x *GetArtistTracksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistTracksRequest.ProtoReflect.Descriptor instead.
 func (*GetArtistTracksRequest) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{7}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetArtistTracksRequest) GetArtistId() string {
@@ -574,7 +574,7 @@ type GetArtistTracksResponse struct {
 
 func (x *GetArtistTracksResponse) Reset() {
 	*x = GetArtistTracksResponse{}
-	mi := &file_track_proto_msgTypes[8]
+	mi := &file_track_v1_track_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -586,7 +586,7 @@ func (x *GetArtistTracksResponse) String() string {
 func (*GetArtistTracksResponse) ProtoMessage() {}
 
 func (x *GetArtistTracksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_track_proto_msgTypes[8]
+	mi := &file_track_v1_track_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -599,7 +599,7 @@ func (x *GetArtistTracksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetArtistTracksResponse.ProtoReflect.Descriptor instead.
 func (*GetArtistTracksResponse) Descriptor() ([]byte, []int) {
-	return file_track_proto_rawDescGZIP(), []int{8}
+	return file_track_v1_track_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetArtistTracksResponse) GetTracks() []*Track {
@@ -609,11 +609,11 @@ func (x *GetArtistTracksResponse) GetTracks() []*Track {
 	return nil
 }
 
-var File_track_proto protoreflect.FileDescriptor
+var File_track_v1_track_proto protoreflect.FileDescriptor
 
-const file_track_proto_rawDesc = "" +
+const file_track_v1_track_proto_rawDesc = "" +
 	"\n" +
-	"\vtrack.proto\x12\btrack.v1\"\x9d\x02\n" +
+	"\x14track/v1/track.proto\x12\btrack.v1\"\x9d\x02\n" +
 	"\x12CreateTrackRequest\x12\x19\n" +
 	"\balbum_id\x18\x01 \x01(\tR\aalbumId\x12!\n" +
 	"\frecording_id\x18\x02 \x01(\tR\vrecordingId\x12\x12\n" +
@@ -670,24 +670,24 @@ const file_track_proto_rawDesc = "" +
 	"\vCreateTrack\x12\x1c.track.v1.CreateTrackRequest\x1a\x1d.track.v1.CreateTrackResponse\x12M\n" +
 	"\fGetTrackById\x12\x1d.track.v1.GetTrackByIdRequest\x1a\x1e.track.v1.GetTrackByIdResponse\x12S\n" +
 	"\x0eGetTracksByIds\x12\x1f.track.v1.GetTracksByIdsRequest\x1a .track.v1.GetTracksByIdsResponse\x12V\n" +
-	"\x0fGetArtistTracks\x12 .track.v1.GetArtistTracksRequest\x1a!.track.v1.GetArtistTracksResponseB\x85\x01\n" +
+	"\x0fGetArtistTracks\x12 .track.v1.GetArtistTracksRequest\x1a!.track.v1.GetArtistTracksResponseB\x93\x01\n" +
 	"\fcom.track.v1B\n" +
-	"TrackProtoP\x01Z(github.com/Chimder/spoti/proto/gen/track\xa2\x02\x03TXX\xaa\x02\bTrack.V1\xca\x02\bTrack\\V1\xe2\x02\x14Track\\V1\\GPBMetadata\xea\x02\tTrack::V1b\x06proto3"
+	"TrackProtoP\x01Z6github.com/Chimder/spoti/internal/gen/track/v1;trackv1\xa2\x02\x03TXX\xaa\x02\bTrack.V1\xca\x02\bTrack\\V1\xe2\x02\x14Track\\V1\\GPBMetadata\xea\x02\tTrack::V1b\x06proto3"
 
 var (
-	file_track_proto_rawDescOnce sync.Once
-	file_track_proto_rawDescData []byte
+	file_track_v1_track_proto_rawDescOnce sync.Once
+	file_track_v1_track_proto_rawDescData []byte
 )
 
-func file_track_proto_rawDescGZIP() []byte {
-	file_track_proto_rawDescOnce.Do(func() {
-		file_track_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_track_proto_rawDesc), len(file_track_proto_rawDesc)))
+func file_track_v1_track_proto_rawDescGZIP() []byte {
+	file_track_v1_track_proto_rawDescOnce.Do(func() {
+		file_track_v1_track_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_track_v1_track_proto_rawDesc), len(file_track_v1_track_proto_rawDesc)))
 	})
-	return file_track_proto_rawDescData
+	return file_track_v1_track_proto_rawDescData
 }
 
-var file_track_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_track_proto_goTypes = []any{
+var file_track_v1_track_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_track_v1_track_proto_goTypes = []any{
 	(*CreateTrackRequest)(nil),      // 0: track.v1.CreateTrackRequest
 	(*CreateTrackResponse)(nil),     // 1: track.v1.CreateTrackResponse
 	(*GetTrackByIdRequest)(nil),     // 2: track.v1.GetTrackByIdRequest
@@ -698,7 +698,7 @@ var file_track_proto_goTypes = []any{
 	(*GetArtistTracksRequest)(nil),  // 7: track.v1.GetArtistTracksRequest
 	(*GetArtistTracksResponse)(nil), // 8: track.v1.GetArtistTracksResponse
 }
-var file_track_proto_depIdxs = []int32{
+var file_track_v1_track_proto_depIdxs = []int32{
 	3, // 0: track.v1.GetTrackByIdResponse.track:type_name -> track.v1.Track
 	3, // 1: track.v1.GetTracksByIdsResponse.tracks:type_name -> track.v1.Track
 	3, // 2: track.v1.GetArtistTracksResponse.tracks:type_name -> track.v1.Track
@@ -717,26 +717,26 @@ var file_track_proto_depIdxs = []int32{
 	0, // [0:3] is the sub-list for field type_name
 }
 
-func init() { file_track_proto_init() }
-func file_track_proto_init() {
-	if File_track_proto != nil {
+func init() { file_track_v1_track_proto_init() }
+func file_track_v1_track_proto_init() {
+	if File_track_v1_track_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_track_proto_rawDesc), len(file_track_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_track_v1_track_proto_rawDesc), len(file_track_v1_track_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_track_proto_goTypes,
-		DependencyIndexes: file_track_proto_depIdxs,
-		MessageInfos:      file_track_proto_msgTypes,
+		GoTypes:           file_track_v1_track_proto_goTypes,
+		DependencyIndexes: file_track_v1_track_proto_depIdxs,
+		MessageInfos:      file_track_v1_track_proto_msgTypes,
 	}.Build()
-	File_track_proto = out.File
-	file_track_proto_goTypes = nil
-	file_track_proto_depIdxs = nil
+	File_track_v1_track_proto = out.File
+	file_track_v1_track_proto_goTypes = nil
+	file_track_v1_track_proto_depIdxs = nil
 }

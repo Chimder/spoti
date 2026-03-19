@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "artist.proto",
+    "title": "artist/v1/artist.proto",
     "version": "version not set"
   },
   "tags": [

@@ -4,7 +4,7 @@ package artist.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/Chimder/spoti/proto/gen/artist";
+// option go_package = "github.com/Chimder/spoti/proto/gen/artist";
 
 service PlaylistService {
   rpc GetArtist(GetArtistRequest) returns (GetArtistResponse);
