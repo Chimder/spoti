@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"github.com/Chimder/spoti/internal/domain/artist"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
 	rediscache "github.com/Chimder/spoti/internal/repository/redis"
-	"time"
+	"github.com/google/uuid"
 )
 
 const artistTTL = 60 * time.Minute
@@ -24,13 +26,13 @@ func NewArtistService(r *postgres.Repository, cache rediscache.Cache,
 	meili *meilisearchrepo.MeiliRepository) *ArtistService {
 	return &ArtistService{repo: r, cache: cache, meili: meili}
 }
-func (as *ArtistService) CreateArtist(ctx context.Context, a artist.CreateArtistReq) error {
+func (as *ArtistService) CreateArtist(ctx context.Context, a artist.CreateArtistReq) (uuid.UUID, error) {
 	id, err := as.repo.Artist.CreateArtist(ctx, a)
 	if err != nil {
-		return err
+		return uuid.Nil, err
 	}
 	err = as.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "artist", Name: a.ArtistName})
-	return err
+	return id, err
 }
 
 func (as *ArtistService) GetArtist(ctx context.Context, artistID string) (artist.Artist, error) {

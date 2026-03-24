@@ -18,9 +18,13 @@ plugins:
     out: internal/gen
     opt: module=github.com/Chimder/spoti/internal/gen
 
-  - remote: buf.build/connectrpc/go
+  - remote: buf.build/grpc/go
     out: internal/gen
     opt: module=github.com/Chimder/spoti/internal/gen
+
+  # - remote: buf.build/connectrpc/go
+  #   out: internal/gen
+  #   opt: module=github.com/Chimder/spoti/internal/gen
 
   - remote: buf.build/bufbuild/validate-go
     out: internal/gen

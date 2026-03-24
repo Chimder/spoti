@@ -23,7 +23,7 @@ func (h *ArtistHandler) CreateArtist(c *gin.Context) {
 		return
 	}
 
-	if err := h.srv.CreateArtist(c.Request.Context(), req); err != nil {
+	if _, err := h.srv.CreateArtist(c.Request.Context(), req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create artist"})
 		return
 	}
