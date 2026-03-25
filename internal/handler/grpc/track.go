@@ -13,6 +13,7 @@ import (
 )
 
 type TrackHandler struct {
+	trackv1.UnimplementedTrackServiceServer
 	srv service.TrackService
 }
 

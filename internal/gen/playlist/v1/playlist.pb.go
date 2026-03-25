@@ -9,6 +9,7 @@ package playlistv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -414,42 +415,6 @@ func (x *AddToPlaylistRequest) GetTrackId() string {
 	return ""
 }
 
-type AddToPlaylistResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AddToPlaylistResponse) Reset() {
-	*x = AddToPlaylistResponse{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AddToPlaylistResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AddToPlaylistResponse) ProtoMessage() {}
-
-func (x *AddToPlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AddToPlaylistResponse.ProtoReflect.Descriptor instead.
-func (*AddToPlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{6}
-}
-
 type UpdatePlaylistRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PlaylistId    string                 `protobuf:"bytes,1,opt,name=playlist_id,json=playlistId,proto3" json:"playlist_id,omitempty"`
@@ -462,7 +427,7 @@ type UpdatePlaylistRequest struct {
 
 func (x *UpdatePlaylistRequest) Reset() {
 	*x = UpdatePlaylistRequest{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[7]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -474,7 +439,7 @@ func (x *UpdatePlaylistRequest) String() string {
 func (*UpdatePlaylistRequest) ProtoMessage() {}
 
 func (x *UpdatePlaylistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[7]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -487,7 +452,7 @@ func (x *UpdatePlaylistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePlaylistRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePlaylistRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{7}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UpdatePlaylistRequest) GetPlaylistId() string {
@@ -526,7 +491,7 @@ type UpdatePlaylistResponse struct {
 
 func (x *UpdatePlaylistResponse) Reset() {
 	*x = UpdatePlaylistResponse{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[8]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -538,7 +503,7 @@ func (x *UpdatePlaylistResponse) String() string {
 func (*UpdatePlaylistResponse) ProtoMessage() {}
 
 func (x *UpdatePlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[8]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -551,7 +516,7 @@ func (x *UpdatePlaylistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePlaylistResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{8}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{7}
 }
 
 type DeleteFromPlaylistRequest struct {
@@ -564,7 +529,7 @@ type DeleteFromPlaylistRequest struct {
 
 func (x *DeleteFromPlaylistRequest) Reset() {
 	*x = DeleteFromPlaylistRequest{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[9]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -576,7 +541,7 @@ func (x *DeleteFromPlaylistRequest) String() string {
 func (*DeleteFromPlaylistRequest) ProtoMessage() {}
 
 func (x *DeleteFromPlaylistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[9]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -589,7 +554,7 @@ func (x *DeleteFromPlaylistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFromPlaylistRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFromPlaylistRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{9}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteFromPlaylistRequest) GetPlaylistId() string {
@@ -614,7 +579,7 @@ type DeleteFromPlaylistResponse struct {
 
 func (x *DeleteFromPlaylistResponse) Reset() {
 	*x = DeleteFromPlaylistResponse{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[10]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -626,7 +591,7 @@ func (x *DeleteFromPlaylistResponse) String() string {
 func (*DeleteFromPlaylistResponse) ProtoMessage() {}
 
 func (x *DeleteFromPlaylistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[10]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -639,7 +604,7 @@ func (x *DeleteFromPlaylistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFromPlaylistResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFromPlaylistResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{10}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{9}
 }
 
 type GetAllUserPlaylistsRequest struct {
@@ -651,7 +616,7 @@ type GetAllUserPlaylistsRequest struct {
 
 func (x *GetAllUserPlaylistsRequest) Reset() {
 	*x = GetAllUserPlaylistsRequest{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[11]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -663,7 +628,7 @@ func (x *GetAllUserPlaylistsRequest) String() string {
 func (*GetAllUserPlaylistsRequest) ProtoMessage() {}
 
 func (x *GetAllUserPlaylistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[11]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -676,7 +641,7 @@ func (x *GetAllUserPlaylistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllUserPlaylistsRequest.ProtoReflect.Descriptor instead.
 func (*GetAllUserPlaylistsRequest) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{11}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetAllUserPlaylistsRequest) GetUserId() string {
@@ -688,14 +653,14 @@ func (x *GetAllUserPlaylistsRequest) GetUserId() string {
 
 type GetAllUserPlaylistsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Playlist      *Playlist              `protobuf:"bytes,1,opt,name=playlist,proto3" json:"playlist,omitempty"`
+	Playlists     []*Playlist            `protobuf:"bytes,1,rep,name=playlists,proto3" json:"playlists,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAllUserPlaylistsResponse) Reset() {
 	*x = GetAllUserPlaylistsResponse{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[12]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -707,7 +672,7 @@ func (x *GetAllUserPlaylistsResponse) String() string {
 func (*GetAllUserPlaylistsResponse) ProtoMessage() {}
 
 func (x *GetAllUserPlaylistsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[12]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -720,12 +685,12 @@ func (x *GetAllUserPlaylistsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllUserPlaylistsResponse.ProtoReflect.Descriptor instead.
 func (*GetAllUserPlaylistsResponse) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{12}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *GetAllUserPlaylistsResponse) GetPlaylist() *Playlist {
+func (x *GetAllUserPlaylistsResponse) GetPlaylists() []*Playlist {
 	if x != nil {
-		return x.Playlist
+		return x.Playlists
 	}
 	return nil
 }
@@ -742,7 +707,7 @@ type PlaylistTracks struct {
 
 func (x *PlaylistTracks) Reset() {
 	*x = PlaylistTracks{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[13]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -754,7 +719,7 @@ func (x *PlaylistTracks) String() string {
 func (*PlaylistTracks) ProtoMessage() {}
 
 func (x *PlaylistTracks) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[13]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -767,7 +732,7 @@ func (x *PlaylistTracks) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlaylistTracks.ProtoReflect.Descriptor instead.
 func (*PlaylistTracks) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{13}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PlaylistTracks) GetTotal() uint32 {
@@ -809,7 +774,7 @@ type PlaylistTrack struct {
 
 func (x *PlaylistTrack) Reset() {
 	*x = PlaylistTrack{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[14]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -821,7 +786,7 @@ func (x *PlaylistTrack) String() string {
 func (*PlaylistTrack) ProtoMessage() {}
 
 func (x *PlaylistTrack) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[14]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -834,7 +799,7 @@ func (x *PlaylistTrack) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlaylistTrack.ProtoReflect.Descriptor instead.
 func (*PlaylistTrack) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{14}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *PlaylistTrack) GetAddedAt() *timestamppb.Timestamp {
@@ -872,7 +837,7 @@ type Track struct {
 
 func (x *Track) Reset() {
 	*x = Track{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[15]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -884,7 +849,7 @@ func (x *Track) String() string {
 func (*Track) ProtoMessage() {}
 
 func (x *Track) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[15]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -897,7 +862,7 @@ func (x *Track) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Track.ProtoReflect.Descriptor instead.
 func (*Track) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{15}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Track) GetId() string {
@@ -953,7 +918,7 @@ type Artist struct {
 
 func (x *Artist) Reset() {
 	*x = Artist{}
-	mi := &file_playlist_v1_playlist_proto_msgTypes[16]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -965,7 +930,7 @@ func (x *Artist) String() string {
 func (*Artist) ProtoMessage() {}
 
 func (x *Artist) ProtoReflect() protoreflect.Message {
-	mi := &file_playlist_v1_playlist_proto_msgTypes[16]
+	mi := &file_playlist_v1_playlist_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -978,7 +943,7 @@ func (x *Artist) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Artist.ProtoReflect.Descriptor instead.
 func (*Artist) Descriptor() ([]byte, []int) {
-	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{16}
+	return file_playlist_v1_playlist_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *Artist) GetId() string {
@@ -1006,7 +971,7 @@ var File_playlist_v1_playlist_proto protoreflect.FileDescriptor
 
 const file_playlist_v1_playlist_proto_rawDesc = "" +
 	"\n" +
-	"\x1aplaylist/v1/playlist.proto\x12\vplaylist.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
+	"\x1aplaylist/v1/playlist.proto\x12\vplaylist.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
 	"\bPlaylist\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x12\n" +
@@ -1038,8 +1003,7 @@ const file_playlist_v1_playlist_proto_rawDesc = "" +
 	"\x14AddToPlaylistRequest\x12\x1f\n" +
 	"\vplaylist_id\x18\x01 \x01(\tR\n" +
 	"playlistId\x12\x19\n" +
-	"\btrack_id\x18\x02 \x01(\tR\atrackId\"\x17\n" +
-	"\x15AddToPlaylistResponse\"\xc1\x01\n" +
+	"\btrack_id\x18\x02 \x01(\tR\atrackId\"\xc1\x01\n" +
 	"\x15UpdatePlaylistRequest\x12\x1f\n" +
 	"\vplaylist_id\x18\x01 \x01(\tR\n" +
 	"playlistId\x12\x17\n" +
@@ -1057,9 +1021,9 @@ const file_playlist_v1_playlist_proto_rawDesc = "" +
 	"\btrack_id\x18\x02 \x01(\tR\atrackId\"\x1c\n" +
 	"\x1aDeleteFromPlaylistResponse\"5\n" +
 	"\x1aGetAllUserPlaylistsRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"P\n" +
-	"\x1bGetAllUserPlaylistsResponse\x121\n" +
-	"\bplaylist\x18\x01 \x01(\v2\x15.playlist.v1.PlaylistR\bplaylist\"\x86\x01\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"R\n" +
+	"\x1bGetAllUserPlaylistsResponse\x123\n" +
+	"\tplaylists\x18\x01 \x03(\v2\x15.playlist.v1.PlaylistR\tplaylists\"\x86\x01\n" +
 	"\x0ePlaylistTracks\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
@@ -1080,11 +1044,11 @@ const file_playlist_v1_playlist_proto_rawDesc = "" +
 	"\x06Artist\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
-	"\x03uri\x18\x03 \x01(\tR\x03uri2\xce\x04\n" +
+	"\x03uri\x18\x03 \x01(\tR\x03uri2\xc2\x04\n" +
 	"\x0fPlaylistService\x12Y\n" +
 	"\x0eCreatePlaylist\x12\".playlist.v1.CreatePlaylistRequest\x1a#.playlist.v1.CreatePlaylistResponse\x12\\\n" +
-	"\x0fGetPlaylistById\x12#.playlist.v1.GetPlaylistByIdRequest\x1a$.playlist.v1.GetPlaylistByIdResponse\x12V\n" +
-	"\rAddToPlaylist\x12!.playlist.v1.AddToPlaylistRequest\x1a\".playlist.v1.AddToPlaylistResponse\x12Y\n" +
+	"\x0fGetPlaylistById\x12#.playlist.v1.GetPlaylistByIdRequest\x1a$.playlist.v1.GetPlaylistByIdResponse\x12J\n" +
+	"\rAddToPlaylist\x12!.playlist.v1.AddToPlaylistRequest\x1a\x16.google.protobuf.Empty\x12Y\n" +
 	"\x0eUpdatePlaylist\x12\".playlist.v1.UpdatePlaylistRequest\x1a#.playlist.v1.UpdatePlaylistResponse\x12e\n" +
 	"\x12DeleteFromPlaylist\x12&.playlist.v1.DeleteFromPlaylistRequest\x1a'.playlist.v1.DeleteFromPlaylistResponse\x12h\n" +
 	"\x13GetAllUserPlaylists\x12'.playlist.v1.GetAllUserPlaylistsRequest\x1a(.playlist.v1.GetAllUserPlaylistsResponseB\xab\x01\n" +
@@ -1102,7 +1066,7 @@ func file_playlist_v1_playlist_proto_rawDescGZIP() []byte {
 	return file_playlist_v1_playlist_proto_rawDescData
 }
 
-var file_playlist_v1_playlist_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_playlist_v1_playlist_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_playlist_v1_playlist_proto_goTypes = []any{
 	(*Playlist)(nil),                    // 0: playlist.v1.Playlist
 	(*GetPlaylistByIdResponse)(nil),     // 1: playlist.v1.GetPlaylistByIdResponse
@@ -1110,40 +1074,40 @@ var file_playlist_v1_playlist_proto_goTypes = []any{
 	(*CreatePlaylistResponse)(nil),      // 3: playlist.v1.CreatePlaylistResponse
 	(*GetPlaylistByIdRequest)(nil),      // 4: playlist.v1.GetPlaylistByIdRequest
 	(*AddToPlaylistRequest)(nil),        // 5: playlist.v1.AddToPlaylistRequest
-	(*AddToPlaylistResponse)(nil),       // 6: playlist.v1.AddToPlaylistResponse
-	(*UpdatePlaylistRequest)(nil),       // 7: playlist.v1.UpdatePlaylistRequest
-	(*UpdatePlaylistResponse)(nil),      // 8: playlist.v1.UpdatePlaylistResponse
-	(*DeleteFromPlaylistRequest)(nil),   // 9: playlist.v1.DeleteFromPlaylistRequest
-	(*DeleteFromPlaylistResponse)(nil),  // 10: playlist.v1.DeleteFromPlaylistResponse
-	(*GetAllUserPlaylistsRequest)(nil),  // 11: playlist.v1.GetAllUserPlaylistsRequest
-	(*GetAllUserPlaylistsResponse)(nil), // 12: playlist.v1.GetAllUserPlaylistsResponse
-	(*PlaylistTracks)(nil),              // 13: playlist.v1.PlaylistTracks
-	(*PlaylistTrack)(nil),               // 14: playlist.v1.PlaylistTrack
-	(*Track)(nil),                       // 15: playlist.v1.Track
-	(*Artist)(nil),                      // 16: playlist.v1.Artist
-	(*timestamppb.Timestamp)(nil),       // 17: google.protobuf.Timestamp
+	(*UpdatePlaylistRequest)(nil),       // 6: playlist.v1.UpdatePlaylistRequest
+	(*UpdatePlaylistResponse)(nil),      // 7: playlist.v1.UpdatePlaylistResponse
+	(*DeleteFromPlaylistRequest)(nil),   // 8: playlist.v1.DeleteFromPlaylistRequest
+	(*DeleteFromPlaylistResponse)(nil),  // 9: playlist.v1.DeleteFromPlaylistResponse
+	(*GetAllUserPlaylistsRequest)(nil),  // 10: playlist.v1.GetAllUserPlaylistsRequest
+	(*GetAllUserPlaylistsResponse)(nil), // 11: playlist.v1.GetAllUserPlaylistsResponse
+	(*PlaylistTracks)(nil),              // 12: playlist.v1.PlaylistTracks
+	(*PlaylistTrack)(nil),               // 13: playlist.v1.PlaylistTrack
+	(*Track)(nil),                       // 14: playlist.v1.Track
+	(*Artist)(nil),                      // 15: playlist.v1.Artist
+	(*timestamppb.Timestamp)(nil),       // 16: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),               // 17: google.protobuf.Empty
 }
 var file_playlist_v1_playlist_proto_depIdxs = []int32{
-	17, // 0: playlist.v1.Playlist.created_at:type_name -> google.protobuf.Timestamp
+	16, // 0: playlist.v1.Playlist.created_at:type_name -> google.protobuf.Timestamp
 	0,  // 1: playlist.v1.GetPlaylistByIdResponse.playlist:type_name -> playlist.v1.Playlist
-	13, // 2: playlist.v1.GetPlaylistByIdResponse.tracks:type_name -> playlist.v1.PlaylistTracks
-	0,  // 3: playlist.v1.GetAllUserPlaylistsResponse.playlist:type_name -> playlist.v1.Playlist
-	14, // 4: playlist.v1.PlaylistTracks.items:type_name -> playlist.v1.PlaylistTrack
-	17, // 5: playlist.v1.PlaylistTrack.added_at:type_name -> google.protobuf.Timestamp
-	15, // 6: playlist.v1.PlaylistTrack.track:type_name -> playlist.v1.Track
-	16, // 7: playlist.v1.Track.artists:type_name -> playlist.v1.Artist
+	12, // 2: playlist.v1.GetPlaylistByIdResponse.tracks:type_name -> playlist.v1.PlaylistTracks
+	0,  // 3: playlist.v1.GetAllUserPlaylistsResponse.playlists:type_name -> playlist.v1.Playlist
+	13, // 4: playlist.v1.PlaylistTracks.items:type_name -> playlist.v1.PlaylistTrack
+	16, // 5: playlist.v1.PlaylistTrack.added_at:type_name -> google.protobuf.Timestamp
+	14, // 6: playlist.v1.PlaylistTrack.track:type_name -> playlist.v1.Track
+	15, // 7: playlist.v1.Track.artists:type_name -> playlist.v1.Artist
 	2,  // 8: playlist.v1.PlaylistService.CreatePlaylist:input_type -> playlist.v1.CreatePlaylistRequest
 	4,  // 9: playlist.v1.PlaylistService.GetPlaylistById:input_type -> playlist.v1.GetPlaylistByIdRequest
 	5,  // 10: playlist.v1.PlaylistService.AddToPlaylist:input_type -> playlist.v1.AddToPlaylistRequest
-	7,  // 11: playlist.v1.PlaylistService.UpdatePlaylist:input_type -> playlist.v1.UpdatePlaylistRequest
-	9,  // 12: playlist.v1.PlaylistService.DeleteFromPlaylist:input_type -> playlist.v1.DeleteFromPlaylistRequest
-	11, // 13: playlist.v1.PlaylistService.GetAllUserPlaylists:input_type -> playlist.v1.GetAllUserPlaylistsRequest
+	6,  // 11: playlist.v1.PlaylistService.UpdatePlaylist:input_type -> playlist.v1.UpdatePlaylistRequest
+	8,  // 12: playlist.v1.PlaylistService.DeleteFromPlaylist:input_type -> playlist.v1.DeleteFromPlaylistRequest
+	10, // 13: playlist.v1.PlaylistService.GetAllUserPlaylists:input_type -> playlist.v1.GetAllUserPlaylistsRequest
 	3,  // 14: playlist.v1.PlaylistService.CreatePlaylist:output_type -> playlist.v1.CreatePlaylistResponse
 	1,  // 15: playlist.v1.PlaylistService.GetPlaylistById:output_type -> playlist.v1.GetPlaylistByIdResponse
-	6,  // 16: playlist.v1.PlaylistService.AddToPlaylist:output_type -> playlist.v1.AddToPlaylistResponse
-	8,  // 17: playlist.v1.PlaylistService.UpdatePlaylist:output_type -> playlist.v1.UpdatePlaylistResponse
-	10, // 18: playlist.v1.PlaylistService.DeleteFromPlaylist:output_type -> playlist.v1.DeleteFromPlaylistResponse
-	12, // 19: playlist.v1.PlaylistService.GetAllUserPlaylists:output_type -> playlist.v1.GetAllUserPlaylistsResponse
+	17, // 16: playlist.v1.PlaylistService.AddToPlaylist:output_type -> google.protobuf.Empty
+	7,  // 17: playlist.v1.PlaylistService.UpdatePlaylist:output_type -> playlist.v1.UpdatePlaylistResponse
+	9,  // 18: playlist.v1.PlaylistService.DeleteFromPlaylist:output_type -> playlist.v1.DeleteFromPlaylistResponse
+	11, // 19: playlist.v1.PlaylistService.GetAllUserPlaylists:output_type -> playlist.v1.GetAllUserPlaylistsResponse
 	14, // [14:20] is the sub-list for method output_type
 	8,  // [8:14] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name
@@ -1156,14 +1120,14 @@ func file_playlist_v1_playlist_proto_init() {
 	if File_playlist_v1_playlist_proto != nil {
 		return
 	}
-	file_playlist_v1_playlist_proto_msgTypes[7].OneofWrappers = []any{}
+	file_playlist_v1_playlist_proto_msgTypes[6].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_playlist_v1_playlist_proto_rawDesc), len(file_playlist_v1_playlist_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

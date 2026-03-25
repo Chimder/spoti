@@ -13,6 +13,7 @@ import (
 )
 
 type UserHandler struct {
+	userv1.UnimplementedUserServiceServer
 	srv *service.UserService
 }
 

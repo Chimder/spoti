@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package playlist.v1;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 // option go_package = "github.com/Chimder/spoti/proto/gen/playlist";
@@ -9,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 service PlaylistService {
   rpc CreatePlaylist(CreatePlaylistRequest) returns (CreatePlaylistResponse);
   rpc GetPlaylistById(GetPlaylistByIdRequest) returns (GetPlaylistByIdResponse);
-  rpc AddToPlaylist(AddToPlaylistRequest) returns (AddToPlaylistResponse);
+  rpc AddToPlaylist(AddToPlaylistRequest) returns (google.protobuf.Empty);
   rpc UpdatePlaylist(UpdatePlaylistRequest) returns (UpdatePlaylistResponse);
   rpc DeleteFromPlaylist(DeleteFromPlaylistRequest) returns (DeleteFromPlaylistResponse);
   rpc GetAllUserPlaylists(GetAllUserPlaylistsRequest) returns (GetAllUserPlaylistsResponse);
@@ -47,15 +48,10 @@ message GetPlaylistByIdRequest {
   int32 offset = 3;
 }
 
-// message GetPlaylistByIdResponse {
-//   PlaylistJson playlist = 1;
-// }
-
 message AddToPlaylistRequest {
   string playlist_id = 1;
   string track_id = 2;
 }
-message AddToPlaylistResponse {}
 
 message UpdatePlaylistRequest {
   string playlist_id = 1;
@@ -75,7 +71,7 @@ message GetAllUserPlaylistsRequest {
   string user_id = 1;
 }
 message GetAllUserPlaylistsResponse {
-  Playlist playlist = 1;
+  repeated Playlist playlists = 1;
 }
 
 message PlaylistTracks {

@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -33,7 +34,7 @@ const (
 type PlaylistServiceClient interface {
 	CreatePlaylist(ctx context.Context, in *CreatePlaylistRequest, opts ...grpc.CallOption) (*CreatePlaylistResponse, error)
 	GetPlaylistById(ctx context.Context, in *GetPlaylistByIdRequest, opts ...grpc.CallOption) (*GetPlaylistByIdResponse, error)
-	AddToPlaylist(ctx context.Context, in *AddToPlaylistRequest, opts ...grpc.CallOption) (*AddToPlaylistResponse, error)
+	AddToPlaylist(ctx context.Context, in *AddToPlaylistRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdatePlaylist(ctx context.Context, in *UpdatePlaylistRequest, opts ...grpc.CallOption) (*UpdatePlaylistResponse, error)
 	DeleteFromPlaylist(ctx context.Context, in *DeleteFromPlaylistRequest, opts ...grpc.CallOption) (*DeleteFromPlaylistResponse, error)
 	GetAllUserPlaylists(ctx context.Context, in *GetAllUserPlaylistsRequest, opts ...grpc.CallOption) (*GetAllUserPlaylistsResponse, error)
@@ -67,9 +68,9 @@ func (c *playlistServiceClient) GetPlaylistById(ctx context.Context, in *GetPlay
 	return out, nil
 }
 
-func (c *playlistServiceClient) AddToPlaylist(ctx context.Context, in *AddToPlaylistRequest, opts ...grpc.CallOption) (*AddToPlaylistResponse, error) {
+func (c *playlistServiceClient) AddToPlaylist(ctx context.Context, in *AddToPlaylistRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddToPlaylistResponse)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, PlaylistService_AddToPlaylist_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -113,7 +114,7 @@ func (c *playlistServiceClient) GetAllUserPlaylists(ctx context.Context, in *Get
 type PlaylistServiceServer interface {
 	CreatePlaylist(context.Context, *CreatePlaylistRequest) (*CreatePlaylistResponse, error)
 	GetPlaylistById(context.Context, *GetPlaylistByIdRequest) (*GetPlaylistByIdResponse, error)
-	AddToPlaylist(context.Context, *AddToPlaylistRequest) (*AddToPlaylistResponse, error)
+	AddToPlaylist(context.Context, *AddToPlaylistRequest) (*emptypb.Empty, error)
 	UpdatePlaylist(context.Context, *UpdatePlaylistRequest) (*UpdatePlaylistResponse, error)
 	DeleteFromPlaylist(context.Context, *DeleteFromPlaylistRequest) (*DeleteFromPlaylistResponse, error)
 	GetAllUserPlaylists(context.Context, *GetAllUserPlaylistsRequest) (*GetAllUserPlaylistsResponse, error)
@@ -133,7 +134,7 @@ func (UnimplementedPlaylistServiceServer) CreatePlaylist(context.Context, *Creat
 func (UnimplementedPlaylistServiceServer) GetPlaylistById(context.Context, *GetPlaylistByIdRequest) (*GetPlaylistByIdResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetPlaylistById not implemented")
 }
-func (UnimplementedPlaylistServiceServer) AddToPlaylist(context.Context, *AddToPlaylistRequest) (*AddToPlaylistResponse, error) {
+func (UnimplementedPlaylistServiceServer) AddToPlaylist(context.Context, *AddToPlaylistRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddToPlaylist not implemented")
 }
 func (UnimplementedPlaylistServiceServer) UpdatePlaylist(context.Context, *UpdatePlaylistRequest) (*UpdatePlaylistResponse, error) {
