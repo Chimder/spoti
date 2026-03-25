@@ -24,7 +24,7 @@ func (h *PlaylistHandler) CreatePlaylist(c *gin.Context) {
 		return
 	}
 
-	if err := h.srv.CreatePlaylist(c.Request.Context(), req); err != nil {
+	if _, err := h.srv.CreatePlaylist(c.Request.Context(), req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create playlist"})
 		return
 	}

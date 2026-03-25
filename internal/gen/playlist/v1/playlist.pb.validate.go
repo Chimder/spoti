@@ -179,22 +179,22 @@ var _ interface {
 	ErrorName() string
 } = PlaylistValidationError{}
 
-// Validate checks the field values on PlaylistJson with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *PlaylistJson) Validate() error {
+// Validate checks the field values on GetPlaylistByIdResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetPlaylistByIdResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on PlaylistJson with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in PlaylistJsonMultiError, or
-// nil if none found.
-func (m *PlaylistJson) ValidateAll() error {
+// ValidateAll checks the field values on GetPlaylistByIdResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetPlaylistByIdResponseMultiError, or nil if none found.
+func (m *GetPlaylistByIdResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *PlaylistJson) validate(all bool) error {
+func (m *GetPlaylistByIdResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -205,7 +205,7 @@ func (m *PlaylistJson) validate(all bool) error {
 		switch v := interface{}(m.GetPlaylist()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, PlaylistJsonValidationError{
+				errors = append(errors, GetPlaylistByIdResponseValidationError{
 					field:  "Playlist",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -213,7 +213,7 @@ func (m *PlaylistJson) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, PlaylistJsonValidationError{
+				errors = append(errors, GetPlaylistByIdResponseValidationError{
 					field:  "Playlist",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -222,7 +222,7 @@ func (m *PlaylistJson) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetPlaylist()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return PlaylistJsonValidationError{
+			return GetPlaylistByIdResponseValidationError{
 				field:  "Playlist",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -234,7 +234,7 @@ func (m *PlaylistJson) validate(all bool) error {
 		switch v := interface{}(m.GetTracks()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, PlaylistJsonValidationError{
+				errors = append(errors, GetPlaylistByIdResponseValidationError{
 					field:  "Tracks",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -242,7 +242,7 @@ func (m *PlaylistJson) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, PlaylistJsonValidationError{
+				errors = append(errors, GetPlaylistByIdResponseValidationError{
 					field:  "Tracks",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -251,7 +251,7 @@ func (m *PlaylistJson) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetTracks()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return PlaylistJsonValidationError{
+			return GetPlaylistByIdResponseValidationError{
 				field:  "Tracks",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -260,18 +260,19 @@ func (m *PlaylistJson) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return PlaylistJsonMultiError(errors)
+		return GetPlaylistByIdResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// PlaylistJsonMultiError is an error wrapping multiple validation errors
-// returned by PlaylistJson.ValidateAll() if the designated constraints aren't met.
-type PlaylistJsonMultiError []error
+// GetPlaylistByIdResponseMultiError is an error wrapping multiple validation
+// errors returned by GetPlaylistByIdResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetPlaylistByIdResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PlaylistJsonMultiError) Error() string {
+func (m GetPlaylistByIdResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -280,11 +281,11 @@ func (m PlaylistJsonMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PlaylistJsonMultiError) AllErrors() []error { return m }
+func (m GetPlaylistByIdResponseMultiError) AllErrors() []error { return m }
 
-// PlaylistJsonValidationError is the validation error returned by
-// PlaylistJson.Validate if the designated constraints aren't met.
-type PlaylistJsonValidationError struct {
+// GetPlaylistByIdResponseValidationError is the validation error returned by
+// GetPlaylistByIdResponse.Validate if the designated constraints aren't met.
+type GetPlaylistByIdResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -292,22 +293,24 @@ type PlaylistJsonValidationError struct {
 }
 
 // Field function returns field value.
-func (e PlaylistJsonValidationError) Field() string { return e.field }
+func (e GetPlaylistByIdResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PlaylistJsonValidationError) Reason() string { return e.reason }
+func (e GetPlaylistByIdResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PlaylistJsonValidationError) Cause() error { return e.cause }
+func (e GetPlaylistByIdResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PlaylistJsonValidationError) Key() bool { return e.key }
+func (e GetPlaylistByIdResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PlaylistJsonValidationError) ErrorName() string { return "PlaylistJsonValidationError" }
+func (e GetPlaylistByIdResponseValidationError) ErrorName() string {
+	return "GetPlaylistByIdResponseValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e PlaylistJsonValidationError) Error() string {
+func (e GetPlaylistByIdResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -319,14 +322,14 @@ func (e PlaylistJsonValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPlaylistJson.%s: %s%s",
+		"invalid %sGetPlaylistByIdResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PlaylistJsonValidationError{}
+var _ error = GetPlaylistByIdResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -334,7 +337,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PlaylistJsonValidationError{}
+} = GetPlaylistByIdResponseValidationError{}
 
 // Validate checks the field values on CreatePlaylistRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -576,6 +579,10 @@ func (m *GetPlaylistByIdRequest) validate(all bool) error {
 
 	// no validation rules for PlaylistId
 
+	// no validation rules for Limit
+
+	// no validation rules for Offset
+
 	if len(errors) > 0 {
 		return GetPlaylistByIdRequestMultiError(errors)
 	}
@@ -655,137 +662,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetPlaylistByIdRequestValidationError{}
-
-// Validate checks the field values on GetPlaylistByIdResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetPlaylistByIdResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetPlaylistByIdResponse with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetPlaylistByIdResponseMultiError, or nil if none found.
-func (m *GetPlaylistByIdResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetPlaylistByIdResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if all {
-		switch v := interface{}(m.GetPlaylist()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, GetPlaylistByIdResponseValidationError{
-					field:  "Playlist",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, GetPlaylistByIdResponseValidationError{
-					field:  "Playlist",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetPlaylist()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return GetPlaylistByIdResponseValidationError{
-				field:  "Playlist",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return GetPlaylistByIdResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetPlaylistByIdResponseMultiError is an error wrapping multiple validation
-// errors returned by GetPlaylistByIdResponse.ValidateAll() if the designated
-// constraints aren't met.
-type GetPlaylistByIdResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetPlaylistByIdResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetPlaylistByIdResponseMultiError) AllErrors() []error { return m }
-
-// GetPlaylistByIdResponseValidationError is the validation error returned by
-// GetPlaylistByIdResponse.Validate if the designated constraints aren't met.
-type GetPlaylistByIdResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetPlaylistByIdResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetPlaylistByIdResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetPlaylistByIdResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetPlaylistByIdResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetPlaylistByIdResponseValidationError) ErrorName() string {
-	return "GetPlaylistByIdResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetPlaylistByIdResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetPlaylistByIdResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetPlaylistByIdResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetPlaylistByIdResponseValidationError{}
 
 // Validate checks the field values on AddToPlaylistRequest with the rules
 // defined in the proto definition for this message. If any rules are

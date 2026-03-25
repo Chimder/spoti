@@ -25,7 +25,7 @@ message Playlist {
   uint32 total = 8;
   google.protobuf.Timestamp created_at = 9;
 }
-message PlaylistJson {
+message GetPlaylistByIdResponse {
   Playlist playlist = 1;
   PlaylistTracks tracks = 2;
 }
@@ -43,10 +43,13 @@ message CreatePlaylistResponse {
 
 message GetPlaylistByIdRequest {
   string playlist_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
 }
-message GetPlaylistByIdResponse {
-  PlaylistJson playlist = 1;
-}
+
+// message GetPlaylistByIdResponse {
+//   PlaylistJson playlist = 1;
+// }
 
 message AddToPlaylistRequest {
   string playlist_id = 1;

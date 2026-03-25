@@ -56,6 +56,7 @@ func StartSeedMeiliSearch() error {
 		}
 	}
 
+	fmt.Print("Ok seed meilisearch")
 	return nil
 }
 

@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"github.com/Chimder/spoti/internal/domain/track"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
 	rediscache "github.com/Chimder/spoti/internal/repository/redis"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -27,14 +28,14 @@ func NewTrackService(repo *postgres.Repository, cache rediscache.Cache,
 	return &TrackService{repo: repo, cache: cache, meili: meili}
 }
 
-func (ts *TrackService) CreateTrack(ctx context.Context, t track.CreateTrackReq) error {
+func (ts *TrackService) CreateTrack(ctx context.Context, t track.CreateTrackReq) (uuid.UUID, error) {
 	id, err := ts.repo.Track.CreateTrack(ctx, t)
 	if err != nil {
-		return err
+		return uuid.Nil, err
 	}
-
 	err = ts.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "track", Name: t.Name})
-	return err
+
+	return id, err
 }
 
 func (ts *TrackService) GetTrackById(ctx context.Context, trackID uuid.UUID) (track.Track, error) {

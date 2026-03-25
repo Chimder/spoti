@@ -2,6 +2,7 @@ package trackrepo
 
 import (
 	"context"
+
 	"github.com/Chimder/spoti/internal/domain/track"
 	"github.com/Chimder/spoti/internal/repository/postgres/pgiface"
 
@@ -95,7 +96,7 @@ func (tr *TrackRepo) GetArtistTracks(ctx context.Context, artistId string) ([]tr
 		FROM tracks t
 		JOIN artist_tracks at ON at.track_id = t.id
 		JOIN recordings r ON t.recording_id = r.id
-		WHERE at.artist_id = $1
+		WHERE at.artist_id = $1::uuid
 	`
 	rows, err := tr.db.Query(ctx, query, artistId)
 	if err != nil {

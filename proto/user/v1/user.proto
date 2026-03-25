@@ -3,7 +3,7 @@ syntax = "proto3";
 package user.v1;
 
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
+// import "google/protobuf/timestamp.proto";
 
 // option go_package = "github.com/Chimder/spoti/internal/gen/user;userpb";
 
@@ -39,23 +39,29 @@ message PlaylistTrack {
   string track_id = 1;
   int32 position = 2;
 }
+
+message GetUserByIDRequest {
+  string id = 1;
+}
+
 message GetUserByIDResponse {
   string id = 1;
   string name = 2;
   string email = 3;
-  google.protobuf.Timestamp created_at = 4;
+  string image = 4;
+  uint32 followers = 5;
+  bool premium_status = 6;
 }
 
 message CreateUserRequest {
   string name = 1;
   string email = 2;
+  string image = 3;
+  int32 followers = 4;
+  bool premium_status = 5;
 }
 
 message CreateUserResponse {
-  string id = 1;
-}
-
-message GetUserByIDRequest {
   string id = 1;
 }
 

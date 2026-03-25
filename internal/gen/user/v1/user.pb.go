@@ -10,7 +10,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -183,19 +182,65 @@ func (x *PlaylistTrack) GetPosition() int32 {
 	return 0
 }
 
+type GetUserByIDRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserByIDRequest) Reset() {
+	*x = GetUserByIDRequest{}
+	mi := &file_user_v1_user_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserByIDRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserByIDRequest) ProtoMessage() {}
+
+func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_user_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserByIDRequest.ProtoReflect.Descriptor instead.
+func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
+	return file_user_v1_user_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetUserByIDRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 type GetUserByIDResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Image         string                 `protobuf:"bytes,4,opt,name=image,proto3" json:"image,omitempty"`
+	Followers     uint32                 `protobuf:"varint,5,opt,name=followers,proto3" json:"followers,omitempty"`
+	PremiumStatus bool                   `protobuf:"varint,6,opt,name=premium_status,json=premiumStatus,proto3" json:"premium_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserByIDResponse) Reset() {
 	*x = GetUserByIDResponse{}
-	mi := &file_user_v1_user_proto_msgTypes[2]
+	mi := &file_user_v1_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -207,7 +252,7 @@ func (x *GetUserByIDResponse) String() string {
 func (*GetUserByIDResponse) ProtoMessage() {}
 
 func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[2]
+	mi := &file_user_v1_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -220,7 +265,7 @@ func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserByIDResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{2}
+	return file_user_v1_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserByIDResponse) GetId() string {
@@ -244,24 +289,41 @@ func (x *GetUserByIDResponse) GetEmail() string {
 	return ""
 }
 
-func (x *GetUserByIDResponse) GetCreatedAt() *timestamppb.Timestamp {
+func (x *GetUserByIDResponse) GetImage() string {
 	if x != nil {
-		return x.CreatedAt
+		return x.Image
 	}
-	return nil
+	return ""
+}
+
+func (x *GetUserByIDResponse) GetFollowers() uint32 {
+	if x != nil {
+		return x.Followers
+	}
+	return 0
+}
+
+func (x *GetUserByIDResponse) GetPremiumStatus() bool {
+	if x != nil {
+		return x.PremiumStatus
+	}
+	return false
 }
 
 type CreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Image         string                 `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
+	Followers     int32                  `protobuf:"varint,4,opt,name=followers,proto3" json:"followers,omitempty"`
+	PremiumStatus bool                   `protobuf:"varint,5,opt,name=premium_status,json=premiumStatus,proto3" json:"premium_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateUserRequest) Reset() {
 	*x = CreateUserRequest{}
-	mi := &file_user_v1_user_proto_msgTypes[3]
+	mi := &file_user_v1_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -273,7 +335,7 @@ func (x *CreateUserRequest) String() string {
 func (*CreateUserRequest) ProtoMessage() {}
 
 func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[3]
+	mi := &file_user_v1_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -286,7 +348,7 @@ func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{3}
+	return file_user_v1_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateUserRequest) GetName() string {
@@ -303,6 +365,27 @@ func (x *CreateUserRequest) GetEmail() string {
 	return ""
 }
 
+func (x *CreateUserRequest) GetImage() string {
+	if x != nil {
+		return x.Image
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetFollowers() int32 {
+	if x != nil {
+		return x.Followers
+	}
+	return 0
+}
+
+func (x *CreateUserRequest) GetPremiumStatus() bool {
+	if x != nil {
+		return x.PremiumStatus
+	}
+	return false
+}
+
 type CreateUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -312,7 +395,7 @@ type CreateUserResponse struct {
 
 func (x *CreateUserResponse) Reset() {
 	*x = CreateUserResponse{}
-	mi := &file_user_v1_user_proto_msgTypes[4]
+	mi := &file_user_v1_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -324,7 +407,7 @@ func (x *CreateUserResponse) String() string {
 func (*CreateUserResponse) ProtoMessage() {}
 
 func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[4]
+	mi := &file_user_v1_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -337,54 +420,10 @@ func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateUserResponse.ProtoReflect.Descriptor instead.
 func (*CreateUserResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *CreateUserResponse) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type GetUserByIDRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetUserByIDRequest) Reset() {
-	*x = GetUserByIDRequest{}
-	mi := &file_user_v1_user_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetUserByIDRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetUserByIDRequest) ProtoMessage() {}
-
-func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetUserByIDRequest.ProtoReflect.Descriptor instead.
-func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
 	return file_user_v1_user_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetUserByIDRequest) GetId() string {
+func (x *CreateUserResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -603,7 +642,7 @@ var File_user_v1_user_proto protoreflect.FileDescriptor
 
 const file_user_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x12user/v1/user.proto\x12\auser.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x85\x02\n" +
+	"\x12user/v1/user.proto\x12\auser.v1\x1a\x1bgoogle/protobuf/empty.proto\"\x85\x02\n" +
 	"\bPlaylist\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x12\n" +
@@ -617,19 +656,23 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\x06tracks\x18\t \x03(\v2\x16.user.v1.PlaylistTrackR\x06tracks\"F\n" +
 	"\rPlaylistTrack\x12\x19\n" +
 	"\btrack_id\x18\x01 \x01(\tR\atrackId\x12\x1a\n" +
-	"\bposition\x18\x02 \x01(\x05R\bposition\"\x8a\x01\n" +
+	"\bposition\x18\x02 \x01(\x05R\bposition\"$\n" +
+	"\x12GetUserByIDRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xaa\x01\n" +
 	"\x13GetUserByIDResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x129\n" +
-	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"=\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
+	"\x05image\x18\x04 \x01(\tR\x05image\x12\x1c\n" +
+	"\tfollowers\x18\x05 \x01(\rR\tfollowers\x12%\n" +
+	"\x0epremium_status\x18\x06 \x01(\bR\rpremiumStatus\"\x98\x01\n" +
 	"\x11CreateUserRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\"$\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\x12\x14\n" +
+	"\x05image\x18\x03 \x01(\tR\x05image\x12\x1c\n" +
+	"\tfollowers\x18\x04 \x01(\x05R\tfollowers\x12%\n" +
+	"\x0epremium_status\x18\x05 \x01(\bR\rpremiumStatus\"$\n" +
 	"\x12CreateUserResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"$\n" +
-	"\x12GetUserByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"Q\n" +
 	"\x15FollowPlaylistRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
@@ -671,37 +714,35 @@ var file_user_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_user_v1_user_proto_goTypes = []any{
 	(*Playlist)(nil),                // 0: user.v1.Playlist
 	(*PlaylistTrack)(nil),           // 1: user.v1.PlaylistTrack
-	(*GetUserByIDResponse)(nil),     // 2: user.v1.GetUserByIDResponse
-	(*CreateUserRequest)(nil),       // 3: user.v1.CreateUserRequest
-	(*CreateUserResponse)(nil),      // 4: user.v1.CreateUserResponse
-	(*GetUserByIDRequest)(nil),      // 5: user.v1.GetUserByIDRequest
+	(*GetUserByIDRequest)(nil),      // 2: user.v1.GetUserByIDRequest
+	(*GetUserByIDResponse)(nil),     // 3: user.v1.GetUserByIDResponse
+	(*CreateUserRequest)(nil),       // 4: user.v1.CreateUserRequest
+	(*CreateUserResponse)(nil),      // 5: user.v1.CreateUserResponse
 	(*FollowPlaylistRequest)(nil),   // 6: user.v1.FollowPlaylistRequest
 	(*UnfollowPlaylistRequest)(nil), // 7: user.v1.UnfollowPlaylistRequest
 	(*FollowArtistRequest)(nil),     // 8: user.v1.FollowArtistRequest
 	(*UnfollowArtistRequest)(nil),   // 9: user.v1.UnfollowArtistRequest
-	(*timestamppb.Timestamp)(nil),   // 10: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),           // 11: google.protobuf.Empty
+	(*emptypb.Empty)(nil),           // 10: google.protobuf.Empty
 }
 var file_user_v1_user_proto_depIdxs = []int32{
 	1,  // 0: user.v1.Playlist.tracks:type_name -> user.v1.PlaylistTrack
-	10, // 1: user.v1.GetUserByIDResponse.created_at:type_name -> google.protobuf.Timestamp
-	3,  // 2: user.v1.UserService.CreateUser:input_type -> user.v1.CreateUserRequest
-	5,  // 3: user.v1.UserService.GetUserByID:input_type -> user.v1.GetUserByIDRequest
-	6,  // 4: user.v1.UserService.FollowPlaylist:input_type -> user.v1.FollowPlaylistRequest
-	7,  // 5: user.v1.UserService.UnfollowPlaylist:input_type -> user.v1.UnfollowPlaylistRequest
-	8,  // 6: user.v1.UserService.FollowArtist:input_type -> user.v1.FollowArtistRequest
-	9,  // 7: user.v1.UserService.UnfollowArtist:input_type -> user.v1.UnfollowArtistRequest
-	4,  // 8: user.v1.UserService.CreateUser:output_type -> user.v1.CreateUserResponse
-	2,  // 9: user.v1.UserService.GetUserByID:output_type -> user.v1.GetUserByIDResponse
-	11, // 10: user.v1.UserService.FollowPlaylist:output_type -> google.protobuf.Empty
-	11, // 11: user.v1.UserService.UnfollowPlaylist:output_type -> google.protobuf.Empty
-	11, // 12: user.v1.UserService.FollowArtist:output_type -> google.protobuf.Empty
-	11, // 13: user.v1.UserService.UnfollowArtist:output_type -> google.protobuf.Empty
-	8,  // [8:14] is the sub-list for method output_type
-	2,  // [2:8] is the sub-list for method input_type
-	2,  // [2:2] is the sub-list for extension type_name
-	2,  // [2:2] is the sub-list for extension extendee
-	0,  // [0:2] is the sub-list for field type_name
+	4,  // 1: user.v1.UserService.CreateUser:input_type -> user.v1.CreateUserRequest
+	2,  // 2: user.v1.UserService.GetUserByID:input_type -> user.v1.GetUserByIDRequest
+	6,  // 3: user.v1.UserService.FollowPlaylist:input_type -> user.v1.FollowPlaylistRequest
+	7,  // 4: user.v1.UserService.UnfollowPlaylist:input_type -> user.v1.UnfollowPlaylistRequest
+	8,  // 5: user.v1.UserService.FollowArtist:input_type -> user.v1.FollowArtistRequest
+	9,  // 6: user.v1.UserService.UnfollowArtist:input_type -> user.v1.UnfollowArtistRequest
+	5,  // 7: user.v1.UserService.CreateUser:output_type -> user.v1.CreateUserResponse
+	3,  // 8: user.v1.UserService.GetUserByID:output_type -> user.v1.GetUserByIDResponse
+	10, // 9: user.v1.UserService.FollowPlaylist:output_type -> google.protobuf.Empty
+	10, // 10: user.v1.UserService.UnfollowPlaylist:output_type -> google.protobuf.Empty
+	10, // 11: user.v1.UserService.FollowArtist:output_type -> google.protobuf.Empty
+	10, // 12: user.v1.UserService.UnfollowArtist:output_type -> google.protobuf.Empty
+	7,  // [7:13] is the sub-list for method output_type
+	1,  // [1:7] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_user_proto_init() }

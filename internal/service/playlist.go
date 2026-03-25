@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"github.com/Chimder/spoti/internal/domain/playlist"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
 	rediscache "github.com/Chimder/spoti/internal/repository/redis"
-	"time"
+	"github.com/google/uuid"
 )
 
 const playlistTTL = 60 * time.Minute
@@ -24,13 +26,13 @@ func NewPlaylistService(repo *postgres.Repository, cache rediscache.Cache,
 	return &PlaylistService{repo: repo, cache: cache, meili: meili}
 }
 
-func (ps *PlaylistService) CreatePlaylist(ctx context.Context, p playlist.CreatePlaylistReq) error {
+func (ps *PlaylistService) CreatePlaylist(ctx context.Context, p playlist.CreatePlaylistReq) (uuid.UUID, error) {
 	id, err := ps.repo.Playlist.CreatePlaylist(ctx, p)
 	if err != nil {
-		return err
+		return uuid.Nil, err
 	}
 	err = ps.meili.Add(ctx, meilisearchrepo.Document{ID: id.String(), Type: "playlist", Name: p.PlaylistName})
-	return err
+	return id, err
 }
 
 func (ps *PlaylistService) GetPlaylistById(ctx context.Context, playlistID string, limit, offset int) (playlist.PlaylistJson, error) {
