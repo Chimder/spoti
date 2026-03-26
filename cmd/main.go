@@ -10,7 +10,7 @@ import (
 
 	"github.com/Chimder/spoti/config"
 	httpgin "github.com/Chimder/spoti/internal/handler/http"
-	"github.com/Chimder/spoti/internal/otel"
+	"github.com/Chimder/spoti/internal/handler/http/otel"
 	"github.com/Chimder/spoti/internal/repository/clickhouse"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
@@ -19,10 +19,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-//		@title			Spoti Api
-//		@version		1.0
-//		@description	Similar Spotify Api
-//	  @BasePath	/
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

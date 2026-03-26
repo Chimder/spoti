@@ -97,7 +97,7 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 		albums.GET("/users/:userId", albumHandler.GetUserSavedAlbums)
 		albums.PUT("/users/:userId", albumHandler.SaveAlbumsForCurrentUser)
 		albums.DELETE("/users/:userId", albumHandler.RemoveAlbumsFromCurrentUser)
-		albums.GET("/users/:userId/contains", albumHandler.CheckUsersSavedAlbums)
+		albums.GET("/users/:userId/contains", albumHandler.CheckUserSavedAlbums)
 	}
 	artists := r.Group("/artists")
 	{

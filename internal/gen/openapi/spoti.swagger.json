@@ -1,10 +1,13 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "artist/v1/artist.proto",
+    "title": "album/v1/album.proto",
     "version": "version not set"
   },
   "tags": [
+    {
+      "name": "AlbumService"
+    },
     {
       "name": "PlaylistService"
     },

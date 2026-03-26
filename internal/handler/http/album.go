@@ -145,7 +145,7 @@ func (h *AlbumHandler) RemoveAlbumsFromCurrentUser(c *gin.Context) {
 
 	c.Status(http.StatusNoContent)
 }
-func (h *AlbumHandler) CheckUsersSavedAlbums(c *gin.Context) {
+func (h *AlbumHandler) CheckUserSavedAlbums(c *gin.Context) {
 	userID := c.Param("userId")
 	var req struct {
 		IDs []string `json:"album_ids"`

@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package album.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service AlbumService {
+  rpc CreateAlbum(CreateAlbumRequest) returns (google.protobuf.Empty);
+  // rpc GetAlbumJson(GetAlbumJsonRequest) returns (GetAlbumJsonResponse);
+  // rpc GetAlbumTracks(GetAlbumTracksRequest) returns (GetAlbumTracksResponse);
+  // rpc GetAlbumsByIds(GetAlbumsByIdsRequest) returns(GetAlbumsByIdsResponse)
+  rpc GetUserSavedAlbums(GetUserSavedAlbumsRequest) returns (GetUserSavedAlbumsResponse);
+  rpc SaveAlbumsForCurrentUser(SaveAlbumsForCurrentUserRequest) returns (google.protobuf.Empty);
+  rpc RemoveAlbumsFromCurrentUser(RemoveAlbumsFromCurrentUserRequest) returns (google.protobuf.Empty);
+  rpc CheckUsersSavedAlbums(CheckUsersSavedAlbumsRequest) returns (CheckUsersSavedAlbumsResponse);
+  rpc GetNewReleases(GetNewReleasesRequest) returns (GetNewReleasesResponse);
+}
+message Album {
+  string id = 1;
+  string album_type = 2;
+  int32 total_tracks = 3;
+  string image = 4;
+  string name = 5;
+  string uri = 6;
+  string copyrights = 7;
+  string label = 8;
+  int32 popularity = 9;
+  google.protobuf.Timestamp release_date = 10;
+  google.protobuf.Timestamp created_at = 11;
+}
+message CreateAlbumRequest {
+  string album_type = 1;
+  int32 total_tracks = 2;
+  string image = 3;
+  string album_name = 4;
+  string uri = 5;
+  string copyrights = 6;
+  string album_label = 7;
+  int32 popularity = 8;
+  google.protobuf.Timestamp release_date = 9;
+}
+message CreateAlbumResponse {}
+
+message GetAlbumJsonRequest {}
+message GetAlbumJsonResponse {}
+
+message GetAlbumTracksRequest {
+  string id = 1;
+}
+message GetAlbumTracksResponse {}
+
+message GetUserSavedAlbumsRequest {
+  string user_id = 1;
+}
+message GetUserSavedAlbumsResponse {
+  repeated Album albums = 1;
+}
+
+message SaveAlbumsForCurrentUserRequest {
+  string user_id = 1;
+  repeated string album_ids = 2;
+}
+
+message RemoveAlbumsFromCurrentUserRequest {
+  string user_id = 1;
+  repeated string album_ids = 2;
+}
+
+message CheckUsersSavedAlbumsRequest {
+  string user_id = 1;
+  repeated string album_ids = 2;
+}
+message CheckUsersSavedAlbumsResponse {
+  repeated bool result = 1;
+}
+
+message GetNewReleasesRequest {
+  int32 limit = 1;
+}
+message GetNewReleasesResponse {
+  repeated Album albums = 1;
+}
