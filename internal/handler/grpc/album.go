@@ -14,11 +14,12 @@ import (
 )
 
 type AlbumHandler struct {
+	albumv1.UnimplementedAlbumServiceServer
 	srv *service.AlbumService
 }
 
-func NewAlbumHandler(svc *service.ArtistService) *ArtistHandler {
-	return &ArtistHandler{srv: svc}
+func NewAlbumHandler(srv *service.AlbumService) *AlbumHandler {
+	return &AlbumHandler{srv: srv}
 }
 
 func (h *AlbumHandler) CreateAlbum(ctx context.Context, req *albumv1.CreateAlbumRequest) (*emptypb.Empty, error) {

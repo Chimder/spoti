@@ -14,10 +14,10 @@ import (
 
 type TrackHandler struct {
 	trackv1.UnimplementedTrackServiceServer
-	srv service.TrackService
+	srv *service.TrackService
 }
 
-func NewTrackHandler(srv service.TrackService) *TrackHandler {
+func NewTrackHandler(srv *service.TrackService) *TrackHandler {
 	return &TrackHandler{srv: srv}
 }
 

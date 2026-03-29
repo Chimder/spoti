@@ -37,10 +37,10 @@ func (h *AlbumHandler) CreateAlbum(c *gin.Context) {
 
 	c.Status(http.StatusCreated)
 }
-func (h *AlbumHandler) GetAlbumJson(c *gin.Context) {
+func (h *AlbumHandler) GetAlbumWithTracks(c *gin.Context) {
 	albumID := c.Param("id")
 
-	data, err := h.srv.GetAlbumJson(c.Request.Context(), albumID)
+	data, err := h.srv.GetAlbumWithTracks(c.Request.Context(), albumID)
 	if err != nil {
 		log.Error().Err(err).Msg("ERROR GET")
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -49,7 +49,7 @@ func (h *AlbumHandler) GetAlbumJson(c *gin.Context) {
 		return
 	}
 
-	c.Data(http.StatusOK, "application/json", data)
+	c.JSON(http.StatusOK, data)
 }
 
 func (h *AlbumHandler) GetAlbumsByIds(c *gin.Context) {
@@ -68,7 +68,7 @@ func (h *AlbumHandler) GetAlbumsByIds(c *gin.Context) {
 		return
 	}
 
-	c.Data(http.StatusOK, "application/json", data)
+	c.JSON(http.StatusOK, data)
 }
 func (h *AlbumHandler) GetAlbumTracks(c *gin.Context) {
 	albumID := c.Param("id")
@@ -81,7 +81,7 @@ func (h *AlbumHandler) GetAlbumTracks(c *gin.Context) {
 		return
 	}
 
-	c.Data(http.StatusOK, "application/json", data)
+	c.JSON(http.StatusOK, data)
 }
 func (h *AlbumHandler) GetUserSavedAlbums(c *gin.Context) {
 	userID := c.Param("userId")

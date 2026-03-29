@@ -2,19 +2,18 @@ package main
 
 import (
 	"context"
-	"net/http"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/Chimder/spoti/config"
-	httpgin "github.com/Chimder/spoti/internal/handler/http"
+	grpcserver "github.com/Chimder/spoti/internal/handler/grpc"
 	"github.com/Chimder/spoti/internal/handler/http/otel"
-	"github.com/Chimder/spoti/internal/repository/clickhouse"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
 	rediscache "github.com/Chimder/spoti/internal/repository/redis"
+	"github.com/Chimder/spoti/internal/service"
 	_ "github.com/lib/pq"
 	"github.com/rs/zerolog/log"
 )
@@ -41,45 +40,76 @@ func main() {
 		return
 	}
 
-	clkhConn, err := clickhouse.Conn(ctx)
-	if err != nil {
-		log.Panic().Msg("Err conn to clickhouse")
-		return
-	}
+	// clkhConn, err := clickhouse.Conn(ctx)
+	// if err != nil {
+	// 	log.Panic().Msg("Err conn to clickhouse")
+	// 	return
+	// }
 	redisConn := rediscache.Conn(cfg.RedisUrl)
 
 	meiliConn := meilisearchrepo.NewMeiliDB(cfg.MeiliSearchUrl)
+	////////////////////
+	repo := postgres.NewRepository(dbConn)
+	meiliSearchRepo := meilisearchrepo.NewMeiliRepository(meiliConn)
+	redisCache := rediscache.NewRedisCache(redisConn)
+	/////////////
+	artistSrv := service.NewArtistService(repo, redisCache, meiliSearchRepo)
+	userSrv := service.NewUserService(repo, redisCache, meiliSearchRepo)
+	playlistSrv := service.NewPlaylistService(repo, redisCache, meiliSearchRepo)
+	trackSrv := service.NewTrackService(repo, redisCache, meiliSearchRepo)
+	albumSrv := service.NewAlbumService(repo, redisCache, meiliSearchRepo)
+	/////////////
 	// elasticConn := elastic.NewElasticDB(cfg.ElasticSearchUrl)
-
 	// event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
 	// event.Start()
 	// defer event.Stop()
+	///////////////////
 
-	r := httpgin.Init(ctx, dbConn, clkhConn, redisConn, meiliConn)
-	srv := &http.Server{
-		Addr:         ":8080",
-		Handler:      r,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  120 * time.Second,
+	grpcSrv := grpcserver.NewServer(artistSrv, userSrv, playlistSrv, trackSrv, albumSrv)
+	lis, err := net.Listen("tcp", ":50051")
+	if err != nil {
+		log.Panic().Err(err).Msg("Failed to listen")
+		return
 	}
 
 	go func() {
-		if err := srv.ListenAndServe(); err != nil {
-			log.Error().Err(err).Msg("Server error")
+		log.Info().Msg("gRPC is running on :50051")
+		if err := grpcSrv.Serve(lis); err != nil {
+			log.Error().Err(err).Msg("gRPC server error")
 		}
 	}()
 
-	log.Info().Msg("Server is running...")
 	<-ctx.Done()
-	log.Info().Msg("Shutting down server...")
+	log.Info().Msg("Shut down gRPC...")
 
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	grpcSrv.GracefulStop()
+	log.Info().Msg("gRPC stopped")
 
-	if err := srv.Shutdown(shutdownCtx); err != nil {
-		log.Error().Err(err).Msg("Server shutdown error")
-	} else {
-		log.Info().Msg("Server stopped gracefully")
-	}
+	// r := httpgin.Init(ctx, dbConn, clkhConn, redisConn, meiliConn)
+	// srv := &http.Server{
+	// 	Addr:         ":8080",
+	// 	Handler:      r,
+	// 	ReadTimeout:  5 * time.Second,
+	// 	WriteTimeout: 10 * time.Second,
+	// 	IdleTimeout:  120 * time.Second,
+	// }
+
+	// go func() {
+	// 	if err := srv.ListenAndServe(); err != nil {
+	// 		log.Error().Err(err).Msg("Server error")
+	// 	}
+	// }()
+
+	// log.Info().Msg("Server is running...")
+	// <-ctx.Done()
+	// log.Info().Msg("Shutting down server...")
+
+	// shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// defer cancel()
+
+	// if err := srv.Shutdown(shutdownCtx); err != nil {
+	// 	log.Error().Err(err).Msg("Server shutdown error")
+	// } else {
+	// 	log.Info().Msg("Server stopped gracefully")
+	// }
 }

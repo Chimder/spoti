@@ -31,11 +31,11 @@ func (as *AlbumService) CreateAlbum(ctx context.Context, a album.CreateAlbumReq)
 	return err
 }
 
-func (as *AlbumService) GetAlbumJson(ctx context.Context, albumID string) (json.RawMessage, error) {
-	return as.repo.Album.GetAlbumJson(ctx, albumID)
+func (as *AlbumService) GetAlbumWithTracks(ctx context.Context, albumID string) (album.GetAlbumResponse, error) {
+	return as.repo.Album.GetAlbumWithTracks(ctx, albumID)
 }
 
-func (as *AlbumService) GetAlbumsByIds(ctx context.Context, albumIDs []string) (json.RawMessage, error) {
+func (as *AlbumService) GetAlbumsByIds(ctx context.Context, albumIDs []string) (album.GetAlbumsByIdsResponse, error) {
 	return as.repo.Album.GetAlbumsByIds(ctx, albumIDs)
 }
 

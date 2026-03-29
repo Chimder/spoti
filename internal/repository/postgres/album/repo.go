@@ -54,7 +54,7 @@ func (al *AlbumRepo) GetAlbum(ctx context.Context, albumID string) (album.Album,
 	return data.ToDomain(), nil
 }
 
-func (al *AlbumRepo) GetAlbumJson(ctx context.Context, albumID string) (json.RawMessage, error) {
+func (al *AlbumRepo) GetAlbumWithTracks(ctx context.Context, albumID string) (album.GetAlbumResponse, error) {
 	query := `
 		WITH album AS (
     SELECT
@@ -135,17 +135,21 @@ LEFT JOIN album_artists aa ON aa.album_id = a.id
 LEFT JOIN tracks t ON TRUE;
 	`
 
-	var data json.RawMessage
-	err := al.db.QueryRow(ctx, query, albumID).Scan(&data)
+	var raw json.RawMessage
+	err := al.db.QueryRow(ctx, query, albumID).Scan(&raw)
 	if err != nil {
 		log.Error().Err(err).Msg("Get Album from db")
-		return nil, err
+		return album.GetAlbumResponse{}, err
+	}
+	var resp album.GetAlbumResponse
+	if err := json.Unmarshal(raw, &resp); err != nil {
+		return album.GetAlbumResponse{}, fmt.Errorf("unmarshal album json: %w", err)
 	}
 
-	return data, nil
+	return resp, nil
 }
 
-func (al *AlbumRepo) GetAlbumsByIds(ctx context.Context, albumIDs []string) (json.RawMessage, error) {
+func (al *AlbumRepo) GetAlbumsByIds(ctx context.Context, albumIDs []string) (album.GetAlbumsByIdsResponse, error) {
 	query := `WITH album AS (
     SELECT
         a.id,
@@ -235,20 +239,25 @@ FROM album a
 LEFT JOIN album_artists aa ON aa.album_id = a.id
 LEFT JOIN tracks t ON t.album_id = a.id;
 `
-	var data json.RawMessage
+	var raw json.RawMessage
 	ids, err := al.parseUUIDs(albumIDs)
 	if err != nil {
 		log.Error().Err(err).Msg("err parse to uuid")
-		return nil, err
+		return album.GetAlbumsByIdsResponse{}, err
 	}
 
-	err = al.db.QueryRow(ctx, query, ids).Scan(&data)
+	err = al.db.QueryRow(ctx, query, ids).Scan(&raw)
 	if err != nil {
-		log.Error().Err(err).Msg("Get Album from db")
-		return nil, err
+		log.Error().Err(err).Msg("Get Albums by ids from db")
+		return album.GetAlbumsByIdsResponse{}, err
 	}
 
-	return data, nil
+	var resp album.GetAlbumsByIdsResponse
+	if err := json.Unmarshal(raw, &resp); err != nil {
+		return album.GetAlbumsByIdsResponse{}, fmt.Errorf("unmarshal albums json: %w", err)
+	}
+
+	return resp, nil
 }
 
 func (al *AlbumRepo) parseUUIDs(ids []string) ([]uuid.UUID, error) {
