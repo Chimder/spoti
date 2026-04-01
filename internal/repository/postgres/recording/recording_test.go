@@ -2,18 +2,29 @@ package recordingrepo_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
 	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+var testDB *pgxpool.Pool
+var cleanup func()
+
+func TestMain(m *testing.M) {
+	testDB, cleanup = testhelpers.SetupContainerDB()
+	code := m.Run()
+	cleanup()
+	os.Exit(code)
+}
 func TestRecordingRepo_CreateRecording(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := recordingrepo.NewRecordingRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := recordingrepo.NewRecordingRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("ok create recording", func(t *testing.T) {
@@ -34,8 +45,8 @@ func TestRecordingRepo_CreateRecording(t *testing.T) {
 }
 
 func TestRecordingRepo_GetRecordingById(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := recordingrepo.NewRecordingRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := recordingrepo.NewRecordingRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("Ok get recording", func(t *testing.T) {

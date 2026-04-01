@@ -2,18 +2,30 @@ package trackrepo_test
 
 import (
 	"context"
+	"os"
+	"testing"
+
 	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
 	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
 	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
 	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
 	trackrepo "github.com/Chimder/spoti/internal/repository/postgres/track"
-	"testing"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+var testDB *pgxpool.Pool
+var cleanup func()
+
+func TestMain(m *testing.M) {
+	testDB, cleanup = testhelpers.SetupContainerDB()
+	code := m.Run()
+	cleanup()
+	os.Exit(code)
+}
 func setTrackDeps(t *testing.T, albumRepo *albumrepo.AlbumRepo, recRepo *recordingrepo.RecordingRepo) (uuid.UUID, uuid.UUID) {
 	t.Helper()
 	albumId := testhelpers.CreateTestAlbum(t, albumRepo)
@@ -22,10 +34,10 @@ func setTrackDeps(t *testing.T, albumRepo *albumrepo.AlbumRepo, recRepo *recordi
 }
 
 func TestTrackRepo_CreateTrack(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	albumRepo := albumrepo.NewAlbumRepo(db)
-	recRepo := recordingrepo.NewRecordingRepo(db)
-	trackRepo := trackrepo.NewTrackRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	albumRepo := albumrepo.NewAlbumRepo(testDB)
+	recRepo := recordingrepo.NewRecordingRepo(testDB)
+	trackRepo := trackrepo.NewTrackRepo(testDB)
 
 	t.Run("ok create track", func(t *testing.T) {
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
@@ -61,10 +73,10 @@ func TestTrackRepo_CreateTrack(t *testing.T) {
 }
 
 func TestTrackRepo_GetTrackById(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	albumRepo := albumrepo.NewAlbumRepo(db)
-	recRepo := recordingrepo.NewRecordingRepo(db)
-	trackRepo := trackrepo.NewTrackRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	albumRepo := albumrepo.NewAlbumRepo(testDB)
+	recRepo := recordingrepo.NewRecordingRepo(testDB)
+	trackRepo := trackrepo.NewTrackRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("success", func(t *testing.T) {
@@ -89,10 +101,10 @@ func TestTrackRepo_GetTrackById(t *testing.T) {
 }
 
 func TestTrackRepo_GetTracksByIds(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	albumRepo := albumrepo.NewAlbumRepo(db)
-	recRepo := recordingrepo.NewRecordingRepo(db)
-	trackRepo := trackrepo.NewTrackRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	albumRepo := albumrepo.NewAlbumRepo(testDB)
+	recRepo := recordingrepo.NewRecordingRepo(testDB)
+	trackRepo := trackrepo.NewTrackRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("return all tracks", func(t *testing.T) {
@@ -127,11 +139,11 @@ func TestTrackRepo_GetTracksByIds(t *testing.T) {
 }
 
 func TestTrackRepo_GetArtistTracks(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	albumRepo := albumrepo.NewAlbumRepo(db)
-	recRepo := recordingrepo.NewRecordingRepo(db)
-	trackRepo := trackrepo.NewTrackRepo(db)
-	artistRepo := artistrepo.NewArtistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	albumRepo := albumrepo.NewAlbumRepo(testDB)
+	recRepo := recordingrepo.NewRecordingRepo(testDB)
+	trackRepo := trackrepo.NewTrackRepo(testDB)
+	artistRepo := artistrepo.NewArtistRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("all artist tracks", func(t *testing.T) {
@@ -139,7 +151,7 @@ func TestTrackRepo_GetArtistTracks(t *testing.T) {
 		albumId, recId := setTrackDeps(t, albumRepo, recRepo)
 		trackId, err := testhelpers.CreateTrack(trackRepo, albumId, recId, 1, 1)
 
-		_, err = db.Exec(ctx,
+		_, err = testDB.Exec(ctx,
 			`INSERT INTO artist_tracks (artist_id, track_id) VALUES ($1, $2)`,
 			artistId, trackId,
 		)

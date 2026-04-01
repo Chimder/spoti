@@ -274,48 +274,6 @@ func (al *AlbumRepo) parseUUIDs(ids []string) ([]uuid.UUID, error) {
 	return res, nil
 }
 
-func (al *AlbumRepo) GetAlbumsTracks(ctx context.Context, albumID string) (json.RawMessage, error) {
-	query := `SELECT jsonb_build_object(
-    'album', to_jsonb(a) || jsonb_build_object(
-    'tracks', (
-            SELECT jsonb_agg(
-                to_jsonb(t) || jsonb_build_object(
-                'recording', to_jsonb(r),
-                'artists', (
-                        SELECT jsonb_agg(
-                            jsonb_build_object(
-                                'id', ar.id,
-                                'name', ar.artist_name,
-                                'uri', ar.uri
-                            )
-                            ORDER BY ar.artist_name
-                        )
-                        FROM artist_tracks at
-                        JOIN artists ar ON ar.id = at.artist_id
-                        WHERE at.track_id = t.id
-                    )
-                )
-                ORDER BY t.disc_number, t.track_number
-            )
-            FROM tracks t
-            JOIN recordings r ON r.id = t.recording_id
-            WHERE t.album_id = a.id
-        )
-    )
-) AS album
-FROM albums a
-WHERE a.id = $1;`
-
-	var data json.RawMessage
-	err := al.db.QueryRow(ctx, query, albumID).Scan(&data)
-	if err != nil {
-		log.Error().Err(err).Msg("Get Album from db")
-		return nil, err
-	}
-
-	return data, nil
-}
-
 func (al *AlbumRepo) GetUserSavedAlbums(ctx context.Context, userId string) ([]album.Album, error) {
 	query := `SELECT a.*
 FROM albums a

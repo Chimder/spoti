@@ -4,14 +4,16 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"testing"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
+	"github.com/stretchr/testify/require"
 	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
 )
 
-func SetupContainerDB() *pgxpool.Pool {
+func SetupContainerDB() (*pgxpool.Pool, func()) {
 	ctx := context.Background()
 
 	pgContainer, err := tcpostgres.Run(ctx,
@@ -44,6 +46,32 @@ func SetupContainerDB() *pgxpool.Pool {
 	if err != nil {
 		panic(fmt.Sprintf("err pgxpoolNew: %v", err))
 	}
+	cleanup := func() {
+		pool.Close()
+		sqlDB.Close()
+		if err := pgContainer.Terminate(ctx); err != nil {
+			panic(fmt.Sprintf("err terminate container: %v", err))
+		}
+	}
 
-	return pool
+	return pool, cleanup
+}
+
+func TruncateAll(t *testing.T, db *pgxpool.Pool) {
+	t.Helper()
+
+	_, err := db.Exec(context.Background(), `
+		TRUNCATE TABLE
+			artist_tracks,
+			user_saved_albums,
+			album_artists,
+			tracks,
+			recordings,
+			playlists,
+			artists,
+			albums,
+			users
+		RESTART IDENTITY CASCADE
+	`)
+	require.NoError(t, err)
 }

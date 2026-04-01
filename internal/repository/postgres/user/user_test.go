@@ -2,6 +2,7 @@ package userrepo_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
@@ -10,13 +11,23 @@ import (
 	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+var testDB *pgxpool.Pool
+var cleanup func()
+
+func TestMain(m *testing.M) {
+	testDB, cleanup = testhelpers.SetupContainerDB()
+	code := m.Run()
+	cleanup()
+	os.Exit(code)
+}
 func TestUserRepo_CreateUser(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := userrepo.NewUserRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := userrepo.NewUserRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("success create user", func(t *testing.T) {
@@ -37,8 +48,8 @@ func TestUserRepo_CreateUser(t *testing.T) {
 }
 
 func TestUserRepo_GetUserById(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := userrepo.NewUserRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := userrepo.NewUserRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("success existing user", func(t *testing.T) {
@@ -61,9 +72,9 @@ func TestUserRepo_GetUserById(t *testing.T) {
 }
 
 func TestUserRepo_FollowUnfollowPlaylist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	userRepo := userrepo.NewUserRepo(db)
-	playlistRepo := playlistrepo.NewPlaylistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	userRepo := userrepo.NewUserRepo(testDB)
+	playlistRepo := playlistrepo.NewPlaylistRepo(testDB)
 
 	ctx := context.Background()
 
@@ -102,9 +113,9 @@ func TestUserRepo_FollowUnfollowPlaylist(t *testing.T) {
 }
 
 func TestUserRepo_FollowUnfollowArtist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	userRepo := userrepo.NewUserRepo(db)
-	artistRepo := artistrepo.NewArtistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	userRepo := userrepo.NewUserRepo(testDB)
+	artistRepo := artistrepo.NewArtistRepo(testDB)
 	ctx := context.Background()
 
 	userId := testhelpers.CreateTestUser(t, userRepo)

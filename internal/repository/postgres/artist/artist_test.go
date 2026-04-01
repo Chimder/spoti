@@ -2,18 +2,29 @@ package artistrepo_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
 	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+var testDB *pgxpool.Pool
+var cleanup func()
+
+func TestMain(m *testing.M) {
+	testDB, cleanup = testhelpers.SetupContainerDB()
+	code := m.Run()
+	cleanup()
+	os.Exit(code)
+}
 func TestArtistRepo_CreateArtist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := artistrepo.NewArtistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := artistrepo.NewArtistRepo(testDB)
 
 	t.Run("create artist", func(t *testing.T) {
 		id := testhelpers.CreateTestArtist(t, repo)
@@ -33,8 +44,8 @@ func TestArtistRepo_CreateArtist(t *testing.T) {
 }
 
 func TestArtistRepo_GetArtist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := artistrepo.NewArtistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := artistrepo.NewArtistRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("existing artist", func(t *testing.T) {
@@ -58,8 +69,8 @@ func TestArtistRepo_GetArtist(t *testing.T) {
 }
 
 func TestArtistRepo_GetArtistsByIDs(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	repo := artistrepo.NewArtistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	repo := artistrepo.NewArtistRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("success multiple artists", func(t *testing.T) {

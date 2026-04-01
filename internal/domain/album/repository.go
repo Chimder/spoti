@@ -2,7 +2,6 @@ package album
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +11,6 @@ type AlbumRepository interface {
 	GetAlbum(ctx context.Context, albumID string) (Album, error)
 	GetAlbumWithTracks(ctx context.Context, albumID string) (GetAlbumResponse, error)
 	GetAlbumsByIds(ctx context.Context, albumIDs []string) (GetAlbumsByIdsResponse, error)
-	GetAlbumsTracks(ctx context.Context, albumID string) (json.RawMessage, error)
 	GetUserSavedAlbums(ctx context.Context, userId string) ([]Album, error)
 	SaveAlbumsForCurrentUser(ctx context.Context, albumIds []string, userId string) error
 	RemoveAlbumsFromCurrentUser(ctx context.Context, albumIds []string, userId string) error

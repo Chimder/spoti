@@ -91,7 +91,6 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 		albums.POST("", albumHandler.CreateAlbum)
 		albums.GET("/:id", albumHandler.GetAlbumWithTracks)
 		albums.GET("", albumHandler.GetAlbumsByIds)
-		albums.GET("/:id/tracks", albumHandler.GetAlbumTracks)
 		albums.GET("/new", albumHandler.GetNewReleases)
 
 		albums.GET("/users/:userId", albumHandler.GetUserSavedAlbums)

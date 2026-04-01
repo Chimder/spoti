@@ -70,19 +70,7 @@ func (h *AlbumHandler) GetAlbumsByIds(c *gin.Context) {
 
 	c.JSON(http.StatusOK, data)
 }
-func (h *AlbumHandler) GetAlbumTracks(c *gin.Context) {
-	albumID := c.Param("id")
 
-	data, err := h.srv.GetAlbumsTracks(c.Request.Context(), albumID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to get album tracks",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, data)
-}
 func (h *AlbumHandler) GetUserSavedAlbums(c *gin.Context) {
 	userID := c.Param("userId")
 

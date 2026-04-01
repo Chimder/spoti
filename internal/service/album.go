@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"encoding/json"
+	"time"
+
 	"github.com/Chimder/spoti/internal/domain/album"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
 	rediscache "github.com/Chimder/spoti/internal/repository/redis"
-	"time"
 )
 
 type AlbumService struct {
@@ -37,10 +37,6 @@ func (as *AlbumService) GetAlbumWithTracks(ctx context.Context, albumID string) 
 
 func (as *AlbumService) GetAlbumsByIds(ctx context.Context, albumIDs []string) (album.GetAlbumsByIdsResponse, error) {
 	return as.repo.Album.GetAlbumsByIds(ctx, albumIDs)
-}
-
-func (as *AlbumService) GetAlbumsTracks(ctx context.Context, albumID string) (json.RawMessage, error) {
-	return as.repo.Album.GetAlbumsTracks(ctx, albumID)
 }
 
 func (as *AlbumService) GetUserSavedAlbums(ctx context.Context, userId string) ([]album.Album, error) {

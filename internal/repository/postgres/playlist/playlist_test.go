@@ -2,6 +2,7 @@ package playlistrepo_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/Chimder/spoti/internal/domain/playlist"
@@ -12,14 +13,24 @@ import (
 	trackrepo "github.com/Chimder/spoti/internal/repository/postgres/track"
 	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+var testDB *pgxpool.Pool
+var cleanup func()
+
+func TestMain(m *testing.M) {
+	testDB, cleanup = testhelpers.SetupContainerDB()
+	code := m.Run()
+	cleanup()
+	os.Exit(code)
+}
 func TestPlaylistRepo_CreatePlaylist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	userRepo := userrepo.NewUserRepo(db)
-	playlistRepo := playlistrepo.NewPlaylistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	userRepo := userrepo.NewUserRepo(testDB)
+	playlistRepo := playlistrepo.NewPlaylistRepo(testDB)
 
 	t.Run("Ok create playlist", func(t *testing.T) {
 		ownerId := testhelpers.CreateTestUser(t, userRepo)
@@ -37,10 +48,120 @@ func TestPlaylistRepo_CreatePlaylist(t *testing.T) {
 	})
 }
 
+func TestPlaylistRepo_GetPlaylistById(t *testing.T) {
+	defer testhelpers.TruncateAll(t, testDB)
+
+	userRepo := userrepo.NewUserRepo(testDB)
+	playlistRepo := playlistrepo.NewPlaylistRepo(testDB)
+	recordingRepo := recordingrepo.NewRecordingRepo(testDB)
+	trackRepo := trackrepo.NewTrackRepo(testDB)
+	albumRepo := albumrepo.NewAlbumRepo(testDB)
+
+	ctx := context.Background()
+
+	t.Run("get playlist", func(t *testing.T) {
+		ownerId := testhelpers.CreateTestUser(t, userRepo)
+		playlistId := testhelpers.CreateTestPlaylist(t, playlistRepo, ownerId)
+
+		resp, err := playlistRepo.GetPlaylistById(ctx, playlistId.String(), 10, 0)
+		require.NoError(t, err)
+
+		assert.Equal(t, playlistId, resp.Id)
+		assert.Empty(t, resp.Tracks.Items)
+	})
+
+	t.Run("playlist with track", func(t *testing.T) {
+		ownerId := testhelpers.CreateTestUser(t, userRepo)
+		playlistId := testhelpers.CreateTestPlaylist(t, playlistRepo, ownerId)
+
+		albumId := testhelpers.CreateTestAlbum(t, albumRepo)
+		recordingId := testhelpers.CreateTestRecording(t, recordingRepo)
+		trackId := testhelpers.CreateTestTrack(t, trackRepo, albumId, recordingId, 1, 1)
+
+		err := playlistRepo.AddToPlaylist(ctx, playlistId.String(), trackId.String())
+		require.NoError(t, err)
+
+		resp, err := playlistRepo.GetPlaylistById(ctx, playlistId.String(), 10, 0)
+		require.NoError(t, err)
+
+		require.Len(t, resp.Tracks.Items, 1)
+
+		item := resp.Tracks.Items[0]
+		assert.Equal(t, trackId, item.Track.Id)
+		assert.Equal(t, 1, item.Track.TrackNumber)
+		assert.Equal(t, 1, item.Track.DiscNumber)
+	})
+
+	t.Run("playlist with many tracks", func(t *testing.T) {
+		ownerId := testhelpers.CreateTestUser(t, userRepo)
+		playlistId := testhelpers.CreateTestPlaylist(t, playlistRepo, ownerId)
+
+		albumId := testhelpers.CreateTestAlbum(t, albumRepo)
+
+		var trackIDs []uuid.UUID
+
+		for i := range 3 {
+			rec := testhelpers.CreateTestRecording(t, recordingRepo)
+			tr := testhelpers.CreateTestTrack(t, trackRepo, albumId, rec, i+1, 1)
+
+			err := playlistRepo.AddToPlaylist(ctx, playlistId.String(), tr.String())
+			require.NoError(t, err)
+
+			trackIDs = append(trackIDs, tr)
+		}
+
+		resp, err := playlistRepo.GetPlaylistById(ctx, playlistId.String(), 10, 0)
+		require.NoError(t, err)
+
+		require.Len(t, resp.Tracks.Items, 3)
+
+		for i, item := range resp.Tracks.Items {
+			assert.Equal(t, trackIDs[i], item.Track.Id)
+		}
+	})
+
+	t.Run("limit and offset", func(t *testing.T) {
+		ownerId := testhelpers.CreateTestUser(t, userRepo)
+		playlistId := testhelpers.CreateTestPlaylist(t, playlistRepo, ownerId)
+
+		albumId := testhelpers.CreateTestAlbum(t, albumRepo)
+
+		for i := range 3 {
+			rec := testhelpers.CreateTestRecording(t, recordingRepo)
+			tr := testhelpers.CreateTestTrack(t, trackRepo, albumId, rec, i+1, 1)
+
+			err := playlistRepo.AddToPlaylist(ctx, playlistId.String(), tr.String())
+			require.NoError(t, err)
+		}
+
+		resp, err := playlistRepo.GetPlaylistById(ctx, playlistId.String(), 2, 1)
+		require.NoError(t, err)
+
+		assert.Len(t, resp.Tracks.Items, 2)
+		assert.Equal(t, 2, resp.Tracks.Limit)
+		assert.Equal(t, 1, resp.Tracks.Offset)
+	})
+
+	t.Run("correct limit", func(t *testing.T) {
+		ownerId := testhelpers.CreateTestUser(t, userRepo)
+		playlistId := testhelpers.CreateTestPlaylist(t, playlistRepo, ownerId)
+
+		resp, err := playlistRepo.GetPlaylistById(ctx, playlistId.String(), 100, -10)
+		require.NoError(t, err)
+
+		assert.Equal(t, 20, resp.Tracks.Limit)
+		assert.Equal(t, 0, resp.Tracks.Offset)
+	})
+
+	t.Run("playlist not found", func(t *testing.T) {
+		_, err := playlistRepo.GetPlaylistById(ctx, uuid.New().String(), 10, 0)
+		assert.Error(t, err)
+	})
+}
 func TestPlaylistRepo_GetAllUserPlaylists(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	userRepo := userrepo.NewUserRepo(db)
-	playlistRepo := playlistrepo.NewPlaylistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	userRepo := userrepo.NewUserRepo(testDB)
+	playlistRepo := playlistrepo.NewPlaylistRepo(testDB)
 	ctx := context.Background()
 
 	t.Run("all user playlists", func(t *testing.T) {
@@ -71,12 +192,12 @@ func TestPlaylistRepo_GetAllUserPlaylists(t *testing.T) {
 }
 
 func TestPlaylistRepo_AddAndDeleteFromPlaylist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	userRepo := userrepo.NewUserRepo(db)
-	playlistRepo := playlistrepo.NewPlaylistRepo(db)
-	albumRepo := albumrepo.NewAlbumRepo(db)
-	recRepo := recordingrepo.NewRecordingRepo(db)
-	trackRepo := trackrepo.NewTrackRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	userRepo := userrepo.NewUserRepo(testDB)
+	playlistRepo := playlistrepo.NewPlaylistRepo(testDB)
+	albumRepo := albumrepo.NewAlbumRepo(testDB)
+	recRepo := recordingrepo.NewRecordingRepo(testDB)
+	trackRepo := trackrepo.NewTrackRepo(testDB)
 	ctx := context.Background()
 
 	ownerId := testhelpers.CreateTestUser(t, userRepo)
@@ -118,7 +239,7 @@ func TestPlaylistRepo_AddAndDeleteFromPlaylist(t *testing.T) {
 		require.NoError(t, playlistRepo.DeleteFromPlaylist(ctx, newPlaylistId.String(), track2.String()))
 
 		var pos int
-		err := db.QueryRow(ctx,
+		err := testDB.QueryRow(ctx,
 			`SELECT track_position FROM playlist_tracks WHERE playlist_id = $1 AND track_id = $2`,
 			newPlaylistId, track3,
 		).Scan(&pos)
@@ -128,9 +249,9 @@ func TestPlaylistRepo_AddAndDeleteFromPlaylist(t *testing.T) {
 }
 
 func TestPlaylistRepo_UpdatePlaylist(t *testing.T) {
-	db := testhelpers.SetupContainerDB()
-	userRepo := userrepo.NewUserRepo(db)
-	playlistRepo := playlistrepo.NewPlaylistRepo(db)
+	defer testhelpers.TruncateAll(t, testDB)
+	userRepo := userrepo.NewUserRepo(testDB)
+	playlistRepo := playlistrepo.NewPlaylistRepo(testDB)
 	ctx := context.Background()
 
 	ownerId := testhelpers.CreateTestUser(t, userRepo)

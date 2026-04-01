@@ -44,6 +44,7 @@ func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, 
 	if offset < 0 {
 		offset = 0
 	}
+
 	query := `
 	WITH playlist_cte AS (
 		SELECT *
@@ -59,27 +60,37 @@ func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, 
 					'name', ar.artist_name,
 					'uri', ar.uri
 				)
-			) as artists
+			) AS artists
 		FROM artist_tracks at
 		JOIN artists ar ON ar.id = at.artist_id
 		GROUP BY at.track_id
+	),
+	playlist_items AS (
+		SELECT
+			pt.track_position,
+			pt.added_at,
+			tr.islocal,
+			to_jsonb(tr.*) || jsonb_build_object(
+				'artists', COALESCE(atc.artists, '[]'::jsonb)
+			) AS track
+		FROM playlist_tracks pt
+		JOIN tracks tr ON tr.id = pt.track_id
+		LEFT JOIN artist_tracks_cte atc ON atc.track_id = tr.id
+		WHERE pt.playlist_id = $1
+		ORDER BY pt.track_position
+		LIMIT $2 OFFSET $3
 	),
 	playlist_items_agg AS (
 		SELECT
 			jsonb_agg(
 				jsonb_build_object(
-					'added_at', pt.added_at,
-					'is_local', tr.islocal,
-					'track', to_jsonb(tr.*) || jsonb_build_object(
-						'artists', COALESCE(atc.artists, '[]'::jsonb)
-					)
-				) ORDER BY pt.track_position
-			) as items
-		FROM playlist_tracks pt
-		JOIN tracks tr ON tr.id = pt.track_id
-		LEFT JOIN artist_tracks_cte atc ON atc.track_id = tr.id
-		WHERE pt.playlist_id = $1
-		LIMIT $2 OFFSET $3
+					'added_at', added_at,
+					'is_local', islocal,
+					'track', track
+				)
+				ORDER BY track_position
+			) AS items
+		FROM playlist_items
 	)
 	SELECT
 		to_jsonb(pi.*) ||
@@ -90,7 +101,7 @@ func (pl *PlaylistRepo) GetPlaylistById(ctx context.Context, playlistId string, 
 				'offset', $3,
 				'items', COALESCE((SELECT items FROM playlist_items_agg), '[]'::jsonb)
 			)
-		) as playlist
+		) AS playlist
 	FROM playlist_cte pi;
 	`
 
