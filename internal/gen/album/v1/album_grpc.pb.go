@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	AlbumService_CreateAlbum_FullMethodName                 = "/album.v1.AlbumService/CreateAlbum"
+	AlbumService_GetAlbumWithTracks_FullMethodName          = "/album.v1.AlbumService/GetAlbumWithTracks"
 	AlbumService_GetUserSavedAlbums_FullMethodName          = "/album.v1.AlbumService/GetUserSavedAlbums"
 	AlbumService_SaveAlbumsForCurrentUser_FullMethodName    = "/album.v1.AlbumService/SaveAlbumsForCurrentUser"
 	AlbumService_RemoveAlbumsFromCurrentUser_FullMethodName = "/album.v1.AlbumService/RemoveAlbumsFromCurrentUser"
@@ -34,7 +35,7 @@ const (
 type AlbumServiceClient interface {
 	CreateAlbum(ctx context.Context, in *CreateAlbumRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// rpc GetAlbumJson(GetAlbumJsonRequest) returns (GetAlbumJsonResponse);
-	// rpc GetAlbumTracks(GetAlbumTracksRequest) returns (GetAlbumTracksResponse);
+	GetAlbumWithTracks(ctx context.Context, in *GetAlbumWithTracksRequest, opts ...grpc.CallOption) (*GetAlbumWithTracksResponse, error)
 	// rpc GetAlbumsByIds(GetAlbumsByIdsRequest) returns(GetAlbumsByIdsResponse)
 	GetUserSavedAlbums(ctx context.Context, in *GetUserSavedAlbumsRequest, opts ...grpc.CallOption) (*GetUserSavedAlbumsResponse, error)
 	SaveAlbumsForCurrentUser(ctx context.Context, in *SaveAlbumsForCurrentUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -55,6 +56,16 @@ func (c *albumServiceClient) CreateAlbum(ctx context.Context, in *CreateAlbumReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, AlbumService_CreateAlbum_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *albumServiceClient) GetAlbumWithTracks(ctx context.Context, in *GetAlbumWithTracksRequest, opts ...grpc.CallOption) (*GetAlbumWithTracksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAlbumWithTracksResponse)
+	err := c.cc.Invoke(ctx, AlbumService_GetAlbumWithTracks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +128,7 @@ func (c *albumServiceClient) GetNewReleases(ctx context.Context, in *GetNewRelea
 type AlbumServiceServer interface {
 	CreateAlbum(context.Context, *CreateAlbumRequest) (*emptypb.Empty, error)
 	// rpc GetAlbumJson(GetAlbumJsonRequest) returns (GetAlbumJsonResponse);
-	// rpc GetAlbumTracks(GetAlbumTracksRequest) returns (GetAlbumTracksResponse);
+	GetAlbumWithTracks(context.Context, *GetAlbumWithTracksRequest) (*GetAlbumWithTracksResponse, error)
 	// rpc GetAlbumsByIds(GetAlbumsByIdsRequest) returns(GetAlbumsByIdsResponse)
 	GetUserSavedAlbums(context.Context, *GetUserSavedAlbumsRequest) (*GetUserSavedAlbumsResponse, error)
 	SaveAlbumsForCurrentUser(context.Context, *SaveAlbumsForCurrentUserRequest) (*emptypb.Empty, error)
@@ -136,6 +147,9 @@ type UnimplementedAlbumServiceServer struct{}
 
 func (UnimplementedAlbumServiceServer) CreateAlbum(context.Context, *CreateAlbumRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateAlbum not implemented")
+}
+func (UnimplementedAlbumServiceServer) GetAlbumWithTracks(context.Context, *GetAlbumWithTracksRequest) (*GetAlbumWithTracksResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAlbumWithTracks not implemented")
 }
 func (UnimplementedAlbumServiceServer) GetUserSavedAlbums(context.Context, *GetUserSavedAlbumsRequest) (*GetUserSavedAlbumsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserSavedAlbums not implemented")
@@ -187,6 +201,24 @@ func _AlbumService_CreateAlbum_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AlbumServiceServer).CreateAlbum(ctx, req.(*CreateAlbumRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AlbumService_GetAlbumWithTracks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAlbumWithTracksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AlbumServiceServer).GetAlbumWithTracks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AlbumService_GetAlbumWithTracks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AlbumServiceServer).GetAlbumWithTracks(ctx, req.(*GetAlbumWithTracksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -291,6 +323,10 @@ var AlbumService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAlbum",
 			Handler:    _AlbumService_CreateAlbum_Handler,
+		},
+		{
+			MethodName: "GetAlbumWithTracks",
+			Handler:    _AlbumService_GetAlbumWithTracks_Handler,
 		},
 		{
 			MethodName: "GetUserSavedAlbums",

@@ -555,8 +555,8 @@ const file_artist_v1_artist_proto_rawDesc = "" +
 	"popularity\x12\x16\n" +
 	"\x06genres\x18\a \x03(\tR\x06genres\"&\n" +
 	"\x14CreateArtistResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id2\xde\x02\n" +
-	"\x0fPlaylistService\x12F\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id2\xdc\x02\n" +
+	"\rArtistService\x12F\n" +
 	"\tGetArtist\x12\x1b.artist.v1.GetArtistRequest\x1a\x1c.artist.v1.GetArtistResponse\x12X\n" +
 	"\x0fGetArtistsByIds\x12!.artist.v1.GetArtistsByIdsRequest\x1a\".artist.v1.GetArtistsByIdsResponse\x12X\n" +
 	"\x0fGetArtistAlbums\x12!.artist.v1.GetArtistAlbumsRequest\x1a\".artist.v1.GetArtistAlbumsResponse\x12O\n" +
@@ -593,14 +593,14 @@ var file_artist_v1_artist_proto_depIdxs = []int32{
 	9, // 0: artist.v1.Artist.created_at:type_name -> google.protobuf.Timestamp
 	0, // 1: artist.v1.GetArtistResponse.artist:type_name -> artist.v1.Artist
 	0, // 2: artist.v1.GetArtistsByIdsResponse.artists:type_name -> artist.v1.Artist
-	1, // 3: artist.v1.PlaylistService.GetArtist:input_type -> artist.v1.GetArtistRequest
-	3, // 4: artist.v1.PlaylistService.GetArtistsByIds:input_type -> artist.v1.GetArtistsByIdsRequest
-	5, // 5: artist.v1.PlaylistService.GetArtistAlbums:input_type -> artist.v1.GetArtistAlbumsRequest
-	7, // 6: artist.v1.PlaylistService.CreateArtist:input_type -> artist.v1.CreateArtistRequest
-	2, // 7: artist.v1.PlaylistService.GetArtist:output_type -> artist.v1.GetArtistResponse
-	4, // 8: artist.v1.PlaylistService.GetArtistsByIds:output_type -> artist.v1.GetArtistsByIdsResponse
-	6, // 9: artist.v1.PlaylistService.GetArtistAlbums:output_type -> artist.v1.GetArtistAlbumsResponse
-	8, // 10: artist.v1.PlaylistService.CreateArtist:output_type -> artist.v1.CreateArtistResponse
+	1, // 3: artist.v1.ArtistService.GetArtist:input_type -> artist.v1.GetArtistRequest
+	3, // 4: artist.v1.ArtistService.GetArtistsByIds:input_type -> artist.v1.GetArtistsByIdsRequest
+	5, // 5: artist.v1.ArtistService.GetArtistAlbums:input_type -> artist.v1.GetArtistAlbumsRequest
+	7, // 6: artist.v1.ArtistService.CreateArtist:input_type -> artist.v1.CreateArtistRequest
+	2, // 7: artist.v1.ArtistService.GetArtist:output_type -> artist.v1.GetArtistResponse
+	4, // 8: artist.v1.ArtistService.GetArtistsByIds:output_type -> artist.v1.GetArtistsByIdsResponse
+	6, // 9: artist.v1.ArtistService.GetArtistAlbums:output_type -> artist.v1.GetArtistAlbumsResponse
+	8, // 10: artist.v1.ArtistService.CreateArtist:output_type -> artist.v1.CreateArtistResponse
 	7, // [7:11] is the sub-list for method output_type
 	3, // [3:7] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

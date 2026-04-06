@@ -13,7 +13,7 @@ import (
 )
 
 type ArtistHandler struct {
-	artistv1.UnimplementedPlaylistServiceServer
+	artistv1.UnimplementedArtistServiceServer
 
 	srv *service.ArtistService
 }

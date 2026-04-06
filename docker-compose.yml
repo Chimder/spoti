@@ -65,7 +65,7 @@ services:
     ports:
       - "8428:8428"
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host:host-gateway"
     volumes:
       - vmdata:/storage
       - ./promscrape.yml:/etc/vm/promscrape.yml:ro

@@ -2,6 +2,7 @@ scrape_configs:
   - job_name: spoti-api
     scrape_interval: 15s
     static_configs:
-      - targets: ["host.docker.internal:8080"]
-      # - targets: ["localhost:8080"]
+      # - targets: ["localhost:2112"]
+      - targets: ["host:2112"]
+      # - targets: ["host.docker.internal:2112"]
     metrics_path: /metrics

@@ -7,6 +7,8 @@ import (
 	trackv1 "github.com/Chimder/spoti/internal/gen/track/v1"
 	userv1 "github.com/Chimder/spoti/internal/gen/user/v1"
 	"github.com/Chimder/spoti/internal/service"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -19,20 +21,22 @@ func NewServer(
 	albumsrv *service.AlbumService,
 ) *grpc.Server {
 	srv := grpc.NewServer(
-	//(OTel, recovery, auth)
-	// grpc.ChainUnaryInterceptor(otelgrpc.UnaryServerInterceptor(), ...)
+		grpc.StatsHandler(otelgrpc.NewServerHandler(
+			otelgrpc.WithMeterProvider(otel.GetMeterProvider()),
+			// otelgrpc.WithTracerProvider(otel.GetTracerProvider()),
+		)),
 	)
 	artistHandler := NewArtistHandler(artistsrv)
 	playlistHandler := NewPlaylistHandler(playlistsrv)
 	userHandler := NewUserHandler(usersrv)
 	trackHandler := NewTrackHandler(tracksrv)
-	AlbumHandler := NewAlbumHandler(albumsrv)
+	albumHandler := NewAlbumHandler(albumsrv)
 
-	artistv1.RegisterPlaylistServiceServer(srv, artistHandler)
+	artistv1.RegisterArtistServiceServer(srv, artistHandler)
 	playlistv1.RegisterPlaylistServiceServer(srv, playlistHandler)
 	userv1.RegisterUserServiceServer(srv, userHandler)
 	trackv1.RegisterTrackServiceServer(srv, trackHandler)
-	albumv1.RegisterAlbumServiceServer(srv, AlbumHandler)
+	albumv1.RegisterAlbumServiceServer(srv, albumHandler)
 
 	reflection.Register(srv)
 

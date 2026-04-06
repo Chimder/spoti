@@ -29,6 +29,15 @@ func (h *AlbumHandler) CreateAlbum(ctx context.Context, req *albumv1.CreateAlbum
 	return &emptypb.Empty{}, nil
 }
 
+func (h *AlbumHandler) GetAlbumWithTracks(ctx context.Context, req *albumv1.GetAlbumWithTracksRequest) (*albumv1.GetAlbumWithTracksResponse, error) {
+	data, err := h.srv.GetAlbumWithTracks(ctx, req.Id)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return albumWithTracksToProto(data), nil
+}
+
 func (h *AlbumHandler) GetUserSavedAlbums(ctx context.Context, req *albumv1.GetUserSavedAlbumsRequest) (*albumv1.GetUserSavedAlbumsResponse, error) {
 	albums, err := h.srv.GetUserSavedAlbums(ctx, req.UserId)
 	if err != nil {
@@ -123,4 +132,46 @@ func albumsToProto(a []album.Album) []*albumv1.Album {
 		albums[i] = albumToProto(v)
 	}
 	return albums
+}
+
+func albumWithTracksToProto(a album.GetAlbumResponse) *albumv1.GetAlbumWithTracksResponse {
+	return &albumv1.GetAlbumWithTracksResponse{
+		AlbumType:   a.AlbumType,
+		TotalTracks: int32(a.TotalTracks),
+		Id:          a.ID.String(),
+		Name:        a.Name,
+		ReleaseDate: timestamppb.New(a.ReleaseDate),
+		Uri:         a.URI,
+		Artists:     toProtoArtists(a.Artists),
+		Tracks:      toProtoTracks(a.Tracks),
+	}
+}
+
+func toProtoArtists(artists []album.ArtistSummary) []*albumv1.ArtistSummary {
+	res := make([]*albumv1.ArtistSummary, 0, len(artists))
+	for _, a := range artists {
+		res = append(res, &albumv1.ArtistSummary{
+			Id:   a.ID.String(),
+			Name: a.Name,
+			Uri:  a.URI,
+		})
+	}
+	return res
+}
+func toProtoTracks(t album.AlbumTracksDTO) *albumv1.AlbumTracksDTO {
+	items := make([]*albumv1.TrackSummary, 0, len(t.Items))
+
+	for _, track := range t.Items {
+		items = append(items, &albumv1.TrackSummary{
+			Id:          track.ID.String(),
+			Name:        track.Name,
+			TrackNumber: int32(track.TrackNumber),
+			DiscNumber:  int32(track.DiscNumber),
+			DurationMs:  int32(track.DurationMs),
+			Explicit:    track.Explicit,
+			Uri:         track.URI,
+			Artists:     toProtoArtists(track.Artists),
+		})
+	}
+	return &albumv1.AlbumTracksDTO{Items: items}
 }

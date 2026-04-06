@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,6 +16,7 @@ import (
 	rediscache "github.com/Chimder/spoti/internal/repository/redis"
 	"github.com/Chimder/spoti/internal/service"
 	_ "github.com/lib/pq"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog/log"
 )
 
@@ -63,6 +65,17 @@ func main() {
 	// event := scheduler.NewEventWorker(ctx, dbConn, clkhConn)
 	// event.Start()
 	// defer event.Stop()
+	///////////////////
+	///////////////////
+	go func() {
+		mux := http.NewServeMux()
+		mux.Handle("/metrics", promhttp.Handler())
+
+		log.Info().Msg("Prom metrics running :2112/metrics")
+		if err := http.ListenAndServe(":2112", mux); err != nil {
+			log.Fatal().Err(err).Msg("failed to serve metrics")
+		}
+	}()
 	///////////////////
 
 	grpcSrv := grpcserver.NewServer(artistSrv, userSrv, playlistSrv, trackSrv, albumSrv)

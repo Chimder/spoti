@@ -209,6 +209,701 @@ var _ interface {
 	ErrorName() string
 } = AlbumValidationError{}
 
+// Validate checks the field values on GetAlbumWithTracksRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetAlbumWithTracksRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetAlbumWithTracksRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetAlbumWithTracksRequestMultiError, or nil if none found.
+func (m *GetAlbumWithTracksRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetAlbumWithTracksRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return GetAlbumWithTracksRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetAlbumWithTracksRequestMultiError is an error wrapping multiple validation
+// errors returned by GetAlbumWithTracksRequest.ValidateAll() if the
+// designated constraints aren't met.
+type GetAlbumWithTracksRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetAlbumWithTracksRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetAlbumWithTracksRequestMultiError) AllErrors() []error { return m }
+
+// GetAlbumWithTracksRequestValidationError is the validation error returned by
+// GetAlbumWithTracksRequest.Validate if the designated constraints aren't met.
+type GetAlbumWithTracksRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetAlbumWithTracksRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetAlbumWithTracksRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetAlbumWithTracksRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetAlbumWithTracksRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetAlbumWithTracksRequestValidationError) ErrorName() string {
+	return "GetAlbumWithTracksRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetAlbumWithTracksRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetAlbumWithTracksRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetAlbumWithTracksRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetAlbumWithTracksRequestValidationError{}
+
+// Validate checks the field values on GetAlbumWithTracksResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetAlbumWithTracksResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetAlbumWithTracksResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetAlbumWithTracksResponseMultiError, or nil if none found.
+func (m *GetAlbumWithTracksResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetAlbumWithTracksResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AlbumType
+
+	// no validation rules for TotalTracks
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	if all {
+		switch v := interface{}(m.GetReleaseDate()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetAlbumWithTracksResponseValidationError{
+					field:  "ReleaseDate",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetAlbumWithTracksResponseValidationError{
+					field:  "ReleaseDate",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetReleaseDate()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetAlbumWithTracksResponseValidationError{
+				field:  "ReleaseDate",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Uri
+
+	for idx, item := range m.GetArtists() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetAlbumWithTracksResponseValidationError{
+						field:  fmt.Sprintf("Artists[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetAlbumWithTracksResponseValidationError{
+						field:  fmt.Sprintf("Artists[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetAlbumWithTracksResponseValidationError{
+					field:  fmt.Sprintf("Artists[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if all {
+		switch v := interface{}(m.GetTracks()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetAlbumWithTracksResponseValidationError{
+					field:  "Tracks",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetAlbumWithTracksResponseValidationError{
+					field:  "Tracks",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTracks()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetAlbumWithTracksResponseValidationError{
+				field:  "Tracks",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetAlbumWithTracksResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetAlbumWithTracksResponseMultiError is an error wrapping multiple
+// validation errors returned by GetAlbumWithTracksResponse.ValidateAll() if
+// the designated constraints aren't met.
+type GetAlbumWithTracksResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetAlbumWithTracksResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetAlbumWithTracksResponseMultiError) AllErrors() []error { return m }
+
+// GetAlbumWithTracksResponseValidationError is the validation error returned
+// by GetAlbumWithTracksResponse.Validate if the designated constraints aren't met.
+type GetAlbumWithTracksResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetAlbumWithTracksResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetAlbumWithTracksResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetAlbumWithTracksResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetAlbumWithTracksResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetAlbumWithTracksResponseValidationError) ErrorName() string {
+	return "GetAlbumWithTracksResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetAlbumWithTracksResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetAlbumWithTracksResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetAlbumWithTracksResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetAlbumWithTracksResponseValidationError{}
+
+// Validate checks the field values on ArtistSummary with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ArtistSummary) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ArtistSummary with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ArtistSummaryMultiError, or
+// nil if none found.
+func (m *ArtistSummary) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ArtistSummary) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Uri
+
+	if len(errors) > 0 {
+		return ArtistSummaryMultiError(errors)
+	}
+
+	return nil
+}
+
+// ArtistSummaryMultiError is an error wrapping multiple validation errors
+// returned by ArtistSummary.ValidateAll() if the designated constraints
+// aren't met.
+type ArtistSummaryMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ArtistSummaryMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ArtistSummaryMultiError) AllErrors() []error { return m }
+
+// ArtistSummaryValidationError is the validation error returned by
+// ArtistSummary.Validate if the designated constraints aren't met.
+type ArtistSummaryValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ArtistSummaryValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ArtistSummaryValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ArtistSummaryValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ArtistSummaryValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ArtistSummaryValidationError) ErrorName() string { return "ArtistSummaryValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ArtistSummaryValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sArtistSummary.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ArtistSummaryValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ArtistSummaryValidationError{}
+
+// Validate checks the field values on AlbumTracksDTO with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AlbumTracksDTO) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AlbumTracksDTO with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in AlbumTracksDTOMultiError,
+// or nil if none found.
+func (m *AlbumTracksDTO) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AlbumTracksDTO) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, AlbumTracksDTOValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, AlbumTracksDTOValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return AlbumTracksDTOValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return AlbumTracksDTOMultiError(errors)
+	}
+
+	return nil
+}
+
+// AlbumTracksDTOMultiError is an error wrapping multiple validation errors
+// returned by AlbumTracksDTO.ValidateAll() if the designated constraints
+// aren't met.
+type AlbumTracksDTOMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AlbumTracksDTOMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AlbumTracksDTOMultiError) AllErrors() []error { return m }
+
+// AlbumTracksDTOValidationError is the validation error returned by
+// AlbumTracksDTO.Validate if the designated constraints aren't met.
+type AlbumTracksDTOValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AlbumTracksDTOValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AlbumTracksDTOValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AlbumTracksDTOValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AlbumTracksDTOValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AlbumTracksDTOValidationError) ErrorName() string { return "AlbumTracksDTOValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AlbumTracksDTOValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAlbumTracksDTO.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AlbumTracksDTOValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AlbumTracksDTOValidationError{}
+
+// Validate checks the field values on TrackSummary with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *TrackSummary) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on TrackSummary with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in TrackSummaryMultiError, or
+// nil if none found.
+func (m *TrackSummary) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *TrackSummary) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for TrackNumber
+
+	// no validation rules for DiscNumber
+
+	// no validation rules for DurationMs
+
+	// no validation rules for Explicit
+
+	// no validation rules for Uri
+
+	for idx, item := range m.GetArtists() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, TrackSummaryValidationError{
+						field:  fmt.Sprintf("Artists[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, TrackSummaryValidationError{
+						field:  fmt.Sprintf("Artists[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return TrackSummaryValidationError{
+					field:  fmt.Sprintf("Artists[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return TrackSummaryMultiError(errors)
+	}
+
+	return nil
+}
+
+// TrackSummaryMultiError is an error wrapping multiple validation errors
+// returned by TrackSummary.ValidateAll() if the designated constraints aren't met.
+type TrackSummaryMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m TrackSummaryMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m TrackSummaryMultiError) AllErrors() []error { return m }
+
+// TrackSummaryValidationError is the validation error returned by
+// TrackSummary.Validate if the designated constraints aren't met.
+type TrackSummaryValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e TrackSummaryValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e TrackSummaryValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e TrackSummaryValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e TrackSummaryValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e TrackSummaryValidationError) ErrorName() string { return "TrackSummaryValidationError" }
+
+// Error satisfies the builtin error interface
+func (e TrackSummaryValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sTrackSummary.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = TrackSummaryValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = TrackSummaryValidationError{}
+
 // Validate checks the field values on CreateAlbumRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

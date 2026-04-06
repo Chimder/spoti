@@ -19,215 +19,215 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PlaylistService_GetArtist_FullMethodName       = "/artist.v1.PlaylistService/GetArtist"
-	PlaylistService_GetArtistsByIds_FullMethodName = "/artist.v1.PlaylistService/GetArtistsByIds"
-	PlaylistService_GetArtistAlbums_FullMethodName = "/artist.v1.PlaylistService/GetArtistAlbums"
-	PlaylistService_CreateArtist_FullMethodName    = "/artist.v1.PlaylistService/CreateArtist"
+	ArtistService_GetArtist_FullMethodName       = "/artist.v1.ArtistService/GetArtist"
+	ArtistService_GetArtistsByIds_FullMethodName = "/artist.v1.ArtistService/GetArtistsByIds"
+	ArtistService_GetArtistAlbums_FullMethodName = "/artist.v1.ArtistService/GetArtistAlbums"
+	ArtistService_CreateArtist_FullMethodName    = "/artist.v1.ArtistService/CreateArtist"
 )
 
-// PlaylistServiceClient is the client API for PlaylistService service.
+// ArtistServiceClient is the client API for ArtistService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PlaylistServiceClient interface {
+type ArtistServiceClient interface {
 	GetArtist(ctx context.Context, in *GetArtistRequest, opts ...grpc.CallOption) (*GetArtistResponse, error)
 	GetArtistsByIds(ctx context.Context, in *GetArtistsByIdsRequest, opts ...grpc.CallOption) (*GetArtistsByIdsResponse, error)
 	GetArtistAlbums(ctx context.Context, in *GetArtistAlbumsRequest, opts ...grpc.CallOption) (*GetArtistAlbumsResponse, error)
 	CreateArtist(ctx context.Context, in *CreateArtistRequest, opts ...grpc.CallOption) (*CreateArtistResponse, error)
 }
 
-type playlistServiceClient struct {
+type artistServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPlaylistServiceClient(cc grpc.ClientConnInterface) PlaylistServiceClient {
-	return &playlistServiceClient{cc}
+func NewArtistServiceClient(cc grpc.ClientConnInterface) ArtistServiceClient {
+	return &artistServiceClient{cc}
 }
 
-func (c *playlistServiceClient) GetArtist(ctx context.Context, in *GetArtistRequest, opts ...grpc.CallOption) (*GetArtistResponse, error) {
+func (c *artistServiceClient) GetArtist(ctx context.Context, in *GetArtistRequest, opts ...grpc.CallOption) (*GetArtistResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetArtistResponse)
-	err := c.cc.Invoke(ctx, PlaylistService_GetArtist_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ArtistService_GetArtist_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *playlistServiceClient) GetArtistsByIds(ctx context.Context, in *GetArtistsByIdsRequest, opts ...grpc.CallOption) (*GetArtistsByIdsResponse, error) {
+func (c *artistServiceClient) GetArtistsByIds(ctx context.Context, in *GetArtistsByIdsRequest, opts ...grpc.CallOption) (*GetArtistsByIdsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetArtistsByIdsResponse)
-	err := c.cc.Invoke(ctx, PlaylistService_GetArtistsByIds_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ArtistService_GetArtistsByIds_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *playlistServiceClient) GetArtistAlbums(ctx context.Context, in *GetArtistAlbumsRequest, opts ...grpc.CallOption) (*GetArtistAlbumsResponse, error) {
+func (c *artistServiceClient) GetArtistAlbums(ctx context.Context, in *GetArtistAlbumsRequest, opts ...grpc.CallOption) (*GetArtistAlbumsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetArtistAlbumsResponse)
-	err := c.cc.Invoke(ctx, PlaylistService_GetArtistAlbums_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ArtistService_GetArtistAlbums_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *playlistServiceClient) CreateArtist(ctx context.Context, in *CreateArtistRequest, opts ...grpc.CallOption) (*CreateArtistResponse, error) {
+func (c *artistServiceClient) CreateArtist(ctx context.Context, in *CreateArtistRequest, opts ...grpc.CallOption) (*CreateArtistResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateArtistResponse)
-	err := c.cc.Invoke(ctx, PlaylistService_CreateArtist_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ArtistService_CreateArtist_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PlaylistServiceServer is the server API for PlaylistService service.
-// All implementations must embed UnimplementedPlaylistServiceServer
+// ArtistServiceServer is the server API for ArtistService service.
+// All implementations must embed UnimplementedArtistServiceServer
 // for forward compatibility.
-type PlaylistServiceServer interface {
+type ArtistServiceServer interface {
 	GetArtist(context.Context, *GetArtistRequest) (*GetArtistResponse, error)
 	GetArtistsByIds(context.Context, *GetArtistsByIdsRequest) (*GetArtistsByIdsResponse, error)
 	GetArtistAlbums(context.Context, *GetArtistAlbumsRequest) (*GetArtistAlbumsResponse, error)
 	CreateArtist(context.Context, *CreateArtistRequest) (*CreateArtistResponse, error)
-	mustEmbedUnimplementedPlaylistServiceServer()
+	mustEmbedUnimplementedArtistServiceServer()
 }
 
-// UnimplementedPlaylistServiceServer must be embedded to have
+// UnimplementedArtistServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPlaylistServiceServer struct{}
+type UnimplementedArtistServiceServer struct{}
 
-func (UnimplementedPlaylistServiceServer) GetArtist(context.Context, *GetArtistRequest) (*GetArtistResponse, error) {
+func (UnimplementedArtistServiceServer) GetArtist(context.Context, *GetArtistRequest) (*GetArtistResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetArtist not implemented")
 }
-func (UnimplementedPlaylistServiceServer) GetArtistsByIds(context.Context, *GetArtistsByIdsRequest) (*GetArtistsByIdsResponse, error) {
+func (UnimplementedArtistServiceServer) GetArtistsByIds(context.Context, *GetArtistsByIdsRequest) (*GetArtistsByIdsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetArtistsByIds not implemented")
 }
-func (UnimplementedPlaylistServiceServer) GetArtistAlbums(context.Context, *GetArtistAlbumsRequest) (*GetArtistAlbumsResponse, error) {
+func (UnimplementedArtistServiceServer) GetArtistAlbums(context.Context, *GetArtistAlbumsRequest) (*GetArtistAlbumsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetArtistAlbums not implemented")
 }
-func (UnimplementedPlaylistServiceServer) CreateArtist(context.Context, *CreateArtistRequest) (*CreateArtistResponse, error) {
+func (UnimplementedArtistServiceServer) CreateArtist(context.Context, *CreateArtistRequest) (*CreateArtistResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateArtist not implemented")
 }
-func (UnimplementedPlaylistServiceServer) mustEmbedUnimplementedPlaylistServiceServer() {}
-func (UnimplementedPlaylistServiceServer) testEmbeddedByValue()                         {}
+func (UnimplementedArtistServiceServer) mustEmbedUnimplementedArtistServiceServer() {}
+func (UnimplementedArtistServiceServer) testEmbeddedByValue()                       {}
 
-// UnsafePlaylistServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PlaylistServiceServer will
+// UnsafeArtistServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ArtistServiceServer will
 // result in compilation errors.
-type UnsafePlaylistServiceServer interface {
-	mustEmbedUnimplementedPlaylistServiceServer()
+type UnsafeArtistServiceServer interface {
+	mustEmbedUnimplementedArtistServiceServer()
 }
 
-func RegisterPlaylistServiceServer(s grpc.ServiceRegistrar, srv PlaylistServiceServer) {
-	// If the following call panics, it indicates UnimplementedPlaylistServiceServer was
+func RegisterArtistServiceServer(s grpc.ServiceRegistrar, srv ArtistServiceServer) {
+	// If the following call panics, it indicates UnimplementedArtistServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&PlaylistService_ServiceDesc, srv)
+	s.RegisterService(&ArtistService_ServiceDesc, srv)
 }
 
-func _PlaylistService_GetArtist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ArtistService_GetArtist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetArtistRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlaylistServiceServer).GetArtist(ctx, in)
+		return srv.(ArtistServiceServer).GetArtist(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlaylistService_GetArtist_FullMethodName,
+		FullMethod: ArtistService_GetArtist_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlaylistServiceServer).GetArtist(ctx, req.(*GetArtistRequest))
+		return srv.(ArtistServiceServer).GetArtist(ctx, req.(*GetArtistRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlaylistService_GetArtistsByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ArtistService_GetArtistsByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetArtistsByIdsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlaylistServiceServer).GetArtistsByIds(ctx, in)
+		return srv.(ArtistServiceServer).GetArtistsByIds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlaylistService_GetArtistsByIds_FullMethodName,
+		FullMethod: ArtistService_GetArtistsByIds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlaylistServiceServer).GetArtistsByIds(ctx, req.(*GetArtistsByIdsRequest))
+		return srv.(ArtistServiceServer).GetArtistsByIds(ctx, req.(*GetArtistsByIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlaylistService_GetArtistAlbums_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ArtistService_GetArtistAlbums_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetArtistAlbumsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlaylistServiceServer).GetArtistAlbums(ctx, in)
+		return srv.(ArtistServiceServer).GetArtistAlbums(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlaylistService_GetArtistAlbums_FullMethodName,
+		FullMethod: ArtistService_GetArtistAlbums_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlaylistServiceServer).GetArtistAlbums(ctx, req.(*GetArtistAlbumsRequest))
+		return srv.(ArtistServiceServer).GetArtistAlbums(ctx, req.(*GetArtistAlbumsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PlaylistService_CreateArtist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ArtistService_CreateArtist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateArtistRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PlaylistServiceServer).CreateArtist(ctx, in)
+		return srv.(ArtistServiceServer).CreateArtist(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PlaylistService_CreateArtist_FullMethodName,
+		FullMethod: ArtistService_CreateArtist_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlaylistServiceServer).CreateArtist(ctx, req.(*CreateArtistRequest))
+		return srv.(ArtistServiceServer).CreateArtist(ctx, req.(*CreateArtistRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// PlaylistService_ServiceDesc is the grpc.ServiceDesc for PlaylistService service.
+// ArtistService_ServiceDesc is the grpc.ServiceDesc for ArtistService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PlaylistService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "artist.v1.PlaylistService",
-	HandlerType: (*PlaylistServiceServer)(nil),
+var ArtistService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "artist.v1.ArtistService",
+	HandlerType: (*ArtistServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetArtist",
-			Handler:    _PlaylistService_GetArtist_Handler,
+			Handler:    _ArtistService_GetArtist_Handler,
 		},
 		{
 			MethodName: "GetArtistsByIds",
-			Handler:    _PlaylistService_GetArtistsByIds_Handler,
+			Handler:    _ArtistService_GetArtistsByIds_Handler,
 		},
 		{
 			MethodName: "GetArtistAlbums",
-			Handler:    _PlaylistService_GetArtistAlbums_Handler,
+			Handler:    _ArtistService_GetArtistAlbums_Handler,
 		},
 		{
 			MethodName: "CreateArtist",
-			Handler:    _PlaylistService_CreateArtist_Handler,
+			Handler:    _ArtistService_CreateArtist_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
