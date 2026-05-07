@@ -77,8 +77,10 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 	}
 
 	users := r.Group("/users")
+	users.POST("/singUp",userHandler.CreateUser)
+	users.POST("/singIn",userHandler.SingInUser)
+	// users.POST("", userHandler.CreateUser)
 	{
-		users.POST("", userHandler.CreateUser)
 		users.GET("/:id", userHandler.GetUserByID)
 		users.POST("/:userId/playlists/:playlistId/follow", userHandler.FollowPlaylist)
 		users.DELETE("/:userId/playlists/:playlistId/follow", userHandler.UnfollowPlaylist)

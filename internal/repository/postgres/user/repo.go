@@ -10,6 +10,15 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type UserRepository interface {
+	CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error)
+	GetUserById(ctx context.Context, userId uuid.UUID) (user.User, error)
+	GetUserByEmail(ctx context.Context, userEmail string) (user.User, error)
+	FollowUserToPlaylist(ctx context.Context, userId, playlistId uuid.UUID) error
+	UnfollowUserFromPlaylist(ctx context.Context, userId, playlistId uuid.UUID) error
+	FollowUserToArtist(ctx context.Context, userId, artistId uuid.UUID) error
+	UnfollowUserFromArtist(ctx context.Context, userId, artistId uuid.UUID) error
+}
 type UserRepo struct {
 	db pgiface.Querier
 }
@@ -22,21 +31,36 @@ func NewUserRepo(db pgiface.Querier) *UserRepo {
 
 func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
 	query := `
-			INSERT INTO users (user_name, email, image)
-			VALUES ($1, $2, $3)
+			INSERT INTO users (user_name, email, image, password_hash)
+			VALUES ($1, $2, $3, $4)
 			RETURNING id
 		`
 
 	var id uuid.UUID
-	err := ur.db.QueryRow(ctx, query,
-		user.Name, user.Email, user.Image,
-	).Scan(&id)
+	err := ur.db.QueryRow(ctx, query, user.Name, user.Email, user.Image, user.HashPassword).Scan(&id)
 	if err != nil {
 		log.Error().Err(err).Msg("err create user")
 		return uuid.UUID{}, err
 	}
 
 	return id, err
+}
+
+func (ur *UserRepo) GetUserByEmail(ctx context.Context, userEmail string) (user.User, error) {
+
+	rows,err := ur.db.Query(ctx, "SELECT * FROM users WHERE email = $1", userEmail)
+	if err != nil {
+		log.Error().Err(err).Msg("err get user_pass by email")
+		return user.User{}, err
+	}
+
+	data, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[User])
+	if err != nil {
+		log.Error().Err(err).Msg("err collect user info by id")
+		return user.User{}, err
+	}
+
+	return data.ToDomain(), nil
 }
 
 func (ur *UserRepo) GetUserById(ctx context.Context, userId uuid.UUID) (user.User, error) {

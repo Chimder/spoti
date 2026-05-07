@@ -11,6 +11,12 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type ArtistRepository interface {
+	CreateArtist(ctx context.Context, a artist.CreateArtistReq) (uuid.UUID, error)
+	GetArtist(ctx context.Context, artistId string) (artist.Artist, error)
+	GetArtistsByIDs(ctx context.Context, artistIds []string) ([]artist.Artist, error)
+	GetArtistAlbums(ctx context.Context, artistId string) ([]artist.Artist, error)
+}
 type ArtistRepo struct {
 	db pgiface.Querier
 }

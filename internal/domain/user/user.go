@@ -10,5 +10,6 @@ type User struct {
 	Email         string
 	Image         string
 	Followers     uint32
+	PasswordHash  string
 	PremiumStatus bool
 }

@@ -11,6 +11,15 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type PlaylistRepository interface {
+	CreatePlaylist(ctx context.Context, p playlist.CreatePlaylistReq) (uuid.UUID, error)
+	GetPlaylistById(ctx context.Context, playlistId string, limit, offset int) (playlist.PlaylistJson, error)
+	AddToPlaylist(ctx context.Context, playlist_id, track_id string) error
+	UpdatePlaylist(ctx context.Context, playlistId string, req playlist.UpdatePlaylistReq) error
+	DeleteFromPlaylist(ctx context.Context, playlistId, trackId string) error
+	GetAllUserPlaylists(ctx context.Context, userId string) ([]playlist.Playlist, error)
+}
+
 type PlaylistRepo struct {
 	db pgiface.Querier
 }

@@ -12,6 +12,19 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type AlbumRepository interface {
+	CreateAlbum(ctx context.Context, a album.CreateAlbumReq) (uuid.UUID, error)
+	GetAlbum(ctx context.Context, albumID string) (album.Album, error)
+	GetAlbumWithTracks(ctx context.Context, albumID string) (album.GetAlbumResponse, error)
+	GetAlbumsByIds(ctx context.Context, albumIDs []string) (album.GetAlbumsByIdsResponse, error)
+	GetUserSavedAlbums(ctx context.Context, userId string) ([]album.Album, error)
+	SaveAlbumsForCurrentUser(ctx context.Context, albumIds []string, userId string) error
+	RemoveAlbumsFromCurrentUser(ctx context.Context, albumIds []string, userId string) error
+	CheckUsersSavedAlbums(ctx context.Context, albumIDs []string, userID string) ([]bool, error)
+	GetNewReleases(ctx context.Context, limit int) ([]album.Album, error)
+	AddArtistToAlbum(ctx context.Context, albumID, artistID uuid.UUID) error
+}
+
 type AlbumRepo struct {
 	db pgiface.Querier
 }

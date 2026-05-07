@@ -3,12 +3,7 @@ package postgres
 import (
 	"context"
 	"fmt"
-	"github.com/Chimder/spoti/internal/domain/album"
-	"github.com/Chimder/spoti/internal/domain/artist"
-	"github.com/Chimder/spoti/internal/domain/playlist"
-	"github.com/Chimder/spoti/internal/domain/recording"
-	"github.com/Chimder/spoti/internal/domain/track"
-	"github.com/Chimder/spoti/internal/domain/user"
+
 	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
 	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
 	"github.com/Chimder/spoti/internal/repository/postgres/pgiface"
@@ -25,12 +20,12 @@ import (
 type Repository struct {
 	Db        pgiface.Querier
 	Pool      *pgxpool.Pool
-	User      user.UserRepository
-	Artist    artist.ArtistRepository
-	Album     album.AlbumRepository
-	Playlist  playlist.PlaylistRepository
-	Track     track.TrackRepository
-	Recording recording.RecordingRepository
+	User      userrepo.UserRepository
+	Artist    artistrepo.ArtistRepository
+	Album     albumrepo.AlbumRepository
+	Playlist  playlistrepo.PlaylistRepository
+	Track     trackrepo.TrackRepository
+	Recording recordingrepo.RecordingRepository
 }
 
 func NewRepository(pool *pgxpool.Pool) *Repository {

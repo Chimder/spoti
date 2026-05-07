@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/Chimder/spoti/internal/domain/user"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
@@ -30,6 +31,10 @@ func (us *UserService) CreateUser(ctx context.Context, user user.CreateUserReq) 
 
 func (us *UserService) GetUserById(ctx context.Context, userId uuid.UUID) (user.User, error) {
 	return us.repo.User.GetUserById(ctx, userId)
+}
+
+func (us *UserService) GetUserByEmail(ctx context.Context, userEmail string) (user.User, error) {
+	return us.repo.User.GetUserByEmail(ctx, userEmail)
 }
 
 func (us *UserService) FollowUserToPlaylist(ctx context.Context, userId, playlistId uuid.UUID) error {

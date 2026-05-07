@@ -10,6 +10,13 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog/log"
 )
+type TrackRepository interface {
+	CreateTrack(ctx context.Context, t track.CreateTrackReq) (uuid.UUID, error)
+	GetTrackById(ctx context.Context, trackId uuid.UUID) (track.Track, error)
+	GetTracksByIds(ctx context.Context, trackIds []string) ([]track.Track, error)
+	GetArtistTracks(ctx context.Context, artistId string) ([]track.Track, error)
+	AddArtistToTrack(ctx context.Context, trackID, artistID uuid.UUID) error
+}
 
 type TrackRepo struct {
 	db pgiface.Querier

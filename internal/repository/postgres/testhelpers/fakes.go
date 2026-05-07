@@ -13,11 +13,17 @@ import (
 	"github.com/Chimder/spoti/internal/domain/recording"
 	"github.com/Chimder/spoti/internal/domain/track"
 	"github.com/Chimder/spoti/internal/domain/user"
+	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
+	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
+	playlistrepo "github.com/Chimder/spoti/internal/repository/postgres/playlist"
+	recordingrepo "github.com/Chimder/spoti/internal/repository/postgres/recording"
+	trackrepo "github.com/Chimder/spoti/internal/repository/postgres/track"
+	userrepo "github.com/Chimder/spoti/internal/repository/postgres/user"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 )
 
-func CreateUser(repo user.UserRepository) (uuid.UUID, error) {
+func CreateUser(repo userrepo.UserRepository) (uuid.UUID, error) {
 	return repo.CreateUser(context.Background(), FakeUser())
 }
 
@@ -31,7 +37,7 @@ func FakeUser() user.CreateUserReq {
 	}
 }
 
-func CreateArtist(repo artist.ArtistRepository) (uuid.UUID, error) {
+func CreateArtist(repo artistrepo.ArtistRepository) (uuid.UUID, error) {
 	return repo.CreateArtist(context.Background(), FakeArtist())
 }
 
@@ -55,7 +61,7 @@ func FakeArtist() artist.CreateArtistReq {
 	}
 }
 
-func CreateAlbum(repo album.AlbumRepository) (uuid.UUID, error) {
+func CreateAlbum(repo albumrepo.AlbumRepository) (uuid.UUID, error) {
 	return repo.CreateAlbum(context.Background(), FakeAlbum())
 }
 
@@ -90,7 +96,7 @@ func FakeAlbum() album.CreateAlbumReq {
 	}
 }
 
-func CreatePlaylist(repo playlist.PlaylistRepository, owner uuid.UUID) (uuid.UUID, error) {
+func CreatePlaylist(repo playlistrepo.PlaylistRepository, owner uuid.UUID) (uuid.UUID, error) {
 	return repo.CreatePlaylist(context.Background(), FakePlaylist(owner))
 }
 
@@ -104,7 +110,7 @@ func FakePlaylist(owner uuid.UUID) playlist.CreatePlaylistReq {
 	}
 }
 
-func CreateRecording(repo recording.RecordingRepository) (uuid.UUID, error) {
+func CreateRecording(repo recordingrepo.RecordingRepository) (uuid.UUID, error) {
 	return repo.CreateRecording(context.Background(), FakeRecording())
 }
 
@@ -118,7 +124,7 @@ func FakeRecording() recording.CreateRecordingReq {
 	}
 }
 
-func CreateTrack(repo track.TrackRepository, albumID, recordingID uuid.UUID, trackNum, discNum int) (uuid.UUID, error) {
+func CreateTrack(repo trackrepo.TrackRepository, albumID, recordingID uuid.UUID, trackNum, discNum int) (uuid.UUID, error) {
 	return repo.CreateTrack(context.Background(), FakeTrack(albumID, recordingID, trackNum, discNum))
 }
 

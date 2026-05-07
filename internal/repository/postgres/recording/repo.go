@@ -9,7 +9,10 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/rs/zerolog/log"
 )
-
+type RecordingRepository interface {
+	CreateRecording(ctx context.Context, r recording.CreateRecordingReq) (uuid.UUID, error)
+	GetRecordingById(ctx context.Context, recordingId string) (recording.Recording, error)
+}
 type RecordingRepo struct {
 	db pgiface.Querier
 }
