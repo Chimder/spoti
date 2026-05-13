@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Chimder/spoti/internal/handler/http/middleware"
 	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
 	playlistrepo "github.com/Chimder/spoti/internal/repository/postgres/playlist"
 	"github.com/Chimder/spoti/internal/repository/postgres/testhelpers"
@@ -38,11 +39,14 @@ func TestUserRepo_CreateUser(t *testing.T) {
 
 	t.Run("error duplicate email", func(t *testing.T) {
 		fakeUser := testhelpers.FakeUser()
-
-		_, err := repo.CreateUser(ctx, fakeUser)
+		hashPass, err := middleware.GeneratePass(fakeUser.Password)
+		require.NotEmpty(t, hashPass)
 		require.NoError(t, err)
 
-		_, err = repo.CreateUser(ctx, fakeUser)
+		_, err = repo.CreateUser(ctx, fakeUser, hashPass)
+		require.NoError(t, err)
+
+		_, err = repo.CreateUser(ctx, fakeUser, hashPass)
 		assert.Error(t, err)
 	})
 }

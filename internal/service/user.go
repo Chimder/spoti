@@ -21,8 +21,8 @@ func NewUserService(repo *postgres.Repository, cache rediscache.Cache,
 	meili *meilisearchrepo.MeiliRepository) *UserService {
 	return &UserService{repo: repo, cache: cache}
 }
-func (us *UserService) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
-	id, err := us.repo.User.CreateUser(ctx, user)
+func (us *UserService) CreateUser(ctx context.Context, user user.CreateUserReq, hassPass string) (uuid.UUID, error) {
+	id, err := us.repo.User.CreateUser(ctx, user, hassPass)
 	if err != nil {
 		return uuid.Nil, err
 	}

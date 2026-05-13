@@ -31,11 +31,10 @@ func CreateUserToken(userID string) (string, error) {
 	return token.SignedString(secretKey)
 }
 
-func ParseUserToken(tokenString string) (string, error) {
+func ParseUserIdFromToken(tokenString string) (string, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
-
 	if err != nil {
 		return "", err
 	}
@@ -46,6 +45,7 @@ func ParseUserToken(tokenString string) (string, error) {
 
 	return "", jwt.ErrInvalidKey
 }
+
 func GenerateRefreshToken(n int) (string, error) {
 	b := make([]byte, n)
 	if _, err := rand.Read(b); err != nil {

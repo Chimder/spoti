@@ -1,25 +1,26 @@
 package httpgin
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/Chimder/spoti/internal/domain/user"
 	"github.com/Chimder/spoti/internal/handler/http/middleware"
+	rediscache "github.com/Chimder/spoti/internal/repository/redis"
 	"github.com/Chimder/spoti/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 )
 
 type UserHandler struct {
-	srv *service.UserService
+	srv   *service.UserService
+	redis *rediscache.RedisCache
 }
 
-func NewUserHandler(s *service.UserService) *UserHandler {
-
-	return &UserHandler{
-		srv: s,
-	}
+func NewUserHandler(s *service.UserService, redis *rediscache.RedisCache) *UserHandler {
+	return &UserHandler{srv: s, redis: redis}
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
@@ -38,9 +39,8 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		})
 		return
 	}
-	req.HashPassword = hashPass
 
-	id, err := h.srv.CreateUser(c.Request.Context(), req)
+	id, err := h.srv.CreateUser(c.Request.Context(), req, hashPass)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to create user",
@@ -54,13 +54,12 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 }
 
 type SingInReq struct {
-	email    string `json:"email"`
-	password string `json:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (h *UserHandler) SingInUser(c *gin.Context) {
 	var req SingInReq
-
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid request body",
@@ -68,7 +67,7 @@ func (h *UserHandler) SingInUser(c *gin.Context) {
 		return
 	}
 
-	user, err := h.srv.GetUserByEmail(c.Request.Context(), req.email)
+	user, err := h.srv.GetUserByEmail(c.Request.Context(), req.Email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid email",
@@ -76,10 +75,11 @@ func (h *UserHandler) SingInUser(c *gin.Context) {
 		return
 	}
 
-	_, err = middleware.ComparePass(req.password, user.PasswordHash)
+	_, err = middleware.ComparePass(req.Password, user.PasswordHash)
 	if err != nil {
+		log.Error().Err(err).Msg("comparePass")
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid email",
+			"error": "invalid comparePass",
 		})
 		return
 	}
@@ -96,15 +96,64 @@ func (h *UserHandler) SingInUser(c *gin.Context) {
 		return
 	}
 
-	// refreshHash := hashToken(refreshToken)
-	// if err := h.redis.Save(c.Request.Context(), refreshHash, user.ID, 30*24*time.Hour); err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to store refresh token"})
-	// 	return
-	// }
+	refreshHash := middleware.HashToken(refreshToken)
+	if err := h.redis.Set(c.Request.Context(), refreshHash, user.Id, 30*24*time.Hour); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed set refresh token"})
+		return
+	}
 
 	c.SetCookie(
 		"refresh_token",
 		refreshToken,
+		int((30 * 24 * time.Hour).Seconds()),
+		"/",
+		"",
+		true,
+		true,
+	)
+
+	c.JSON(http.StatusOK, gin.H{
+		"AccessToken": accessToken,
+	})
+}
+
+func (h *UserHandler) RefreshUserToken(c *gin.Context) {
+	refreshToken, err := c.Cookie("refresh_token")
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "no refresh token"})
+		return
+	}
+
+	hash := middleware.HashToken(refreshToken)
+
+	var userId string
+	err = h.redis.Get(c.Request.Context(), hash, &userId)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid refresh token"})
+		return
+	}
+	fmt.Printf("GET userid from redis %s", userId)
+	accessToken, err := middleware.CreateUserToken(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create access"})
+		return
+	}
+
+	newRefresh, err := middleware.GenerateRefreshToken(32)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed refresh"})
+		return
+	}
+
+	newHash := middleware.HashToken(newRefresh)
+
+	_ = h.redis.Invalidate(c.Request.Context(), hash)
+
+	_ = h.redis.Set(c.Request.Context(), newHash, userId, 30*24*time.Hour)
+
+	c.SetCookie(
+		"refresh_token",
+		newRefresh,
 		int((30 * 24 * time.Hour).Seconds()),
 		"/",
 		"",

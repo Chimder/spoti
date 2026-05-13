@@ -11,7 +11,7 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error)
+	CreateUser(ctx context.Context, user user.CreateUserReq, hashPass string) (uuid.UUID, error)
 	GetUserById(ctx context.Context, userId uuid.UUID) (user.User, error)
 	GetUserByEmail(ctx context.Context, userEmail string) (user.User, error)
 	FollowUserToPlaylist(ctx context.Context, userId, playlistId uuid.UUID) error
@@ -29,7 +29,7 @@ func NewUserRepo(db pgiface.Querier) *UserRepo {
 	}
 }
 
-func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uuid.UUID, error) {
+func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq, hashPass string) (uuid.UUID, error) {
 	query := `
 			INSERT INTO users (user_name, email, image, password_hash)
 			VALUES ($1, $2, $3, $4)
@@ -37,7 +37,7 @@ func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uu
 		`
 
 	var id uuid.UUID
-	err := ur.db.QueryRow(ctx, query, user.Name, user.Email, user.Image, user.HashPassword).Scan(&id)
+	err := ur.db.QueryRow(ctx, query, user.Name, user.Email, user.Image, hashPass).Scan(&id)
 	if err != nil {
 		log.Error().Err(err).Msg("err create user")
 		return uuid.UUID{}, err
@@ -47,8 +47,7 @@ func (ur *UserRepo) CreateUser(ctx context.Context, user user.CreateUserReq) (uu
 }
 
 func (ur *UserRepo) GetUserByEmail(ctx context.Context, userEmail string) (user.User, error) {
-
-	rows,err := ur.db.Query(ctx, "SELECT * FROM users WHERE email = $1", userEmail)
+	rows, err := ur.db.Query(ctx, "SELECT * FROM users WHERE email = $1", userEmail)
 	if err != nil {
 		log.Error().Err(err).Msg("err get user_pass by email")
 		return user.User{}, err

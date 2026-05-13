@@ -6,6 +6,7 @@ import (
 
 	"context"
 
+	"github.com/Chimder/spoti/internal/handler/http/middleware"
 	"github.com/Chimder/spoti/internal/repository/clickhouse"
 	meilisearchrepo "github.com/Chimder/spoti/internal/repository/meilisearch"
 	"github.com/Chimder/spoti/internal/repository/postgres"
@@ -55,7 +56,7 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 	playlistService := service.NewPlaylistService(repo, redisCache, meiliSearchRepo)
 	trackService := service.NewTrackService(repo, redisCache, meiliSearchRepo)
 
-	userHandler := NewUserHandler(userService)
+	userHandler := NewUserHandler(userService, redisCache)
 	albumHandler := NewAlbumHandler(albumService)
 	artistHandler := NewArtistHandler(*artistService)
 	playlistHandler := NewPlaylistHandler(playlistService)
@@ -77,15 +78,19 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 	}
 
 	users := r.Group("/users")
-	users.POST("/singUp",userHandler.CreateUser)
-	users.POST("/singIn",userHandler.SingInUser)
-	// users.POST("", userHandler.CreateUser)
 	{
-		users.GET("/:id", userHandler.GetUserByID)
-		users.POST("/:userId/playlists/:playlistId/follow", userHandler.FollowPlaylist)
-		users.DELETE("/:userId/playlists/:playlistId/follow", userHandler.UnfollowPlaylist)
-		users.POST("/:userId/artists/:artistId/follow", userHandler.FollowArtist)
-		users.DELETE("/:userId/artists/:artistId/follow", userHandler.UnfollowArtist)
+		users.POST("/singUp", userHandler.CreateUser)
+		users.POST("/singIn", userHandler.SingInUser)
+		users.POST("/refresh", userHandler.RefreshUserToken)
+		auth := users.Group("/")
+		auth.Use(middleware.AuthUserMiddleware())
+		{
+			auth.GET("/:id", userHandler.GetUserByID)
+			auth.POST("/:userId/playlists/:playlistId/follow", userHandler.FollowPlaylist)
+			auth.DELETE("/:userId/playlists/:playlistId/follow", userHandler.UnfollowPlaylist)
+			auth.POST("/:userId/artists/:artistId/follow", userHandler.FollowArtist)
+			auth.DELETE("/:userId/artists/:artistId/follow", userHandler.UnfollowArtist)
+		}
 	}
 
 	albums := r.Group("/albums")

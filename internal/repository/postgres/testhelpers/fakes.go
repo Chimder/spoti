@@ -13,6 +13,7 @@ import (
 	"github.com/Chimder/spoti/internal/domain/recording"
 	"github.com/Chimder/spoti/internal/domain/track"
 	"github.com/Chimder/spoti/internal/domain/user"
+	"github.com/Chimder/spoti/internal/handler/http/middleware"
 	albumrepo "github.com/Chimder/spoti/internal/repository/postgres/album"
 	artistrepo "github.com/Chimder/spoti/internal/repository/postgres/artist"
 	playlistrepo "github.com/Chimder/spoti/internal/repository/postgres/playlist"
@@ -24,13 +25,19 @@ import (
 )
 
 func CreateUser(repo userrepo.UserRepository) (uuid.UUID, error) {
-	return repo.CreateUser(context.Background(), FakeUser())
+	user := FakeUser()
+	hashPass, err := middleware.GeneratePass(user.Password)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	return repo.CreateUser(context.Background(), user, hashPass)
 }
 
 func FakeUser() user.CreateUserReq {
 	return user.CreateUserReq{
 		Name:          gofakeit.Username(),
 		Email:         gofakeit.Email(),
+		Password:      gofakeit.Password(false, false, false, false, false, 16),
 		Image:         fmt.Sprintf("https://i.scdn.co/image/%s", gofakeit.UUID()),
 		Followers:     uint32(gofakeit.Number(0, 1_000_000)),
 		PremiumStatus: gofakeit.Bool(),
