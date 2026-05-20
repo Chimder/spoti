@@ -3,7 +3,6 @@ package grpc
 import (
 	"context"
 
-	"github.com/Chimder/spoti/internal/domain/user"
 	userv1 "github.com/Chimder/spoti/internal/gen/user/v1"
 	"github.com/Chimder/spoti/internal/service"
 	"github.com/google/uuid"
@@ -21,19 +20,19 @@ func NewUserHandler(s *service.UserService) *UserHandler {
 	return &UserHandler{srv: s}
 }
 
-func (h *UserHandler) CreateUser(ctx context.Context, req *userv1.CreateUserRequest) (*userv1.CreateUserResponse, error) {
-	if err := req.ValidateAll(); err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
+// func (h *UserHandler) CreateUser(ctx context.Context, req *userv1.CreateUserRequest) (*userv1.CreateUserResponse, error) {
+// 	if err := req.ValidateAll(); err != nil {
+// 		return nil, status.Error(codes.InvalidArgument, err.Error())
+// 	}
 
-	id, err := h.srv.CreateUser(ctx, user.CreateUserReq{Name: req.Name, Email: req.Email,
-		Image: req.Image, Followers: uint32(req.Followers), PremiumStatus: req.PremiumStatus})
-	if err != nil {
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
+// 	id, err := h.srv.CreateUser(ctx, user.CreateUserReq{Name: req.Name, Email: req.Email,
+// 		Image: req.Image, Followers: uint32(req.Followers), PremiumStatus: req.PremiumStatus})
+// 	if err != nil {
+// 		return nil, status.Error(codes.NotFound, err.Error())
+// 	}
 
-	return &userv1.CreateUserResponse{Id: id.String()}, nil
-}
+// 	return &userv1.CreateUserResponse{Id: id.String()}, nil
+// }
 
 func (h *UserHandler) GetUserByID(ctx context.Context, req *userv1.GetUserByIDRequest) (*userv1.GetUserByIDResponse, error) {
 	if err := req.Validate(); err != nil {

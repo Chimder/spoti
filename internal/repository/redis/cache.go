@@ -11,7 +11,7 @@ import (
 type Cache interface {
 	Get(ctx context.Context, key string, dest any) error
 	Set(ctx context.Context, key string, value any, ttl time.Duration) error
-	Invalidate(ctx context.Context, key string) error
+	Delete(ctx context.Context, key string) error
 }
 
 type RedisCache struct {
@@ -39,6 +39,6 @@ func (r *RedisCache) Set(ctx context.Context, key string, value any, ttl time.Du
 	}
 	return r.client.Set(ctx, key, data, ttl).Err()
 }
-func (r *RedisCache) Invalidate(ctx context.Context, key string) error {
+func (r *RedisCache) Delete(ctx context.Context, key string) error {
 	return r.client.Del(ctx, key).Err()
 }

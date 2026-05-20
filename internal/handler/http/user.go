@@ -53,13 +53,13 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	})
 }
 
-type SingInReq struct {
+type SignInReq struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func (h *UserHandler) SingInUser(c *gin.Context) {
-	var req SingInReq
+func (h *UserHandler) SignInUser(c *gin.Context) {
+	var req SignInReq
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid request body",
@@ -147,7 +147,7 @@ func (h *UserHandler) RefreshUserToken(c *gin.Context) {
 
 	newHash := middleware.HashToken(newRefresh)
 
-	_ = h.redis.Invalidate(c.Request.Context(), hash)
+	_ = h.redis.Delete(c.Request.Context(), hash)
 
 	_ = h.redis.Set(c.Request.Context(), newHash, userId, 30*24*time.Hour)
 

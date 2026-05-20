@@ -79,8 +79,8 @@ func Init(ctx context.Context, dbConn *pgxpool.Pool, clkhConn driver.Conn,
 
 	users := r.Group("/users")
 	{
-		users.POST("/singUp", userHandler.CreateUser)
-		users.POST("/singIn", userHandler.SingInUser)
+		users.POST("/signUp", userHandler.CreateUser)
+		users.POST("/signIn", userHandler.SignInUser)
 		users.POST("/refresh", userHandler.RefreshUserToken)
 		auth := users.Group("/")
 		auth.Use(middleware.AuthUserMiddleware())
