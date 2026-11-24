@@ -26,7 +26,7 @@ type SearchResult = Document
 func (r *MeiliRepository) Add(ctx context.Context, doc Document) error {
 	index := r.client.Index(spotiIndexName)
 
-	_, err := index.AddDocuments([]Document{doc}, nil)
+	_, err := index.AddDocuments(ctx, []Document{doc}, nil)
 	if err != nil {
 		return fmt.Errorf("add doc: %w", err)
 	}
@@ -50,7 +50,7 @@ func (r *MeiliRepository) search(ctx context.Context, query, docType string) ([]
 		filter = fmt.Sprintf(`type = "%s"`, docType)
 	}
 
-	searchRes, err := index.SearchWithContext(ctx, query, &meilisearch.SearchRequest{
+	searchRes, err := index.Search(ctx, query, &meilisearch.SearchRequest{
 		Limit:  10,
 		Filter: filter,
 	})

@@ -17,7 +17,6 @@ func setupMeili(t *testing.T) (*meilisearchrepo.MeiliRepository, testcontainers.
 	ctx := context.Background()
 
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: testcontainers.ContainerRequest{
 			Image:        "getmeili/meilisearch:latest",
 			ExposedPorts: []string{"7700/tcp"},
 			Env: map[string]string{
@@ -25,7 +24,6 @@ func setupMeili(t *testing.T) (*meilisearchrepo.MeiliRepository, testcontainers.
 			},
 			WaitingFor: wait.ForHTTP("/health").
 				WithPort("7700/tcp"),
-		},
 		Started: true,
 	})
 	if err != nil {
@@ -44,7 +42,7 @@ func setupMeili(t *testing.T) (*meilisearchrepo.MeiliRepository, testcontainers.
 
 	url := fmt.Sprintf("http://%s:%s", host, port.Port())
 
-	conn := meilisearchrepo.NewMeiliDB(url)
+	conn := meilisearchrepo.NewMeiliDB(ctx, url)
 	repo := meilisearchrepo.NewMeiliRepository(conn)
 
 	return repo, container

@@ -19,7 +19,7 @@ func StartSeedMeiliSearch() error {
 	}
 	defer pool.Close()
 
-	conn := NewMeiliDB("http://localhost:7700")
+	conn := NewMeiliDB(ctx, "http://localhost:7700")
 	if conn == nil {
 		return fmt.Errorf("err conn to meilisearch")
 	}

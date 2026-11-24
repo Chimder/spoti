@@ -1,6 +1,7 @@
 package meilisearchrepo
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bytedance/sonic"
@@ -10,9 +11,9 @@ import (
 
 const spotiIndexName = "spoti"
 
-func NewMeiliDB(url string) meilisearch.ServiceManager {
+func NewMeiliDB(ctx context.Context,url string) meilisearch.ServiceManager {
 	client := meiliConn(url)
-	if err := mappingIndex(client, spotiIndexName); err != nil {
+	if err := mappingIndex(ctx, client, spotiIndexName); err != nil {
 		log.Panic().Str("err setup meilisearch", err.Error()).Msg("err mapping meili")
 	}
 	return client
@@ -26,8 +27,8 @@ func meiliConn(url string) meilisearch.ServiceManager {
 	)
 }
 
-func mappingIndex(client meilisearch.ServiceManager, indexName string) error {
-	_, err := client.CreateIndex(&meilisearch.IndexConfig{
+func mappingIndex(ctx context.Context, client meilisearch.ServiceManager, indexName string) error {
+	_, err := client.CreateIndex(ctx, &meilisearch.IndexConfig{
 		Uid:        indexName,
 		PrimaryKey: "id",
 	})
@@ -46,7 +47,7 @@ func mappingIndex(client meilisearch.ServiceManager, indexName string) error {
 		FilterableAttributes: []string{"type"},
 	}
 
-	if _, err := index.UpdateSettings(settings); err != nil {
+	if _, err := index.UpdateSettings(ctx, settings); err != nil {
 		return fmt.Errorf("update settings: %w", err)
 	}
 

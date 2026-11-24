@@ -75,12 +75,10 @@ func (h *UserHandler) SignInUser(c *gin.Context) {
 		return
 	}
 
-	_, err = middleware.ComparePass(req.Password, user.PasswordHash)
-	if err != nil {
+	ok, err := middleware.ComparePass(req.Password, user.PasswordHash)
+	if err != nil || !ok {
 		log.Error().Err(err).Msg("comparePass")
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid comparePass",
-		})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid email or password"})
 		return
 	}
 
@@ -97,7 +95,7 @@ func (h *UserHandler) SignInUser(c *gin.Context) {
 	}
 
 	refreshHash := middleware.HashToken(refreshToken)
-	if err := h.redis.Set(c.Request.Context(), refreshHash, user.Id, 30*24*time.Hour); err != nil {
+	if err := h.redis.Set(c.Request.Context(), refreshHash, user.Id.String(), 30*24*time.Hour); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed set refresh token"})
 		return
 	}

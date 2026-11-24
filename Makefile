@@ -13,8 +13,18 @@ test:
 test-cache:
 	go clean -testcache && go test ./...
 
+testcover:
+	go test -v -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
+
 dev:
 	go run ./cmd
+
+fix-diff:
+	go fix -diff ./...
+
+fix:
+	go fix ./...
 
 up:
 	goose -dir $(PostgresDIR) postgres ${POSTGRES_URL} up

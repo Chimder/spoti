@@ -16,14 +16,12 @@ func TestRedis(t *testing.T) {
 	ctx := context.Background()
 
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: testcontainers.ContainerRequest{
 			Image: "redis:latest",
 			ExposedPorts: []string{
 				"6379/tcp",
 			},
 			WaitingFor: wait.ForLog("Ready to accept connections").
 				WithStartupTimeout(120 * time.Second),
-		},
 		Started: true,
 	})
 	require.NoError(t, err)

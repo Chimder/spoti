@@ -23,23 +23,21 @@ func SetupClickHouseContainer(t *testing.T) (driver.Conn, func()) {
 	ctx := context.Background()
 
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: testcontainers.ContainerRequest{
-			Image: "clickhouse/clickhouse-server:latest",
-			ExposedPorts: []string{
-				"9000/tcp",
-				"8123/tcp",
-			},
-			Env: map[string]string{
-				"CLICKHOUSE_DB":                        "default",
-				"CLICKHOUSE_USER":                      "test",
-				"CLICKHOUSE_PASSWORD":                  "test",
-				"CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT": "1",
-			},
-			WaitingFor: wait.ForHTTP("/ping").
-				WithPort("8123/tcp").
-				WithStatusCodeMatcher(func(status int) bool { return status == 200 }).
-				WithStartupTimeout(120 * time.Second),
+		Image: "clickhouse/clickhouse-server:latest",
+		ExposedPorts: []string{
+			"9000/tcp",
+			"8123/tcp",
 		},
+		Env: map[string]string{
+			"CLICKHOUSE_DB":                        "default",
+			"CLICKHOUSE_USER":                      "test",
+			"CLICKHOUSE_PASSWORD":                  "test",
+			"CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT": "1",
+		},
+		WaitingFor: wait.ForHTTP("/ping").
+			WithPort("8123/tcp").
+			WithStatusCodeMatcher(func(status int) bool { return status == 200 }).
+			WithStartupTimeout(120 * time.Second),
 		Started: true,
 	})
 	require.NoError(t, err)

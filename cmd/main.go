@@ -48,7 +48,7 @@ func main() {
 	}
 	redisConn := rediscache.Conn(cfg.RedisUrl)
 
-	meiliConn := meilisearchrepo.NewMeiliDB(cfg.MeiliSearchUrl)
+	meiliConn := meilisearchrepo.NewMeiliDB(ctx, cfg.MeiliSearchUrl)
 	////////////////////
 	// repo := postgres.NewRepository(dbConn)
 	// meiliSearchRepo := meilisearchrepo.NewMeiliRepository(meiliConn)
